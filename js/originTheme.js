@@ -1,6 +1,3 @@
-board.setStatusMark("area", "", function (painter, size, x, y) {
-    painter.clearRect(x - 1, y - 1, size, size);
-});
 board.setStatusMark("area", "O", function (painter, size, x, y) {
     painter.fillStyle = "indianred";
     painter.fillRect(x - 1, y - 1, size, size);

@@ -7,7 +7,7 @@
         isExist = (obj, val) => obj.indexOf(val) > -1,
         getColName = (crd) => crd[0],
         getRowName = (crd) => crd.substr(1, 2);
-    class Board {
+    class GridBoard {
         constructor(w, h) {
             this.grids = {};
             this.height = h;
@@ -18,13 +18,6 @@
                         grid = new this.Grid(crd, this);
                     this.grids[crd] = grid;
                 }
-        }
-        clean() {
-            if (this.onclean) this.onclean();
-        }
-        gameStart() {
-            if (this.onclean) this.onclean();
-            if (this.ongamestart) this.ongamestart();
         }
         getGridByCrd(crd) { return this.grids[crd]; }
         getGridsByCrd(crd) {
@@ -66,8 +59,8 @@
                     } else if (rowName) {
                         var rowName1 = maxRowName,
                             rowName2 = rowName;
-                        maxRowName = maxVal(rowName1, rowName2);
-                        minRowName = minVal(rowName1, rowName2);
+                        maxRowName = maxVal(rowName1 | 0, rowName2 | 0);
+                        minRowName = minVal(rowName1 | 0, rowName2 | 0);
                     }
                 }
                 for (var col = toAsc(minColName); col < toAsc(maxColName) + 1; col++)
@@ -82,7 +75,7 @@
             return [this.grids[crd]];
         }
     }
-    Board.prototype.Grid = class {
+    GridBoard.prototype.Grid = class {
         constructor(crd, board) {
             this.crd = crd;
             this.board = board;
@@ -178,5 +171,5 @@
             return [this.getCrdByRelCrd(relCrd)];
         }
     };
-    global.Board = Board;
+    global.GridBoard = GridBoard;
 })(this);
