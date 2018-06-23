@@ -1,5 +1,3 @@
-<style> * { font-family: monospace; } </style>
-
 # 聯棋/Relati
 
 ## 規則/Rules:
