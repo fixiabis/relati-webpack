@@ -17,11 +17,13 @@ var turn = 0,
             },
             configure: function (grid) {
                 grid.status = "broken";
+
                 for (var crd in board.gridOf) {
                     if (board.gridOf[crd].is("select")) {
                         board.gridOf[crd].status = "normal";
                     }
                 }
+
                 turn++;
             }
         },
