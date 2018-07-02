@@ -1,4 +1,17 @@
+(function() {
+    var symbol = "OXDURA";
+    var dirO = ["F", "B", "R", "L", "FR", "FL", "BR", "BL"];
+    var dirT = dirO.filter(dir => dir.length === 1);
+    var dirX = dirO.filter(dir => dir.length === 2);
+
+    return function() {
+        var turn = 0;
+    }
+})();
 var dirO = ["F", "B", "R", "L", "FR", "FL", "BR", "BL"];
+var dirT = dirO.filter(dir => dir.length === 1);
+var dirX = dirO.filter(dir => dir.length === 2);
+
 var turn = 0,
     players = 2,
     selectHistory = [],
@@ -7,23 +20,13 @@ var turn = 0,
     actions = [
         {
             condition: function () {
-                for (var crd in board.gridOf) {
-                    if (board.gridOf[crd].is("select")) {
-                        return true;
-                    }
-                }
-
-                return false;
+                return board.query("select").length > 0;
             },
             configure: function (grid) {
                 grid.status = "broken";
-
-                for (var crd in board.gridOf) {
-                    if (board.gridOf[crd].is("select")) {
-                        board.gridOf[crd].status = "normal";
-                    }
-                }
-
+                board.query("select").forEach(
+                    grid => grid.status = "normal"
+                );
                 turn++;
             }
         },
@@ -70,13 +73,9 @@ var turn = 0,
                 return false;
             },
             configure: function (grid) {
-                for (var crd in board.gridOf) {
-                    let grid = board.gridOf[crd];
-
-                    if (grid.is("owner valid")) {
-                        grid.status = "broken";
-                    }
-                }
+                board.query("owner valid").forEach(
+                    grid => grid.status = "broken"
+                );
 
                 grid.symbol = symbol[turn % players];
                 grid.status = "source";
@@ -216,15 +215,13 @@ var relatiForbid = function () {
     var sourceGrid = [];
     var related = [];
 
-    for (var crd in board.gridOf) {
-        var grid = board.gridOf[crd];
+    board.query("forbid").forEach(
+        grid => grid.status = "normal"
+    );
 
-        if (grid.is("forbid")) {
-            grid.status = "normal";
-        } else if (grid.is("source")) {
-            sourceGrid.push(grid);
-        }
-    }
+    board.query("source").forEach(
+        grid => sourceGrid.push(grid)
+    );
 
     function relatiTree(source) {
         var relatiList = getRelatiList(source);
@@ -243,22 +240,16 @@ var relatiForbid = function () {
         relatiTree(sourceGrid[i]);
     }
 
-    for (var crd in board.gridOf) {
-        var grid = board.gridOf[crd];
-
-        if (grid.is("normal")) {
-            if (related.indexOf(grid) < 0) {
-                grid.status = "forbid";
-            }
+    board.query("normal").forEach(function (grid) {
+        if (related.indexOf(grid) < 0) {
+            grid.status = "forbid";
         }
-    }
+    });
 };
 var attackPincer = function () {
     for (var x = 1; x < board.width - 1; x++) {
         for (var y = 1; y < board.height - 1; y++) {
             var grid = board.grids[x][y];
-            var dirT = dirO.filter(dir => dir.length === 1);
-            var dirX = dirO.filter(dir => dir.length === 2);
             var broken = true;
 
             dirT.forEach(
@@ -405,6 +396,14 @@ for (var crd in board.gridOf) {
     grid.symbol = "";
     grid.is = (type, sym) => gridIs(grid, type, sym);
 }
+
+board.query = (function () {
+    var grids = [];
+
+    board.grids.forEach(gridCol => grids = grids.concat(gridCol));
+
+    return type => grids.filter(grid => grid.is(type));
+})();
 
 function nextPlayerExist() {
     for (var i = 0; i < actions.length; i++) {

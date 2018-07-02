@@ -7,7 +7,6 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
     <script src="GridBoard.js"></script>
-    <script src="RelatiGame.js"></script>
     <style>
         body {
             width: 100vw;
@@ -23,29 +22,26 @@
 
 <body>
     <script>
-        var board = RelatiGame(
-            2,
-            {
-                relati: {
-                    normal: true,
-                    remote: {
-                        normal: true,
-                        stable: true
-                    }
-                },
-                escape: "source",
-                attack: {
-                    normal: true,
-                    pincer: true,
-                    bomber: true
-                },
-                defend: true,
-                region: "first"
-            },
-            document.body
-        );
+        var board = new GridBoard(15, 15);
+
+        document.body.appendChild(board.viewer);
+
+        function viewerResize() {
+            var viewerSize = Math.min(
+                document.body.clientWidth,
+                document.body.clientHeight
+            );
+
+            board.viewer.width = viewerSize;
+            board.viewer.height = viewerSize;
+            board.viewerRefresh();
+        }
+
+        window.addEventListener("load", viewerResize);
+        window.addEventListener("resize", viewerResize);
     </script>
     <script src="skin.js"></script>
+    <script src="relati.js"></script>
 </body>
 
 </html>
