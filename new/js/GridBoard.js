@@ -117,7 +117,7 @@ class GridBoard {
         viewer.height = gridSize * this.height + (this.height + 1);
         painter.fillStyle = "#fff";
         painter.strokeStyle = "#000";
-        painter.fillRect(0, 0, viewer.width, viewer.height);
+        painter.clearRect(0, 0, viewer.width, viewer.height);
         painter.lineWidth = 1;
         painter.setTransform(1, 0, 0, 1, 0.5, 0.5);
 

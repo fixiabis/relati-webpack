@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Relati - 說明</title>
+    <script src="js/GridBoard.js"></script>
+    <script src="js/skin.js"></script>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            background-color: #eee;
+            width: 100vw;
+            height: 100vh;
+            overflow-x: hidden;
+            margin: 0px;
+        }
+
+        header {
+            color: #eee;
+            background-color: rgb(15, 85, 102);
+            font-size: 35px;
+            line-height: 45px;
+            height: 60px;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        main {
+            padding: 10px;
+        }
+
+        section {
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            font-size: 25px;
+            margin: 5px;
+        }
+
+        h2 {
+            font-size: 20px;
+            margin: 2.5px;
+        }
+    </style>
+</head>
+
+<body>
+    <header>Relati 說明</header>
+    <main>
+        <section>
+            <h1>基本規則</h1>
+            <hr>
+            <ul>
+                <li>
+                    遊戲開始時，玩家分別標記符號於棋盤的格子中
+                </li>
+                <li>之後玩家標記符號時必須符合連結規範</li>
+            </ul>
+            <h2>連結規範</h2>
+            <ul>
+                <li>
+                    一般連結 : 如下圖所示，連結的型式可以參考紅線
+                    <div id="relati-normal"></div>
+                </li>
+            </ul>
+            <h2>其他</h2>
+            <ul>
+                <li>玩家人數 : 2 - 6人</li>
+                <li>棋盤大小公式 : 玩家人數 x 2 + 11 的平方</li>
+                <li>玩家標記符號(依照回合順序)如下圖
+                    <div id="player-symbol"></div>
+                </li>
+            </ul>
+        </section>
+    </main>
+    <script>
+        (function playerSymbol() {
+            var container = document.getElementById("player-symbol");
+            var board = new GridBoard(6, 1);
+            container.appendChild(board.viewer);
+            board.viewer.width = 250;
+            addSkin(board);
+            var symbol = "OXDUAH";
+            board.gridOf.A1.getGridsFromDir("C,~R").forEach(
+                (grid, i) => grid.symbol = symbol[i]
+            );
+            board.viewerRefresh();
+        })();
+
+        function boardCreate(elementId) {
+            var container = document.getElementById(elementId);
+            var board = new GridBoard(5, 5);
+            container.appendChild(board.viewer);
+            board.viewer.width = 200;
+            board.viewer.height = 200;
+            addSkin(board);
+
+            return board;
+        }
+
+        (function relatiNormal() {
+            var board = boardCreate("relati-normal");
+            board.gridOf.C3.getGridsFromDir("O,C").forEach(
+                grid => grid.symbol = "O"
+            );
+            board.gridOf.C3.status = "source";
+            board.addGridMark(
+                grid => grid.crd === "C3",
+                function (painter, x, y, gridSize) {
+                    painter.strokeStyle = "red";
+                    painter.lineWidth = 2;
+
+                    painter.beginPath();
+                    painter.moveTo(
+                        x + gridSize * 0.2,
+                        y + gridSize * 0.2
+                    );
+                    painter.lineTo(
+                        x - gridSize * 0.2,
+                        y - gridSize * 0.2
+                    );
+                    painter.closePath();
+                    painter.stroke();
+
+                    painter.beginPath();
+                    painter.moveTo(
+                        x + gridSize + gridSize * 0.2,
+                        y + gridSize + gridSize * 0.2
+                    );
+                    painter.lineTo(
+                        x + gridSize - gridSize * 0.2,
+                        y + gridSize - gridSize * 0.2
+                    );
+                    painter.closePath();
+                    painter.stroke();
+
+                    painter.beginPath();
+                    painter.moveTo(
+                        x + gridSize - gridSize * 0.2,
+                        y + gridSize * 0.2
+                    );
+                    painter.lineTo(
+                        x + gridSize + gridSize * 0.2,
+                        y - gridSize * 0.2
+                    );
+                    painter.closePath();
+                    painter.stroke();
+
+                    painter.beginPath();
+                    painter.moveTo(
+                        x - gridSize * 0.2,
+                        y + gridSize + gridSize * 0.2
+                    );
+                    painter.lineTo(
+                        x + gridSize * 0.2,
+                        y + gridSize - gridSize * 0.2
+                    );
+                    painter.closePath();
+                    painter.stroke();
+
+                    painter.beginPath();
+                    painter.moveTo(
+                        x + gridSize * 0.5,
+                        y + gridSize * 0.2
+                    );
+                    painter.lineTo(
+                        x + gridSize * 0.5,
+                        y - gridSize * 0.2
+                    );
+                    painter.closePath();
+                    painter.stroke();
+
+                    painter.beginPath();
+                    painter.moveTo(
+                        x + gridSize * 0.5,
+                        y + gridSize + gridSize * 0.2
+                    );
+                    painter.lineTo(
+                        x + gridSize * 0.5,
+                        y + gridSize - gridSize * 0.2
+                    );
+                    painter.closePath();
+                    painter.stroke();
+
+                    painter.beginPath();
+                    painter.moveTo(
+                        x + gridSize * 0.2,
+                        y + gridSize * 0.5
+                    );
+                    painter.lineTo(
+                        x - gridSize * 0.2,
+                        y + gridSize * 0.5
+                    );
+                    painter.closePath();
+                    painter.stroke();
+
+                    painter.beginPath();
+                    painter.moveTo(
+                        x + gridSize + gridSize * 0.2,
+                        y + gridSize * 0.5
+                    );
+                    painter.lineTo(
+                        x + gridSize - gridSize * 0.2,
+                        y + gridSize * 0.5
+                    );
+                    painter.closePath();
+                    painter.stroke();
+
+                    painter.strokeStyle = "black";
+                }
+            );
+            board.viewerRefresh();
+        })();
+
+    </script>
+</body>
+
+</html>
