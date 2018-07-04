@@ -264,14 +264,16 @@ var RelatiGame = (function () {
                     var grid = board.grids[x][y];
                     var broken = true;
 
-                    dirT.forEach(
-                        function (dir) {
-                            var pincerGrid = grid.getGridFromDir(dir);
-                            if (!pincerGrid.is("other valid", grid.symbol)) {
-                                broken = false;
+                    if (options.attack.pincer !== "X") {
+                        dirT.forEach(
+                            function (dir) {
+                                var pincerGrid = grid.getGridFromDir(dir);
+                                if (!pincerGrid.is("other valid", grid.symbol)) {
+                                    broken = false;
+                                }
                             }
-                        }
-                    );
+                        );
+                    }
 
                     if (broken) {
                         grid.status = "broken";
@@ -280,14 +282,16 @@ var RelatiGame = (function () {
 
                     var broken = true;
 
-                    dirX.forEach(
-                        function (dir) {
-                            var pincerGrid = grid.getGridFromDir(dir);
-                            if (!pincerGrid.is("other valid", grid.symbol)) {
-                                broken = false;
+                    if (options.attack.pincer !== "T") {
+                        dirX.forEach(
+                            function (dir) {
+                                var pincerGrid = grid.getGridFromDir(dir);
+                                if (!pincerGrid.is("other valid", grid.symbol)) {
+                                    broken = false;
+                                }
                             }
-                        }
-                    );
+                        );
+                    }
 
                     if (broken) {
                         grid.status = "broken";

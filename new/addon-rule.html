@@ -57,15 +57,32 @@
     <header>Relati 說明</header>
     <main>
         <section>
-            <h1>額外規則</h1>
+            <h1>擴充規則</h1>
             <hr>
             <ul>
                 <li>
                     遊戲開始時，玩家分別標記符號於棋盤的格子中，此時玩家的符號稱為來源符號
                 </li>
-                <li>之後玩家標記符號時必須符合連結規範</li>
-                <li>玩家標記符號時可以參考逃脫規範</li>
-                <li>當所有其他玩家無法進行標記符號的行為時即為勝利</li>
+                <li>玩家輪流進行行動</li>
+                <li>當所有其他玩家無法進行標記符號的行動時即為勝利</li>
+            </ul>
+            <h2>可用行動</h2>
+            <ul>
+                <li>標記 : 符合連結規範或逃脫規範便可進行</li>
+                <li>攻擊 : 符合攻擊條件便可進行</li>
+                <li>防禦 : 符合防禦條件變可進行</li>
+                <li>轟炸 : 符合轟炸條件便可進行</li>
+            </ul>
+            <h2>符號狀態</h2>
+            <ul>
+                <li>
+                    如下圖所示
+                    <div id="status-symbol"></div>
+                    依序為一般、來源、阻斷、死亡、防盾
+                </li>
+                <li>阻斷狀態又稱為無效符號</li>
+                <li>死亡狀態視為空白</li>
+                <li>防盾狀態僅我方視為空白</li>
             </ul>
             <h2>連結規範</h2>
             <ul>
@@ -83,9 +100,56 @@
                     <div id="relati-remote-stable"></div>
                 </li>
                 <li>
-                    所有的符號，最終無法連結到來源符號時，符號將變成阻斷符號，如下圖所示，來源符號為黃，阻斷符號為紅
+                    所有的符號，最終無法連結到來源符號時，符號將變成阻斷符號，如下圖所示
                     <div id="relati-forbid"></div>
                     上圖D3,E3處的O與X因雙方都無法以任何型式連結，故雙方都是阻斷符號
+                </li>
+            </ul>
+            <h2>逃脫規範</h2>
+            <ul>
+                <li>
+                    如下圖所示，逃跑的路線可以參考紅線，紅線所經過之格子必須為空白
+                    <div id="escape"></div>
+                </li>
+                <li>符號可放置於我方有效符號8個方位不限距離長處，放置後符號將改變為來源符號，其他符號除了防盾符號，將變為死亡符號</li>
+                <li>逃脫範圍不可以在連結範圍內</li>
+            </ul>
+            <h2>攻擊條件</h2>
+            <ul>
+                <li>
+                    如下圖所示，攻擊的路線可以參考紅線，紅線所經過之格子必須為空白或我方符號
+                    <div id="attack"></div>
+                </li>
+                <li>可選擇我方有效符號8個方位不限距離長處的他方符號</li>
+                <li>我方有效符號8個方位不限距離長處的他方符號反方向必須有一枚我方有效符號，此有效符號稱為攻擊耗材</li>
+                <li>進行行動後，攻擊耗材與他方符號一起變更為死亡符號</li>
+                <li>他方符號狀態不得為防盾</li>
+            </ul>
+            <h2>防禦條件</h2>
+            <ul>
+                <li>可選擇一枚我方一般符號</li>
+                <li>進行行動後，一般符號變更為防盾符號</li>
+            </ul>
+            <h2>轟炸條件</h2>
+            <ul>
+                <li>
+                    如下圖所示
+                    <div id="bomber"></div>
+                </li>
+                <li>可選擇一枚我方防盾符號</li>
+                <li>進行行動後，防盾符號變更為死亡符號，該符號八方若有符號，皆變更為死亡符號</li>
+            </ul>
+            <h2>額外機能</h2>
+            <ul>
+                <li>
+                    區域 : 我方四個有效符號圍成的矩型，如下圖所示
+                    <div id="region"></div>
+                </li>
+                <li>區域內部的對方符號不能進行攻擊行動</li>
+                <li>區域內部的我方符號不會被作為攻擊對象</li>
+                <li>
+                    夾擊 : 他方正四方或斜四方皆為我方符號時，他方符號變更為死亡符號，如下圖所示
+                    <div id="pincer"></div>
                 </li>
             </ul>
             <h2>其他</h2>
@@ -95,23 +159,33 @@
                 <li>玩家標記符號(依照回合順序)如下圖
                     <div id="player-symbol"></div>
                 </li>
+                <li>
+                    所有規則可進行協議後調整，可調整的項目如下 :
+                    <ul>
+                        <li>連線規範 : 三項連結方法可選擇禁止使用</li>
+                        <li>逃脫規範 : 我方有效符號可修改為我方來源符號或禁止使用</li>
+                        <li>攻擊條件 : 可禁止使用</li>
+                        <li>防禦條件 : 可禁止使用</li>
+                        <li>轟炸條件 : 可禁止使用</li>
+                        <li>額外機能 :
+                            <ul>
+                                <li>區域重疊部份 :
+                                    <ul>
+                                        <li>優先制：重疊部份為先者擁有</li>
+                                        <li>分隔制：重疊部份不屬重疊者</li>
+                                        <li>公共制：重疊部份重疊者共有</li>
+                                        <li>獨占制：重疊部份為後者擁有</li>
+                                    </ul>
+                                </li>
+                                <li>夾擊 : 可禁止使用或正四方、斜四方擇一不使用</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
             </ul>
         </section>
     </main>
     <script>
-        (function playerSymbol() {
-            var container = document.getElementById("player-symbol");
-            var board = new GridBoard(6, 1);
-            container.appendChild(board.viewer);
-            board.viewer.width = 250;
-            addSkin(board);
-            var symbol = "OXDUAH";
-            board.gridOf.A1.getGridsFromDir("C,~R").forEach(
-                (grid, i) => grid.symbol = symbol[i]
-            );
-            board.viewerRefresh();
-        })();
-
         function boardCreate(elementId) {
             var container = document.getElementById(elementId);
             var board = new GridBoard(5, 5);
@@ -132,6 +206,20 @@
             painter.stroke();
             painter.closePath();
         }
+    </script>
+    <script>
+        (function playerSymbol() {
+            var container = document.getElementById("player-symbol");
+            var board = new GridBoard(6, 1);
+            container.appendChild(board.viewer);
+            board.viewer.width = 250;
+            addSkin(board);
+            var symbol = "OXDUAH";
+            board.gridOf.A1.getGridsFromDir("C,~R").forEach(
+                (grid, i) => grid.symbol = symbol[i]
+            );
+            board.viewerRefresh();
+        })();
 
         (function relatiNormal() {
             var board = boardCreate("relati-normal");
@@ -240,7 +328,8 @@
             );
             board.viewerRefresh();
         })();
-
+    </script>
+    <script>
         (function relatiRemote() {
             var board = boardCreate("relati-remote");
             board.gridOf.C3.getGridsFromDir("OO,C").forEach(
@@ -794,6 +883,122 @@
             board.gridOf.B1.symbol = "X";
             board.gridOf.B1.status = "normal";
             board.viewerRefresh();
+        })();    
+    </script>
+    <script>
+        (function statusSymbol() {
+            var container = document.getElementById("status-symbol");
+            var board = new GridBoard(5, 1);
+            container.appendChild(board.viewer);
+            board.viewer.width = 200;
+            addSkin(board);
+            var status = ["normal", "source", "forbid", "broken", "shield"];
+            board.gridOf.A1.getGridsFromDir("C,~R").forEach(
+                (grid, i) => {
+                    grid.symbol = "O";
+                    grid.status = status[i];
+                }
+            );
+            board.viewerRefresh();
+        })();
+
+        (function escape() {
+            var board = boardCreate("escape");
+            board.gridOf.A1.symbol = "O";
+            board.gridOf.A1.status = "source";
+            board.gridOf.E5.symbol = "O";
+            board.gridOf.E5.status = "broken";
+            board.gridOf.D5.symbol = "O";
+            board.gridOf.D5.status = "broken";
+            board.gridOf.E4.symbol = "O";
+            board.gridOf.E4.status = "shield";
+            board.addGridMark(
+                grid => grid.crd === "A1",
+                function (painter, x, y, gridSize) {
+                    painter.strokeStyle = "red";
+                    painter.lineWidth = 2;
+
+                    var routeLength = gridSize * 0.2;
+                    var finalX = x + gridSize - routeLength;
+                    var finalY = x + gridSize - routeLength;
+
+                    painter.beginPath();
+                    painter.moveTo(finalX, finalY);
+                    painter.lineTo(
+                        finalX + gridSize * 3 + routeLength * 2.5,
+                        finalY + gridSize * 3 + routeLength * 2.5
+                    );
+                    painter.stroke();
+                    painter.closePath();
+                }
+            );
+            board.viewerRefresh();
+        })();
+
+        (function attack() {
+            var board = boardCreate("attack");
+            board.gridOf.A1.symbol = "O";
+            board.gridOf.A1.status = "broken";
+            board.gridOf.E5.symbol = "X";
+            board.gridOf.E5.status = "broken";
+            board.gridOf.D4.symbol = "X";
+            board.gridOf.D4.status = "normal";
+            board.addGridMark(
+                grid => grid.crd === "A1",
+                function (painter, x, y, gridSize) {
+                    painter.strokeStyle = "red";
+                    painter.lineWidth = 2;
+
+                    var routeLength = gridSize * 0.2;
+                    var finalX = x + gridSize - routeLength;
+                    var finalY = x + gridSize - routeLength;
+
+                    painter.beginPath();
+                    painter.moveTo(finalX, finalY);
+                    painter.lineTo(
+                        finalX + gridSize * 2 + routeLength * 2.5,
+                        finalY + gridSize * 2 + routeLength * 2.5
+                    );
+                    painter.stroke();
+                    painter.closePath();
+                }
+            );
+            board.viewerRefresh();
+        })();
+
+        (function bomber() {
+            var board = boardCreate("bomber");
+            board.gridOf.C3.symbol = "O";
+            board.gridOf.C3.getGridsFromDir("O,C").forEach(
+                grid => grid.status = "broken"
+            );
+            board.gridOf.B2.symbol = "X";
+            board.gridOf.B4.symbol = "X";
+            board.gridOf.D3.symbol = "O";
+            board.viewerRefresh();
+        })();
+
+        (function region() {
+            var board = boardCreate("region");
+            board.gridOf.C3.getGridsFromDir("IHH").forEach(
+                grid => grid.symbol = "O"
+            );
+            board.viewerRefresh();
+        })();
+
+        (function pincer() {
+            for (let d of "TX") {
+                var board = boardCreate("pincer");
+                board.gridOf.C3.getGridsFromDir(d).forEach(
+                    grid => {
+                        grid.symbol = "O";
+                        grid.status = "normal";
+                    }
+                );
+                board.gridOf.C3.symbol = "X";
+                board.gridOf.C3.status = "broken";
+                board.viewerRefresh();
+            };
         })();
     </script>
 </body>
