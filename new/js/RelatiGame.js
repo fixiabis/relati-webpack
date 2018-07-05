@@ -4,10 +4,41 @@ var RelatiGame = (function () {
     var dirT = dirO.filter(dir => dir.length === 1); // 正四方
     var dirX = dirO.filter(dir => dir.length === 2); // 斜四方
 
-    return function (players, options, container) {
+    var createBoard = function (players, container) {
+        var size = players * 2 + 11;
+        var board = new GridBoard(size, size);
+        container.appendChild(board.viewer);
+
+        function viewerResize() {
+            var viewerSize = Math.min(
+                container.clientWidth,
+                container.clientHeight
+            );
+            board.viewerResize(viewerSize, viewerSize);
+        }
+
+        window.addEventListener("load", viewerResize);
+        window.addEventListener("resize", viewerResize);
+
+        return board;
+    };
+
+    var createRelatiBoard = function (players, container) {
+        var board = createBoard(players, container);
+        board.query = (function () {
+            var grids = [];
+            board.grids.forEach(
+                gridCol => grids = grids.concat(gridCol)
+            );
+            return type => grids.filter(grid => grid.is(type));
+        })();
+        board.history = [];
+        return board;
+    };
+
+    return function (players, container, options) {
         var turn = 0; // 回合
-        var selectHistory = []; // 選取紀錄
-        var board = new GridBoard(players * 2 + 11, players * 2 + 11); //棋盤
+        var board = createRelatiBoard(players, container); //棋盤
         var actions = [
             {
                 condition: function () {
@@ -145,13 +176,13 @@ var RelatiGame = (function () {
         ];
         var regions = []; // 區域
         var getRelatiList = (function () {
-            var normalSource = dirO;
-            var remoteSource = normalSource.map(dir => dir + dir);
-            var remoteSpaces = normalSource.map(dir => dir);
-            var remoteStableSource = [
+            var normalSource = dirO; //一般連結方位
+            var remoteSource = normalSource.map(dir => dir + dir); //遠程連結方位
+            var remoteSpaces = normalSource.map(dir => dir); //遠程連結路徑
+            var remoteStableSource = [ //遠程穩定連結方位
                 "FFR", "FFL", "BBR", "BBL", "FRR", "BRR", "FLL", "BLL"
             ];
-            var remoteStableSpaces = [
+            var remoteStableSpaces = [ //遠程穩定連結路徑
                 [["FF", "F"], ["F", "FR"], ["R", "FR"]],
                 [["FF", "F"], ["F", "FL"], ["L", "FL"]],
                 [["BB", "B"], ["B", "BR"], ["R", "BR"]],
@@ -163,14 +194,16 @@ var RelatiGame = (function () {
             ];
 
             return function getRelatiList(grid) {
-                var relatiList = [];
+                var relatiList = []; //連結清單
                 var getGrid = dir => grid.getGridFromDir(dir);
                 var gridSym = grid.symbol !== "" ? grid.symbol : undefined;
                 var normalSourceGrid = normalSource.map(getGrid);
                 var remoteSourceGrid = remoteSource.map(getGrid);
                 var remoteStableSourceGrid = remoteStableSource.map(getGrid);
                 var remoteSpacesGrid = remoteSpaces.map(getGrid);
-                var remoteStableSpacesGrid = remoteStableSpaces.map(dirs => dirs.map(dirs => dirs.map(getGrid)));
+                var remoteStableSpacesGrid = remoteStableSpaces.map(
+                    dirs => dirs.map(dirs => dirs.map(getGrid))
+                );
 
                 for (var i = 0; i < 8; i++) {
                     var sourceGrid = normalSourceGrid[i];
@@ -234,7 +267,7 @@ var RelatiGame = (function () {
             );
 
             function relatiTree(source) {
-                var relatiList = getRelatiList(source, source.symbol);
+                var relatiList = getRelatiList(source);
 
                 for (var i = 0; i < relatiList.length; i++) {
                     var relatiGrid = relatiList[i];
@@ -416,13 +449,6 @@ var RelatiGame = (function () {
             grid.is = (type, sym) => gridIs(grid, type, sym);
         }
 
-        board.query = (function () {
-            var grids = [];
-            board.grids.forEach(gridCol => grids = grids.concat(gridCol));
-            return type => grids.filter(grid => grid.is(type));
-        })();
-        board.history = selectHistory;
-
         function nextPlayerExist() {
             for (var i = 0; i < actions.length; i++) {
                 var { condition } = actions[i];
@@ -430,7 +456,9 @@ var RelatiGame = (function () {
                     grid => condition(grid)
                 );
 
-                if (markableGrid.indexOf(true) > -1) return true;
+                if (markableGrid.indexOf(true) > -1) {
+                    return true;
+                }
             }
 
             return false;
@@ -444,7 +472,7 @@ var RelatiGame = (function () {
                     configure(grid);
                     relatiForbid();
                     attackPincer();
-                    selectHistory.push(grid.crd);
+                    board.history.push(grid.crd);
                     board.viewerRefresh();
 
                     while (!nextPlayerExist()) turn++;
@@ -456,21 +484,6 @@ var RelatiGame = (function () {
             return false;
         };
 
-        function viewerResize() {
-            var viewerSize = Math.min(
-                container.clientWidth,
-                container.clientHeight
-            );
-
-            board.viewer.width = viewerSize;
-            board.viewer.height = viewerSize;
-            board.viewerRefresh();
-        }
-
-        container.appendChild(board.viewer);
-        window.addEventListener("load", viewerResize);
-        window.addEventListener("resize", viewerResize);
-
         return board;
-    }
+    };
 })();

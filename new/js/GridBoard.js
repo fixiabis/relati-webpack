@@ -156,6 +156,12 @@ class GridBoard {
         }
     }
 
+    viewerResize(width, height) {
+        this.viewer.width = width;
+        this.viewer.height = height;
+        this.viewerRefresh();
+    }
+
     addGridMark(condition, configure) {
         this.gridMarks.push({
             condition, configure

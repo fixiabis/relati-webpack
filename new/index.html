@@ -8,7 +8,7 @@
     <title>Relati</title>
     <script src="js/GridBoard.js"></script>
     <script src="js/RelatiGame.js"></script>
-    <script src="js/skin.js"></script>
+    <script src="js/RelatiSkin.js"></script>
     <style>
         body {
             width: 100vw;
@@ -24,8 +24,8 @@
 
 <body>
     <script>
-        var board = RelatiGame(
-            2,
+        var board = new RelatiGame(
+            2, document.body,
             {
                 relati: {
                     normal: true,
@@ -42,8 +42,7 @@
                 },
                 defend: true,
                 region: "first"
-            },
-            document.body
+            }
         );
         addSkin(board);
     </script>
