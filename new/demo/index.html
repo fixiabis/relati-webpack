@@ -6,12 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Relati</title>
-    <script src="js/GridBoard.js"></script>
+    <script src="../js/GridBoard.js"></script>
     <script src="js/RelatiGame.js"></script>
-    <script src="js/RelatiRule.js"></script>
-    <script src="js/EscapeRule.js"></script>
-    <script src="js/BattleRule.js"></script>
-    <script src="js/RelatiSkin.js"></script>
+    <script src="../js/RelatiSkin.js"></script>
     <style>
         body {
             width: 100vw;
@@ -27,7 +24,7 @@
 
 <body>
     <script>
-        var game = new RelatiGame(
+        var board = new RelatiGame(
             2, document.body,
             {
                 relati: {
@@ -44,17 +41,10 @@
                     bomber: true
                 },
                 defend: true,
-                region: "first",
-                forbid: true
+                region: "first"
             }
         );
-        addSkin(game.board);
-        addRelatiRule(game);
-        addEscapeRule(game);
-        addBattleRule(game);
-        addPincerRule(game);
-        addDefendRule(game);
-        addBomberRule(game);
+        addSkin(board);
     </script>
 </body>
 

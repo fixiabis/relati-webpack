@@ -104,6 +104,7 @@ function addRelatiRule(game) {
         };
     })();
     var relatiForbid = function () {
+        if (!game.options.forbid) return;
         var sourceGrid = [];
         var related = [];
 
