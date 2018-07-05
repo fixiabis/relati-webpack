@@ -9,11 +9,29 @@ function addSkin(board) {
     );
     board.addGridMark(
         grid => grid.status === "source",
-        painter => painter.strokeStyle = "orange"
+        function (painter, x, y, size) {
+            painter.strokeStyle = "black";
+            painter.lineWidth = 2;
+            painter.beginPath();
+            painter.moveTo(x + size * 0.1, y + size * 0.1);
+            painter.lineTo(x + size * 0.1, y + size * 0.9);
+            painter.lineTo(x + size * 0.9, y + size * 0.9);
+            painter.stroke();
+            painter.closePath();
+        }
     );
     board.addGridMark(
         grid => grid.status === "broken",
-        painter => painter.strokeStyle = "brown"
+        function (painter, x, y, size) {
+            painter.strokeStyle = "brown";
+            painter.lineWidth = 2;
+            painter.beginPath();
+            painter.moveTo(x + size * 0.1, y + size * 0.9);
+            painter.lineTo(x + size * 0.9, y + size * 0.1);
+            painter.stroke();
+            painter.closePath();
+            painter.strokeStyle = "black";
+        }
     );
     board.addGridMark(
         grid => grid.status === "forbid",
@@ -21,6 +39,25 @@ function addSkin(board) {
     );
     board.addGridMark(
         grid => grid.status === "shield",
+        function (painter, x, y, size) {
+            painter.strokeStyle = "blue";
+            painter.lineWidth = 2;
+            painter.beginPath();
+            painter.moveTo(x + size * 0.1, y + size * 0.2);
+            painter.lineTo(x + size * 0.1, y + size * 0.8);
+            painter.lineTo(x + size * 0.5, y + size * 0.9);
+            painter.lineTo(x + size * 0.9, y + size * 0.8);
+            painter.lineTo(x + size * 0.9, y + size * 0.2);
+            painter.stroke();
+            painter.closePath();
+            painter.strokeStyle = "black";
+        }
+    );
+    board.addGridMark(
+        function (grid) {
+            if (!window.game) return false;
+            return game.board.history[board.history.length - 1] === grid.crd;
+        },
         painter => painter.strokeStyle = "blue"
     );
     board.addGridMark(

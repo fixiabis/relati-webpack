@@ -37,7 +37,7 @@
                     remoteStable: true,
                     forbid: true
                 },
-                escape: true,
+                escape: "valid",
                 attack: true,
                 defend: true,
                 bomber: true,
@@ -53,11 +53,11 @@
             }
         );
         addSkin(game.board);
+        addAttackRule(game);
         addBomberRule(game);
         addPincerRule(game);
         addRelatiRule(game);
         addEscapeRule(game);
-        addAttackRule(game);
         addDefendRule(game);
         addRegionRule(game);
     </script>

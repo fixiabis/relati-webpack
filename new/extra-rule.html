@@ -67,6 +67,14 @@
                 <li>玩家標記符號時可以參考逃脫規範</li>
                 <li>當所有其他玩家無法進行標記符號的行為時即為勝利</li>
             </ul>
+            <h2>符號狀態</h2>
+            <ul>
+                <li>
+                    如下圖所示
+                    <div id="status-symbol"></div>
+                    依序為一般、來源、阻斷
+                </li>
+            </ul>
             <h2>連結規範</h2>
             <ul>
                 <li>連結時，雙方都不得為阻斷符號</li>
@@ -83,7 +91,7 @@
                     <div id="relati-remote-stable"></div>
                 </li>
                 <li>
-                    所有的符號，最終無法連結到來源符號時，符號將變成阻斷符號，如下圖所示，來源符號為黃，阻斷符號為紅
+                    所有的符號，最終無法連結到來源符號時，符號將變成阻斷符號，如下圖所示
                     <div id="relati-forbid"></div>
                     上圖D3,E3處的O與X因雙方都無法以任何型式連結，故雙方都是阻斷符號
                 </li>
@@ -108,6 +116,22 @@
             var symbol = "OXDUAH";
             board.gridOf.A1.getGridsFromDir("C,~R").forEach(
                 (grid, i) => grid.symbol = symbol[i]
+            );
+            board.viewerRefresh();
+        })();
+
+        (function statusSymbol() {
+            var container = document.getElementById("status-symbol");
+            var board = new GridBoard(3, 1);
+            container.appendChild(board.viewer);
+            board.viewer.width = 120;
+            addSkin(board);
+            var status = ["normal", "source", "forbid"];
+            board.gridOf.A1.getGridsFromDir("C,~R").forEach(
+                (grid, i) => {
+                    grid.symbol = "O";
+                    grid.status = status[i];
+                }
             );
             board.viewerRefresh();
         })();

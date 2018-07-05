@@ -85,7 +85,7 @@ function addBomberRule(game) {
             grid.status = "broken";
             game.board.query(
                 "owner|other",
-                grid.getGridFromDir("O")
+                grid.getGridsFromDir("O")
             ).forEach(
                 grid => grid.status = "broken"
             );

@@ -970,12 +970,16 @@
         (function bomber() {
             var board = boardCreate("bomber");
             board.gridOf.C3.symbol = "O";
-            board.gridOf.C3.getGridsFromDir("O,C").forEach(
-                grid => grid.status = "broken"
-            );
             board.gridOf.B2.symbol = "X";
             board.gridOf.B4.symbol = "X";
             board.gridOf.D3.symbol = "O";
+            board.gridOf.C3.getGridsFromDir("O,C").forEach(
+                grid => {
+                    if (grid.symbol) {
+                        grid.status = "broken";
+                    }
+                }
+            );
             board.viewerRefresh();
         })();
 

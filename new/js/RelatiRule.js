@@ -135,7 +135,7 @@ function addRelatiRule(game) {
         }
 
         game.board.query("normal").forEach(function (grid) {
-            if (related.indexOf(grid) < 0) {
+            if (related.indexOf(grid) < 0 && !grid.is("space-real")) {
                 grid.status = "forbid";
             }
         });
