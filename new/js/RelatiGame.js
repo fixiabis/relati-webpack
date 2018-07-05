@@ -1,5 +1,5 @@
 var RelatiGame = (function () {
-    var createBoard = function (players, container) {
+    function createBoard(players, container) {
         var size = players * 2 + 11;
         var board = new GridBoard(size, size);
         container.appendChild(board.viewer);
@@ -16,35 +16,39 @@ var RelatiGame = (function () {
         window.addEventListener("resize", viewerResize);
 
         return board;
-    };
-    var createRelatiBoard = function (players, container) {
+    }
+
+    function createRelatiBoard(players, container) {
         var board = createBoard(players, container);
         board.query = (function () {
-            var grids = [];
+            var allGrids = [];
             board.grids.forEach(
-                gridCol => grids = grids.concat(gridCol)
+                gridCol => allGrids = allGrids.concat(gridCol)
             );
-            return type => grids.filter(grid => grid.is(type));
+            return (type, grids, sym) => (grids || allGrids).filter(
+                grid => grid && grid.is(type, sym)
+            );
         })();
         board.history = [];
         return board;
-    };
+    }
+
     function gridIs(grid, type, sym) {
         sym = sym || this.symbol[this.turn % this.players];
         var typeIs = type => gridIs(grid, type, sym);
 
         switch (type) {
-            case "space-real": // 實質空白
+            case "space-real":
                 return grid.symbol === "";
-            case "space-fake": //視為空白
+            case "space-fake":
                 return typeIs("broken|owner shield");
-            case "space": //空白
+            case "space":
                 return typeIs("space-real|space-fake");
-            case "valid": //有效
+            case "valid":
                 return !typeIs("owner forbid|space");
-            case "owner": //我方
+            case "owner":
                 return grid.symbol === sym;
-            case "other": //他方
+            case "other":
                 return !typeIs("owner|space-real");
             default:
                 if (type.indexOf("|") > -1) {
@@ -67,7 +71,8 @@ var RelatiGame = (function () {
                     return grid.status === type;
                 }
         }
-    };
+    }
+
     return class RelatiGame {
         constructor(players, container, options) {
             this.turn = 0;

@@ -1,5 +1,6 @@
 function addRelatiRule(game) {
     var dirO = ["F", "B", "R", "L", "FR", "FL", "BR", "BL"];
+    var options = game.options;
     var locate = {
         condition: function (grid) {
             return (
@@ -16,7 +17,7 @@ function addRelatiRule(game) {
     var relati = {
         condition: function (grid) {
             if (!grid.is("space-real")) return false;
-            return getRelatiList(grid, game.options).length > 0;
+            return getRelatiList(grid, options).length > 0;
         },
         configure: function (grid) {
             grid.symbol = game.symbol[game.turn % game.players];
@@ -25,13 +26,13 @@ function addRelatiRule(game) {
         }
     };
     var getRelatiList = (function () {
-        var normalSource = dirO; //一般連結方位
-        var remoteSource = normalSource.map(dir => dir + dir); //遠程連結方位
-        var remoteSpaces = normalSource.map(dir => dir); //遠程連結路徑
-        var remoteStableSource = [ //遠程穩定連結方位
+        var normalSource = dirO;
+        var remoteSource = normalSource.map(dir => dir + dir);
+        var remoteSpaces = normalSource.map(dir => dir);
+        var remoteStableSource = [
             "FFR", "FFL", "BBR", "BBL", "FRR", "BRR", "FLL", "BLL"
         ];
-        var remoteStableSpaces = [ //遠程穩定連結路徑
+        var remoteStableSpaces = [
             [["FF", "F"], ["F", "FR"], ["R", "FR"]],
             [["FF", "F"], ["F", "FL"], ["L", "FL"]],
             [["BB", "B"], ["B", "BR"], ["R", "BR"]],
@@ -43,7 +44,7 @@ function addRelatiRule(game) {
         ];
 
         return function getRelatiList(grid, options) {
-            var relatiList = []; //連結清單
+            var relatiList = [];
             var getGrid = dir => grid.getGridFromDir(dir);
             var gridSym = grid.symbol !== "" ? grid.symbol : undefined;
             var normalSourceGrid = normalSource.map(getGrid);
@@ -69,7 +70,7 @@ function addRelatiRule(game) {
                 var spacesGrid = remoteSpacesGrid[i];
 
                 if (
-                    options.relati.remote.normal &&
+                    options.relati.remote &&
                     sourceGrid &&
                     sourceGrid.is("owner valid", gridSym)
                 ) {
@@ -82,7 +83,7 @@ function addRelatiRule(game) {
                 var allSpacesGrids = remoteStableSpacesGrid[i];
 
                 if (
-                    options.relati.remote.stable &&
+                    options.relati.remoteStable &&
                     sourceGrid &&
                     sourceGrid.is("owner valid", gridSym)
                 ) {
@@ -104,7 +105,7 @@ function addRelatiRule(game) {
         };
     })();
     var relatiForbid = function () {
-        if (!game.options.forbid) return;
+        if (!options.relati.forbid) return;
         var sourceGrid = [];
         var related = [];
 
@@ -117,7 +118,7 @@ function addRelatiRule(game) {
         );
 
         function relatiTree(source) {
-            var relatiList = getRelatiList(source, game.options);
+            var relatiList = getRelatiList(source, options);
 
             for (var i = 0; i < relatiList.length; i++) {
                 var relatiGrid = relatiList[i];

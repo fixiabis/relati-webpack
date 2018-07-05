@@ -12,6 +12,7 @@
     <script src="js/EscapeRule.js"></script>
     <script src="js/BattleRule.js"></script>
     <script src="js/RelatiSkin.js"></script>
+    <script src="js/RegionRule.js"></script>
     <style>
         body {
             width: 100vw;
@@ -32,29 +33,33 @@
             {
                 relati: {
                     normal: true,
-                    remote: {
-                        normal: true,
-                        stable: true
-                    }
+                    remote: true,
+                    remoteStable: true,
+                    forbid: true
                 },
-                escape: "source",
-                attack: {
-                    normal: true,
-                    pincer: "O",
-                    bomber: true
-                },
+                escape: true,
+                attack: true,
                 defend: true,
-                region: "first",
-                forbid: true
+                bomber: true,
+                region: {
+                    rule: "first",
+                    type: "valid|forbid",
+                    block: false
+                },
+                pincer: {
+                    dir: "O",
+                    type: "valid|forbid"
+                }
             }
         );
         addSkin(game.board);
+        addBomberRule(game);
+        addPincerRule(game);
         addRelatiRule(game);
         addEscapeRule(game);
-        addBattleRule(game);
-        addPincerRule(game);
+        addAttackRule(game);
         addDefendRule(game);
-        addBomberRule(game);
+        addRegionRule(game);
     </script>
 </body>
 
