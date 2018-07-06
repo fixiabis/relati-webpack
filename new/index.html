@@ -15,51 +15,217 @@
     <script src="js/RegionRule.js"></script>
     <style>
         body {
+            background-color: #eee;
             width: 100vw;
             height: 100vh;
             margin: 0px;
-            overflow: hidden;
+            overflow-x: hidden;
             display: flex;
-            align-items: center;
-            justify-content: center;
+            flex-direction: column;
+        }
+
+        header {
+            color: #eee;
+            background-color: rgb(15, 85, 102);
+            font-size: 35px;
+            line-height: 45px;
+            height: 60px;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        main {
+            padding: 10px;
+        }
+
+        section {
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            font-size: 25px;
+            margin: 5px;
+        }
+
+        h2 {
+            font-size: 20px;
+            margin: 2.5px;
+        }
+
+        li {
+            list-style: none;
         }
     </style>
 </head>
 
 <body>
+    <header>Relati</header>
+    <main>
+        <section id="game-player">
+            <h1>遊戲協議</h1>
+            <h2>遊戲人數</h2>
+            <input type="number" id="players" value="2" min="2" max="6">
+            <h2>連結規範</h2>
+            <ul>
+                <li>
+                    <input type="checkbox" id="relati-normal" checked>
+                    <label for="relati-normal">一般連結</label>
+                </li>
+                <li>
+                    <input type="checkbox" id="relati-remote" checked>
+                    <label for="relati-remote">遠程連結</label>
+                </li>
+                <li>
+                    <input type="checkbox" id="relati-remote-stable" checked>
+                    <label for="relati-remote-stable">遠程穩定連結</label>
+                </li>
+                <li>
+                    <input type="checkbox" id="relati-forbid" checked>
+                    <label for="relati-forbid">連結阻斷機能</label>
+                </li>
+            </ul>
+            <h2>逃脫規範</h2>
+            <ul>
+                <li>
+                    <input type="radio" name="escape" id="escape-source" value="source">
+                    <label for="escape-source">逃脫來源僅限定我方來源符號</label>
+                </li>
+                <li>
+                    <input type="radio" name="escape" id="escape-valid" value="valid" checked>
+                    <label for="escape-valid">逃脫來源可為我方任何有效符號</label>
+                </li>
+                <li>
+                    <input type="radio" name="escape" id="escape-owner" value="valid|forbid">
+                    <label for="escape-owner">逃脫來源可為我方任何非死亡符號</label>
+                </li>
+            </ul>
+            <h2>對戰規範</h2>
+            <ul>
+                <li>
+                    <input type="checkbox" id="attack" checked>
+                    <label for="attack">攻擊</label>
+                </li>
+                <li>
+                    <input type="checkbox" id="defend" checked>
+                    <label for="defend">防禦</label>
+                </li>
+                <li>
+                    <input type="checkbox" id="bomber" checked>
+                    <label for="bomber">轟炸</label>
+                </li>
+            </ul>
+            <h2>額外機能</h2>
+            <ul>
+                <li>區域
+                    <ul>重疊區域
+                        <li>
+                            <input type="radio" name="region-rule" id="region-first" value="first" checked>
+                            <label for="region-first">採優先制，先佔有者擁有</label>
+                        </li>
+                        <li>
+                            <input type="radio" name="region-rule" id="region-final" value="final">
+                            <label for="region-final">採佔有制，後佔有者擁有</label>
+                        </li>
+                        <li>
+                            <input type="radio" name="region-rule" id="region-share" value="share">
+                            <label for="region-share">採共有制，所有佔有者皆擁有</label>
+                        </li>
+                        <li>
+                            <input type="radio" name="region-rule" id="region-split" value="split">
+                            <label for="region-split">採分隔制，所有佔有者皆不擁有</label>
+                        </li>
+                        區域四端
+                        <li>
+                            <input type="radio" name="region-type" id="region-owner" value="valid|forbid|shield" checked>
+                            <label for="region-owner">區域四端為我方任何非死亡符號</label>
+                        </li>
+                        <li>
+                            <input type="radio" name="region-type" id="region-valid" value="valid">
+                            <label for="region-valid">區域四端為我方任何有效符號</label>
+                        </li>
+                        <li>
+                            <input type="checkbox" id="region-block">
+                            <label for="region-block">區域四端內對方無法標記符號</label>
+                        </li>
+                    </ul>
+                </li>
+                <li>夾擊
+                    <ul>符號
+                        <li>
+                            <input type="radio" name="pincer-type" id="pincer-owner" value="valid|forbid" checked>
+                            <label for="pincer-owner">夾擊來源為對方任何非死亡符號</label>
+                        </li>
+                        <li>
+                            <input type="radio" name="pincer-type" id="pincer-valid" value="valid">
+                            <label for="pincer-valid">夾擊來源為對方任何有效符號</label>
+                        </li>
+                    </ul>
+                    <ul>方向
+                        <li>
+                            <input type="radio" name="pincer-dir" id="pincer-dirT" value="T">
+                            <label for="pincer-dirT">夾擊來源為正四方</label>
+                        </li>
+                        <li>
+                            <input type="radio" name="pincer-dir" id="pincer-dirX" value="X">
+                            <label for="pincer-dirX">夾擊來源為斜四方</label>
+                        </li>
+                        <li>
+                            <input type="radio" name="pincer-dir" id="pincer-dirO" value="O" checked>
+                            <label for="pincer-dirO">夾擊來源為斜四方或正四方</label>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+            <input type="button" id="complete" value="協議完成">
+        </section>
+    </main>
     <script>
-        var game = new RelatiGame(
-            2, document.body,
-            {
-                relati: {
-                    normal: true,
-                    remote: true,
-                    remoteStable: true,
-                    forbid: true
-                },
-                escape: "valid",
-                attack: true,
-                defend: true,
-                bomber: true,
-                region: {
-                    rule: "first",
-                    type: "valid|forbid",
-                    block: false
-                },
-                pincer: {
-                    dir: "O",
-                    type: "valid|forbid"
+        function createGame() {
+            var options = id => document.querySelector(id);
+            var players = options("#players").value;
+            window.game = new RelatiGame(
+                players,
+                document.body,
+                {
+                    relati: {
+                        normal: options("#relati-normal").checked,
+                        remote: options("#relati-remote").checked,
+                        remoteStable: options("#relati-remote-stable").checked,
+                        forbid: options("#relati-forbid").checked
+                    },
+                    escape: options("[name=escape]:checked").value,
+                    attack: options("#attack").checked,
+                    defend: options("#defend").checked,
+                    bomber: options("#bomber").checked,
+                    region: {
+                        rule: options("[name=region-rule]:checked").value,
+                        type: options("[name=region-type]:checked").value,
+                        block: options("#region-block").checked
+                    },
+                    pincer: {
+                        dir: options("[name=pincer-dir]:checked").value,
+                        type: options("[name=pincer-type]:checked").value
+                    }
                 }
-            }
-        );
-        addSkin(game.board);
-        addAttackRule(game);
-        addBomberRule(game);
-        addPincerRule(game);
-        addRelatiRule(game);
-        addEscapeRule(game);
-        addDefendRule(game);
-        addRegionRule(game);
+            );
+            game.board.viewer.width = (2 * players + 11) * 40;
+            game.board.viewerRefresh();
+            addSkin(game.board);
+            addAttackRule(game);
+            addBomberRule(game);
+            addPincerRule(game);
+            addRelatiRule(game);
+            addEscapeRule(game);
+            addDefendRule(game);
+            addRegionRule(game);
+        }
+        document.getElementById("complete").onclick = function () {
+            createGame();
+            document.body.style.alignItems = "center";
+            document.body.style.justifyContent = "center";
+            document.querySelector("main").style.display = "none";
+            document.querySelector("header").style.display = "none";
+        };
     </script>
 </body>
 
