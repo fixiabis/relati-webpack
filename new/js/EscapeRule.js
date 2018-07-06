@@ -16,7 +16,7 @@ function addEscapeRule(game) {
                 do {
                     var escapeGrid = grid.getGridFromDir(nowDir);
                     if (!escapeGrid || escapeGrid.is("other valid")) break;
-                    if (escapeGrid.is(type)) return true;
+                    if (escapeGrid.is(type, escapeGrid.symbol)) return true;
                     nowDir += dirO[i];
                 } while (grid.getGridFromDir(nowDir));
             }

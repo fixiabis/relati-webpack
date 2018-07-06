@@ -98,20 +98,24 @@
                     <input type="radio" name="escape" id="escape-owner" value="valid|forbid">
                     <label for="escape-owner">逃脫來源可為我方任何非死亡符號</label>
                 </li>
+                <li>
+                    <input type="radio" name="escape" id="escape-false" value="false">
+                    <label for="escape-false">不使用逃脫</label>
+                </li>
             </ul>
             <h2>對戰規範</h2>
             <ul>
                 <li>
                     <input type="checkbox" id="attack" checked>
-                    <label for="attack">攻擊</label>
+                    <label for="attack">使用攻擊</label>
                 </li>
                 <li>
                     <input type="checkbox" id="defend" checked>
-                    <label for="defend">防禦</label>
+                    <label for="defend">使用防禦</label>
                 </li>
                 <li>
                     <input type="checkbox" id="bomber" checked>
-                    <label for="bomber">轟炸</label>
+                    <label for="bomber">使用轟炸</label>
                 </li>
             </ul>
             <h2>額外機能</h2>
@@ -134,6 +138,10 @@
                             <input type="radio" name="region-rule" id="region-split" value="split">
                             <label for="region-split">採分隔制，所有佔有者皆不擁有</label>
                         </li>
+                        <li>
+                            <input type="radio" name="region-rule" id="region-false" value="">
+                            <label for="region-false">不使用區域</label>
+                        </li>
                         區域四端
                         <li>
                             <input type="radio" name="region-type" id="region-owner" value="valid|forbid|shield" checked>
@@ -142,6 +150,10 @@
                         <li>
                             <input type="radio" name="region-type" id="region-valid" value="valid">
                             <label for="region-valid">區域四端為我方任何有效符號</label>
+                        </li>
+                        <li>
+                            <input type="radio" name="region-type" id="region-space" value="">
+                            <label for="region-space">不使用區域</label>
                         </li>
                         <li>
                             <input type="checkbox" id="region-block">
@@ -159,6 +171,10 @@
                             <input type="radio" name="pincer-type" id="pincer-valid" value="valid">
                             <label for="pincer-valid">夾擊來源為對方任何有效符號</label>
                         </li>
+                        <li>
+                            <input type="radio" name="pincer-type" id="pincer-false" value="false">
+                            <label for="pincer-false">不使用夾擊</label>
+                        </li>
                     </ul>
                     <ul>方向
                         <li>
@@ -172,6 +188,10 @@
                         <li>
                             <input type="radio" name="pincer-dir" id="pincer-dirO" value="O" checked>
                             <label for="pincer-dirO">夾擊來源為斜四方或正四方</label>
+                        </li>
+                        <li>
+                            <input type="radio" name="pincer-dir" id="pincer-dirN" value="">
+                            <label for="pincer-dirN">不使用夾擊</label>
                         </li>
                     </ul>
                 </li>
@@ -220,11 +240,12 @@
             addRegionRule(game);
         }
         document.getElementById("complete").onclick = function () {
-            createGame();
             document.body.style.alignItems = "center";
             document.body.style.justifyContent = "center";
             document.querySelector("main").style.display = "none";
             document.querySelector("header").style.display = "none";
+            createGame();
+            game.board.viewerRefresh();
         };
     </script>
 </body>

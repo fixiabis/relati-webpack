@@ -3,7 +3,7 @@ var regionOwner = function (grid) {
     var rule = game.options.region.rule;
     var type = game.options.region.type;
     var owner = [];
-    if (!rule) return;
+    if (!rule || !type) return;
 
     for (var i = 0; i < regions.length; i++) {
         var region = regions[i];

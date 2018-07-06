@@ -98,7 +98,7 @@ function addBomberRule(game) {
 function addPincerRule(game) {
     var options = game.options;
     var attackPincer = function () {
-        if (!options.pincer.type) return;
+        if (!options.pincer.type || !options.pincer.dir) return;
 
         var type = "other " + options.pincer.type.replace(/\|/g, "|other ");
 

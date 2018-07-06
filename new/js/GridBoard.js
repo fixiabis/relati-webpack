@@ -112,7 +112,6 @@ class GridBoard {
     viewerRefresh() {
         var { painter, viewer } = this;
         var gridSize = Math.floor((viewer.width - this.width - 1) / this.width);
-
         viewer.width = gridSize * this.width + (this.width + 1);
         viewer.height = gridSize * this.height + (this.height + 1);
         painter.fillStyle = "#fff";
