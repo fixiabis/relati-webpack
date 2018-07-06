@@ -1,14 +1,8 @@
 function addEscapeRule(game) {
     var dirO = ["F", "B", "R", "L", "FR", "FL", "BR", "BL"];
-    var options = game.options;
     var escape = {
         condition: function (grid) {
-            if (
-                !options.escape ||
-                !grid.is("space-real")
-            ) return false;
-
-            var type = "owner " + options.escape.replace(/\|/, "|owner ");
+            if (!grid.is("space-real")) return false;
 
             for (var i = 0; i < dirO.length; i++) {
                 var nowDir = dirO[i];
@@ -16,7 +10,7 @@ function addEscapeRule(game) {
                 do {
                     var escapeGrid = grid.getGridFromDir(nowDir);
                     if (!escapeGrid || escapeGrid.is("other valid")) break;
-                    if (escapeGrid.is(type, escapeGrid.symbol)) return true;
+                    if (escapeGrid.is("owner valid", escapeGrid.symbol)) return true;
                     nowDir += dirO[i];
                 } while (grid.getGridFromDir(nowDir));
             }

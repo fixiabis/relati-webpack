@@ -1,6 +1,5 @@
 function addRelatiRule(game) {
     var dirO = ["F", "B", "R", "L", "FR", "FL", "BR", "BL"];
-    var options = game.options;
     var locate = {
         condition: function (grid) {
             return (
@@ -17,7 +16,7 @@ function addRelatiRule(game) {
     var relati = {
         condition: function (grid) {
             if (!grid.is("space-real")) return false;
-            return getRelatiList(grid, options).length > 0;
+            return getRelatiList(grid).length > 0;
         },
         configure: function (grid) {
             grid.symbol = game.symbol[game.turn % game.players];
@@ -43,7 +42,7 @@ function addRelatiRule(game) {
             [["LL", "L"], ["B", "BL"], ["L", "BL"]]
         ];
 
-        return function getRelatiList(grid, options) {
+        return function getRelatiList(grid) {
             var relatiList = [];
             var getGrid = dir => grid.getGridFromDir(dir);
             var gridSym = grid.symbol !== "" ? grid.symbol : undefined;
@@ -59,7 +58,6 @@ function addRelatiRule(game) {
                 var sourceGrid = normalSourceGrid[i];
 
                 if (
-                    options.relati.normal &&
                     sourceGrid &&
                     sourceGrid.is("owner valid", gridSym)
                 ) {
@@ -70,7 +68,6 @@ function addRelatiRule(game) {
                 var spacesGrid = remoteSpacesGrid[i];
 
                 if (
-                    options.relati.remote &&
                     sourceGrid &&
                     sourceGrid.is("owner valid", gridSym)
                 ) {
@@ -83,7 +80,6 @@ function addRelatiRule(game) {
                 var allSpacesGrids = remoteStableSpacesGrid[i];
 
                 if (
-                    options.relati.remoteStable &&
                     sourceGrid &&
                     sourceGrid.is("owner valid", gridSym)
                 ) {
@@ -105,7 +101,6 @@ function addRelatiRule(game) {
         };
     })();
     var relatiForbid = function () {
-        if (!options.relati.forbid) return;
         var sourceGrid = [];
         var related = [];
 
@@ -118,7 +113,7 @@ function addRelatiRule(game) {
         );
 
         function relatiTree(source) {
-            var relatiList = getRelatiList(source, options);
+            var relatiList = getRelatiList(source);
 
             for (var i = 0; i < relatiList.length; i++) {
                 var relatiGrid = relatiList[i];

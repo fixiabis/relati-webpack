@@ -1,9 +1,7 @@
 var regions = [];
 var regionOwner = function (grid) {
-    var rule = game.options.region.rule;
-    var type = game.options.region.type;
+    var rule = "first";
     var owner = [];
-    if (!rule || !type) return;
 
     for (var i = 0; i < regions.length; i++) {
         var region = regions[i];
@@ -13,10 +11,10 @@ var regionOwner = function (grid) {
             grid.y >= region.begin.y &&
             grid.y <= region.final.y
         ) && (
-                game.board.grids[region.begin.x][region.begin.y].is(type) &&
-                game.board.grids[region.begin.x][region.final.y].is(type) &&
-                game.board.grids[region.final.x][region.begin.y].is(type) &&
-                game.board.grids[region.final.x][region.final.y].is(type)
+                game.board.grids[region.begin.x][region.begin.y].is("valid|sheild|forbid") &&
+                game.board.grids[region.begin.x][region.final.y].is("valid|sheild|forbid") &&
+                game.board.grids[region.final.x][region.begin.y].is("valid|sheild|forbid") &&
+                game.board.grids[region.final.x][region.final.y].is("valid|sheild|forbid")
             );
 
         if (inRegion) {
@@ -32,18 +30,15 @@ var regionOwner = function (grid) {
 
 function addRegionRule(game) {
     var regionExist = function (grid) {
-        if (!game.options.region) return;
-        var type = "owner " + game.options.region.type.replace(/\|/, "|owner ");
-
         for (var x = 0; x < game.board.width; x++) {
             if (grid.x === x) continue;
 
-            if (game.board.grids[x][grid.y].is(type, grid.symbol)) {
+            if (game.board.grids[x][grid.y].is("owner valid|owner forbid|owner shield", grid.symbol)) {
                 for (var y = 0; y < game.board.height; y++) {
                     if (grid.y === y) continue;
 
-                    if (game.board.grids[grid.x][y].is(type, grid.symbol)) {
-                        if (game.board.grids[x][y].is(type, grid.symbol)) {
+                    if (game.board.grids[grid.x][y].is("owner valid|owner forbid|owner shield", grid.symbol)) {
+                        if (game.board.grids[x][y].is("owner valid|owner forbid|owner shield", grid.symbol)) {
                             regions.push({
                                 begin: {
                                     x: Math.min(x, grid.x),
@@ -63,7 +58,7 @@ function addRegionRule(game) {
     };
     var regionBlock = {
         condition: function (grid) {
-            if (!game.options.region.block) return false;
+            return false;
             var regionOwners = regionOwner(grid);
             var sym = game.symbol[game.turn % game.players];
 
