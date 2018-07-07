@@ -55,7 +55,7 @@ function addRelatiRule(game) {
         ]
     };
 
-    var getRelatiList = function (grid) {
+    function getRelatiList(grid) {
         var relatiList = [];
         var getGrid = dir => grid.getGridFromDir(dir);
         var normalSourceGrid = source.normal.map(getGrid);
@@ -82,7 +82,7 @@ function addRelatiRule(game) {
             var sourceGrid = remoteSourceGrid[i];
             var spacesGrid = remoteSpacesGrid[i];
             var isRemoteRelati = (
-                sourceGridIsOwnerValid() && 
+                sourceGridIsOwnerValid() &&
                 spacesGrid.is(inSpaceRoute, gridSym)
             );
 
@@ -110,9 +110,9 @@ function addRelatiRule(game) {
         }
 
         return relatiList;
-    };
+    }
 
-    var relatiForbid = function () {
+    function relatiForbid() {
         var sourceGrid = [];
         var related = [];
 
@@ -141,9 +141,7 @@ function addRelatiRule(game) {
                 grid.status = "forbid";
             }
         });
-    };
-
-    window.relatiForbid = relatiForbid;
+    }
 
     game.actions.push(locate);
     game.actions.push(relati);

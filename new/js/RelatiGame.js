@@ -92,7 +92,7 @@ const RelatiGame = (function () {
             this.rules = [];
             this.board.viewerIn(container);
 
-            function nextPlayerExist() {
+            var nextPlayerExist = function nextPlayerExist() {
                 var { board, actions } = this;
 
                 for (var i = 0; i < actions.length; i++) {
@@ -107,7 +107,7 @@ const RelatiGame = (function () {
                 }
 
                 return false;
-            }
+            }.bind(this);
 
             this.board.ongridselect = function (grid) {
                 var { board, actions } = this;
@@ -121,11 +121,11 @@ const RelatiGame = (function () {
                         board.history.push(grid.crd);
                         board.viewerRefresh();
 
-                        var skip = 0;
+                        var skip = 1;
 
-                        while (!nextPlayerExist.bind(this)()) {
-                            this.turn++;
+                        while (!nextPlayerExist()) {
                             skip++;
+                            this.turn++;
 
                             if (skip === this.players) break;
                         }

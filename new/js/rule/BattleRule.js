@@ -101,7 +101,7 @@ function addPincerRule(game) {
     var pincerObject = "owner valid|owner forbid";
     var pincerDir = ["T", "X"];
 
-    var pincer = function () {
+    function pincer() {
         for (var x = 1; x < board.width - 1; x++) {
             for (var y = 1; y < board.height - 1; y++) {
                 var grid = board.grids[x][y];
@@ -123,7 +123,7 @@ function addPincerRule(game) {
                 }
             }
         }
-    };
+    }
 
     game.rules.push(pincer);
 }

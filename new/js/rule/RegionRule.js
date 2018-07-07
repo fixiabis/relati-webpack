@@ -5,7 +5,7 @@ function addRegionRule(game) {
     var regionRule = "first"
     var isValidSource = (grid, sym) => grid.is(validSource, sym);
 
-    var regionExist = function (grid) {
+    function regionExist(grid) {
         var gridSym = grid.symbol;
 
         for (var x = 0; x < board.width; x++) {
@@ -33,9 +33,9 @@ function addRegionRule(game) {
                 }
             }
         }
-    };
+    }
 
-    var regionOwner = function (grid) {
+    function regionOwner(grid) {
         var gridSym = grid.symbol;
         var owner = [];
 
@@ -63,7 +63,7 @@ function addRegionRule(game) {
         if (regionRule === "final") return [owner[owner.length - 1]];
         if (regionRule === "share") return owner;
         if (regionRule === "split") return owner.length > 1 ? [] : owner;
-    };
+    }
 
     var regionBlock = {
         condition: function (grid) {
