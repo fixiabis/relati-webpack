@@ -74,12 +74,11 @@ var RelatiGame = (function () {
     }
 
     return class RelatiGame {
-        constructor(players, container, options) {
+        constructor(players, container) {
             this.turn = 0;
             this.symbol = "OXDURA";
             this.board = createRelatiBoard(players, container);
             this.players = players;
-            this.options = options;
             this.actions = [];
             this.rules = [];
 
@@ -115,15 +114,19 @@ var RelatiGame = (function () {
                         this.board.history.push(grid.crd);
                         this.board.viewerRefresh();
 
+                        var skip = 0;
+
                         while (!nextPlayerExist.bind(this)()) {
                             this.turn++;
-                        }
+                            skip++;
 
-                        return true;
+                            if (skip === this.players) {
+                                console.log("平手");
+                                break;
+                            }
+                        }
                     }
                 }
-
-                return false;
             }.bind(this);
         }
     };

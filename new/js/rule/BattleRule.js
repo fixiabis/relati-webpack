@@ -1,22 +1,29 @@
 function addAttackRule(game) {
+    var board = game.board;
     var dirO = ["F", "B", "R", "L", "FR", "FL", "BR", "BL"];
+    var attackTarget = "other valid|other forbid";
+    var validMedium = "owner valid";
+    var validBullet = "owner normal";
+    var inSpaceRoute = "space|owner";
+
     var select = {
         condition: function () {
-            return game.board.query("select").length > 0;
+            return board.query("select").length > 0;
         },
         configure: function (grid) {
             grid.status = "broken";
-            game.board.query("select").forEach(
+            board.query("select").forEach(
                 grid => grid.status = "normal"
             );
             game.turn++;
         }
     };
+
     var attack = {
         condition: function (grid) {
             if (
-                grid.is("owner|other shield|space") ||
-                regionOwner(grid).indexOf(grid.symbol) > -1
+                !grid.is(attackTarget) ||
+                game.regionOwner(grid).indexOf(grid.symbol) > -1
             ) return false;
 
             var selected = false;
@@ -26,12 +33,12 @@ function addAttackRule(game) {
 
                 do {
                     var attackGrid = grid.getGridFromDir(nowDir);
-                    if (!attackGrid || attackGrid.is("other valid")) break;
+                    if (!attackGrid || !attackGrid.is(inSpaceRoute)) break;
 
-                    if (attackGrid.is("owner valid")) {
+                    if (attackGrid.is(validMedium)) {
                         var consumGrid = attackGrid.getGridFromDir(dirO[i]);
 
-                        if (consumGrid && consumGrid.is("owner normal")) {
+                        if (consumGrid && consumGrid.is(validBullet)) {
                             consumGrid.status = "select";
                             selected = true;
                             break;
@@ -48,6 +55,7 @@ function addAttackRule(game) {
             grid.status = "broken";
         }
     };
+
     game.actions.unshift(select);
     game.actions.push(attack);
 }
@@ -62,58 +70,59 @@ function addDefendRule(game) {
             game.turn++;
         }
     };
+
     game.actions.push(defend);
 }
 
 function addBomberRule(game) {
+    var board = game.board;
+    var bomberSource = "owner shield";
+    var bomberTarget = "owner|other";
+
     var bomber = {
         condition: function (grid) {
-            return grid.is("owner shield");
+            return grid.is(bomberSource);
         },
         configure: function (grid) {
             grid.status = "broken";
-            game.board.query(
-                "owner|other",
-                grid.getGridsFromDir("O")
-            ).forEach(
+            board.query(bomberTarget, grid.getGridsFromDir("O")).forEach(
                 grid => grid.status = "broken"
             );
             game.turn++;
         }
     };
+
     game.actions.push(bomber);
 }
 
 function addPincerRule(game) {
-    var attackPincer = function () {
-        for (var x = 1; x < game.board.width - 1; x++) {
-            for (var y = 1; y < game.board.height - 1; y++) {
-                var grid = game.board.grids[x][y];
-                var broken = true;
+    var board = game.board;
+    var pincerSource = "other valid|other forbid";
+    var pincerObject = "owner valid|owner forbid";
+    var pincerDir = "TX";
 
-                broken = game.board.query(
-                    "other valid|other forbid",
-                    grid.getGridsFromDir("T"),
-                    grid.symbol
-                ).length == 4;
+    var pincer = function () {
+        for (var x = 1; x < board.width - 1; x++) {
+            for (var y = 1; y < board.height - 1; y++) {
+                var grid = board.grids[x][y];
+                var gridSym = grid.symbol;
+                if (!grid.is(pincerObject, gridSym)) continue;
+                var broken = false;
 
-                if (broken) {
-                    grid.status = "broken";
-                    break;
+                for (var i = 0; i < pincerDir.length; i++) {
+                    broken = board.query(
+                        pincerSource,
+                        grid.getGridsFromDir(pincerDir[i]),
+                        gridSym
+                    ).length == 4;
                 }
 
-                broken = game.board.query(
-                    "other valid|other forbid",
-                    grid.getGridsFromDir("X"),
-                    grid.symbol
-                ).length == 4;
-
                 if (broken) {
                     grid.status = "broken";
-                    break;
                 }
             }
         }
     };
-    game.rules.push(attackPincer);
+
+    game.rules.push(pincer);
 }

@@ -74,22 +74,20 @@ class GridBoard {
     constructor(width, height) {
         this.width = width;
         this.height = height;
-        this.gridOf = {};
-        this.grids = [];
         this.viewer = document.createElement("canvas");
         this.painter = this.viewer.getContext("2d");
+        this.gridOf = {};
+        this.grids = [];
         this.gridMarks = [];
 
         this.viewer.addEventListener("click", function (event) {
             var { offsetX: x, offsetY: y } = event;
-            var gridSize = Math.floor((this.viewer.width - this.width - 1) / this.width);
+            var { viewer, width, grids, ongridselect } = this;
+            var gridSize = Math.floor((viewer.width - width - 1) / width);
 
-            if (this.ongridselect) {
-                this.ongridselect(this.grids[
-                    Math.floor(x / (gridSize + 1))
-                ][
-                    Math.floor(y / (gridSize + 1))
-                ]
+            if (ongridselect) {
+                ongridselect(
+                    grids[(x / (gridSize + 1)) | 0][(y / (gridSize + 1)) | 0]
                 );
             }
         }.bind(this));
@@ -110,17 +108,17 @@ class GridBoard {
     }
 
     viewerRefresh() {
-        var { painter, viewer } = this;
-        var gridSize = Math.floor((viewer.width - this.width - 1) / this.width);
-        viewer.width = gridSize * this.width + (this.width + 1);
-        viewer.height = gridSize * this.height + (this.height + 1);
+        var { painter, viewer, width, height, gridOf, gridMarks } = this;
+        var gridSize = Math.floor((viewer.width - width - 1) / width);
+        viewer.width = gridSize * width + (width + 1);
+        viewer.height = gridSize * height + (height + 1);
         painter.fillStyle = "#fff";
         painter.strokeStyle = "#000";
         painter.clearRect(0, 0, viewer.width, viewer.height);
         painter.lineWidth = 1;
         painter.setTransform(1, 0, 0, 1, 0.5, 0.5);
 
-        for (var x = 0; x <= this.width; x++) {
+        for (var x = 0; x <= width; x++) {
             painter.beginPath();
             painter.moveTo((gridSize + 1) * x, 0);
             painter.lineTo((gridSize + 1) * x, viewer.height);
@@ -128,7 +126,7 @@ class GridBoard {
             painter.closePath();
         }
 
-        for (var y = 0; y <= this.height; y++) {
+        for (var y = 0; y <= height; y++) {
             painter.beginPath();
             painter.moveTo(0, (gridSize + 1) * y);
             painter.lineTo(viewer.width, (gridSize + 1) * y);
@@ -137,15 +135,15 @@ class GridBoard {
         }
 
 
-        for (var crd in this.gridOf) {
-            var grid = this.gridOf[crd];
+        for (var crd in gridOf) {
+            var grid = gridOf[crd];
 
-            for (var i = 0; i < this.gridMarks.length; i++) {
-                var { condition, configure } = this.gridMarks[i];
+            for (var i = 0; i < gridMarks.length; i++) {
+                var { condition, configure } = gridMarks[i];
 
                 if (condition(grid)) {
                     configure(
-                        this.painter,
+                        painter,
                         grid.x * (gridSize + 1) + 0.5,
                         grid.y * (gridSize + 1) + 0.5,
                         gridSize
@@ -162,8 +160,12 @@ class GridBoard {
     }
 
     addGridMark(condition, configure) {
-        this.gridMarks.push({
-            condition, configure
-        });
+        this.gridMarks.push({ condition, configure });
+    }
+
+    selectGrid(crd) {
+        if (this.ongridselect) {
+            this.ongridselect(this.gridOf[crd]);
+        }
     }
 }
