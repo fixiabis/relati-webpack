@@ -1,4 +1,4 @@
-function addSkin(board) {
+function addSkinOn(board) {
     board.addGridMark(
         grid => grid.status === "normal",
         painter => painter.strokeStyle = "black"

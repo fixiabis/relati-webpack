@@ -1,38 +1,4 @@
-var RelatiGame = (function () {
-    function createBoard(players, container) {
-        var size = players * 2 + 11;
-        var board = new GridBoard(size, size);
-        container.appendChild(board.viewer);
-
-        function viewerResize() {
-            var viewerSize = Math.min(
-                container.clientWidth,
-                container.clientHeight
-            );
-            board.viewerResize(viewerSize, viewerSize);
-        }
-
-        window.addEventListener("load", viewerResize);
-        window.addEventListener("resize", viewerResize);
-
-        return board;
-    }
-
-    function createRelatiBoard(players, container) {
-        var board = createBoard(players, container);
-        board.query = (function () {
-            var allGrids = [];
-            board.grids.forEach(
-                gridCol => allGrids = allGrids.concat(gridCol)
-            );
-            return (type, grids, sym) => (grids || allGrids).filter(
-                grid => grid && grid.is(type, sym)
-            );
-        })();
-        board.history = [];
-        return board;
-    }
-
+const RelatiGame = (function () {
     function gridIs(grid, type, sym) {
         sym = sym || this.symbol[this.turn % this.players];
         var typeIs = type => gridIs(grid, type, sym);
@@ -45,54 +11,93 @@ var RelatiGame = (function () {
             case "space":
                 return typeIs("space-real|space-fake");
             case "valid":
-                return !typeIs("owner forbid|space");
+                return !typeIs("forbid|shield|broken");
             case "owner":
                 return grid.symbol === sym;
             case "other":
                 return !typeIs("owner|space-real");
-            default:
-                if (type.indexOf("|") > -1) {
-                    var types = type.split("|");
+        }
 
-                    for (let i = 0; i < types.length; i++) {
-                        if (typeIs(types[i])) return true;
-                    }
+        if (type.indexOf("|") > -1) {
+            var types = type.split("|");
 
-                    return false;
-                } else if (type.indexOf(" ") > -1) {
-                    var types = type.split(" ");
-
-                    for (let i = 0; i < types.length; i++) {
-                        if (!typeIs(types[i])) return false;
-                    }
-
+            for (let i = 0; i < types.length; i++) {
+                if (typeIs(types[i])) {
                     return true;
-                } else {
-                    return grid.status === type;
                 }
+            }
+
+            return false;
+        } else if (type.indexOf(" ") > -1) {
+            var types = type.split(" ");
+
+            for (let i = 0; i < types.length; i++) {
+                if (!typeIs(types[i])) {
+                    return false;
+                }
+            }
+
+            return true;
+        } else {
+            return grid.status === type;
         }
     }
 
-    return class RelatiGame {
+    class RelatiBoard extends GridBoard {
+        constructor(players, game) {
+            var size = players * 2 + 11;
+            super(size, size);
+            this.history = [];
+            this.query = (function () {
+                var allGrids = [];
+                this.grids.forEach(
+                    gridCol => allGrids = allGrids.concat(gridCol)
+                );
+                return (type, grids, sym) => (grids || allGrids).filter(
+                    grid => grid && grid.is(type, sym)
+                );
+            }.bind(this))();
+
+            for (var crd in this.gridOf) {
+                let grid = this.gridOf[crd];
+                grid.status = "normal";
+                grid.symbol = "";
+                grid.is = (type, sym) => gridIs.bind(game)(grid, type, sym);
+            }
+        }
+
+        viewerIn(container) {
+            container.appendChild(this.viewer);
+
+            function viewerResize() {
+                var viewerSize = Math.min(
+                    container.clientWidth,
+                    container.clientHeight
+                );
+                this.viewerResize(viewerSize, viewerSize);
+            }
+
+            window.addEventListener("load", viewerResize.bind(this));
+            window.addEventListener("resize", viewerResize.bind(this));
+        }
+    }
+
+    class RelatiGame {
         constructor(players, container) {
             this.turn = 0;
             this.symbol = "OXDURA";
-            this.board = createRelatiBoard(players, container);
+            this.board = new RelatiBoard(players, this);
             this.players = players;
             this.actions = [];
             this.rules = [];
-
-            for (var crd in this.board.gridOf) {
-                let grid = this.board.gridOf[crd];
-                grid.status = "normal";
-                grid.symbol = "";
-                grid.is = (type, sym) => gridIs.bind(this)(grid, type, sym);
-            }
+            this.board.viewerIn(container);
 
             function nextPlayerExist() {
-                for (var i = 0; i < this.actions.length; i++) {
-                    var { condition } = this.actions[i];
-                    var markableGrid = this.board.query("space-real").map(
+                var { board, actions } = this;
+
+                for (var i = 0; i < actions.length; i++) {
+                    var { condition } = actions[i];
+                    var markableGrid = board.query("space-real").map(
                         grid => condition(grid)
                     );
 
@@ -105,14 +110,16 @@ var RelatiGame = (function () {
             }
 
             this.board.ongridselect = function (grid) {
-                for (var i = 0; i < this.actions.length; i++) {
-                    var { condition, configure } = this.actions[i];
+                var { board, actions } = this;
+
+                for (var i = 0; i < actions.length; i++) {
+                    var { condition, configure } = actions[i];
 
                     if (condition(grid)) {
                         configure(grid);
                         this.rules.forEach(rule => rule(grid));
-                        this.board.history.push(grid.crd);
-                        this.board.viewerRefresh();
+                        board.history.push(grid.crd);
+                        board.viewerRefresh();
 
                         var skip = 0;
 
@@ -120,14 +127,13 @@ var RelatiGame = (function () {
                             this.turn++;
                             skip++;
 
-                            if (skip === this.players) {
-                                console.log("平手");
-                                break;
-                            }
+                            if (skip === this.players) break;
                         }
                     }
                 }
             }.bind(this);
         }
-    };
+    }
+
+    return RelatiGame;
 })();

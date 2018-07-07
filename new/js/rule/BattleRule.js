@@ -1,7 +1,7 @@
 function addAttackRule(game) {
     var board = game.board;
     var dirO = ["F", "B", "R", "L", "FR", "FL", "BR", "BL"];
-    var attackTarget = "other valid|other forbid";
+    var attackTarget = "other normal|other source|other forbid";
     var validMedium = "owner valid";
     var validBullet = "owner normal";
     var inSpaceRoute = "space|owner";
@@ -99,7 +99,7 @@ function addPincerRule(game) {
     var board = game.board;
     var pincerSource = "other valid|other forbid";
     var pincerObject = "owner valid|owner forbid";
-    var pincerDir = "TX";
+    var pincerDir = ["T", "X"];
 
     var pincer = function () {
         for (var x = 1; x < board.width - 1; x++) {
@@ -110,11 +110,12 @@ function addPincerRule(game) {
                 var broken = false;
 
                 for (var i = 0; i < pincerDir.length; i++) {
+                    var pincerSourceGrid = grid.getGridsFromDir(pincerDir[i]);
                     broken = board.query(
                         pincerSource,
-                        grid.getGridsFromDir(pincerDir[i]),
+                        pincerSourceGrid,
                         gridSym
-                    ).length == 4;
+                    ).length === pincerSourceGrid.length;
                 }
 
                 if (broken) {

@@ -62,7 +62,7 @@ function addRegionRule(game) {
         if (regionRule === "first") return [owner[0]];
         if (regionRule === "final") return [owner[owner.length - 1]];
         if (regionRule === "share") return owner;
-        if (regionRule === "split") return [];
+        if (regionRule === "split") return owner.length > 1 ? [] : owner;
     };
 
     var regionBlock = {
