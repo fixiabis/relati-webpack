@@ -120,7 +120,6 @@ const RelatiGame = (function () {
                         this.rules.forEach(rule => rule(grid));
                         board.history.push(grid.crd);
                         board.viewerRefresh();
-
                         var skip = 0;
 
                         while (!nextPlayerExist()) {
@@ -129,6 +128,8 @@ const RelatiGame = (function () {
 
                             if (skip === this.players) break;
                         }
+
+                        break;
                     }
                 }
             }.bind(this);
