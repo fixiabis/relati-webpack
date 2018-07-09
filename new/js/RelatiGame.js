@@ -121,7 +121,7 @@ const RelatiGame = (function () {
                         board.history.push(grid.crd);
                         board.viewerRefresh();
 
-                        var skip = 1;
+                        var skip = 0;
 
                         while (!nextPlayerExist()) {
                             skip++;

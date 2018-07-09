@@ -41,7 +41,7 @@ const GridBoard = (function () {
             }
 
             if (dirString[0] === "~") {
-                var dir = dirString.substr(1, dirString.length - 1);;
+                var dir = dirString.substr(1, dirString.length - 1);
                 var nowDir = dir;
 
                 do {
@@ -81,6 +81,18 @@ const GridBoard = (function () {
             this.grids = [];
             this.gridMarks = [];
 
+            for (var x = 0; x < width; x++) {
+                var gridCol = [];
+                this.grids.push(gridCol);
+
+                for (var y = 0; y < height; y++) {
+                    var crd = String.fromCharCode(x + 65) + (y + 1);
+                    var grid = new Grid(crd, x, y, this);
+                    this.gridOf[crd] = grid;
+                    gridCol.push(grid);
+                }
+            }
+
             this.viewer.addEventListener("click", function (event) {
                 var { offsetX: x, offsetY: y } = event;
                 var { viewer, width, grids, ongridselect } = this;
@@ -92,20 +104,6 @@ const GridBoard = (function () {
                     );
                 }
             }.bind(this));
-
-            for (var x = 0; x < width; x++) {
-                var gridCol = [];
-
-                this.grids.push(gridCol);
-
-                for (var y = 0; y < height; y++) {
-                    var crd = String.fromCharCode(x + 65) + (y + 1);
-                    var grid = new Grid(crd, x, y, this);
-
-                    this.gridOf[crd] = grid;
-                    gridCol.push(grid);
-                }
-            }
         }
 
         viewerRefresh() {
@@ -134,7 +132,6 @@ const GridBoard = (function () {
                 painter.stroke();
                 painter.closePath();
             }
-
 
             for (var crd in gridOf) {
                 var grid = gridOf[crd];

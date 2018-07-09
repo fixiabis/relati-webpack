@@ -112,7 +112,7 @@
             var board = new GridBoard(6, 1);
             container.appendChild(board.viewer);
             board.viewer.width = 250;
-            addSkin(board);
+            addSkinOn(board);
             var symbol = "OXDUAH";
             board.gridOf.A1.getGridsFromDir("C,~R").forEach(
                 (grid, i) => grid.symbol = symbol[i]
@@ -125,7 +125,7 @@
             var board = new GridBoard(3, 1);
             container.appendChild(board.viewer);
             board.viewer.width = 120;
-            addSkin(board);
+            addSkinOn(board);
             var status = ["normal", "source", "forbid"];
             board.gridOf.A1.getGridsFromDir("C,~R").forEach(
                 (grid, i) => {
@@ -142,7 +142,7 @@
             container.appendChild(board.viewer);
             board.viewer.width = 200;
             board.viewer.height = 200;
-            addSkin(board);
+            addSkinOn(board);
 
             return board;
         }

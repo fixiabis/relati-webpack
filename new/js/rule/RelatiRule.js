@@ -75,9 +75,7 @@ function addRelatiRule(game) {
             );
             var isNormalRelati = sourceGridIsOwnerValid();
 
-            if (isNormalRelati) {
-                relatiList.push(sourceGrid);
-            }
+            if (isNormalRelati) relatiList.push(sourceGrid);
 
             var sourceGrid = remoteSourceGrid[i];
             var spacesGrid = remoteSpacesGrid[i];
@@ -86,9 +84,7 @@ function addRelatiRule(game) {
                 spacesGrid.is(inSpaceRoute, gridSym)
             );
 
-            if (isRemoteRelati) {
-                relatiList.push(sourceGrid);
-            }
+            if (isRemoteRelati) relatiList.push(sourceGrid);
 
             var sourceGrid = remoteStableSourceGrid[i];
             var allSpacesGrids = remoteStableSpacesGrid[i];
@@ -137,9 +133,10 @@ function addRelatiRule(game) {
         });
 
         board.query("normal").forEach(function (grid) {
-            if (related.indexOf(grid) < 0 && !grid.is("space-real")) {
-                grid.status = "forbid";
-            }
+            if (
+                related.indexOf(grid) < 0 &&
+                !grid.is("space-real")
+            ) grid.status = "forbid";
         });
     }
 

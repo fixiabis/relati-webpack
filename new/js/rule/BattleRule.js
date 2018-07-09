@@ -63,6 +63,7 @@ function addAttackRule(game) {
 function addDefendRule(game) {
     var defend = {
         condition: function (grid) {
+            console.log(grid.crd, grid.is("owner normal"));
             return grid.is("owner normal");
         },
         configure: function (grid) {
@@ -118,9 +119,7 @@ function addPincerRule(game) {
                     ).length === pincerSourceGrid.length;
                 }
 
-                if (broken) {
-                    grid.status = "broken";
-                }
+                if (broken) grid.status = "broken";
             }
         }
     }

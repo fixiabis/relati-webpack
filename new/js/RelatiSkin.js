@@ -8,9 +8,12 @@ function addSkinOn(board) {
         painter => painter.strokeStyle = "green"
     );
     board.addGridMark(
+        grid => grid.status === "forbid",
+        painter => painter.strokeStyle = "red"
+    );
+    board.addGridMark(
         grid => grid.status === "source",
         function (painter, x, y, size) {
-            painter.strokeStyle = "black";
             painter.lineWidth = 2;
             painter.beginPath();
             painter.moveTo(x + size * 0.1, y + size * 0.1);
@@ -39,10 +42,6 @@ function addSkinOn(board) {
         }
     );
     board.addGridMark(
-        grid => grid.status === "forbid",
-        painter => painter.strokeStyle = "red"
-    );
-    board.addGridMark(
         grid => grid.status === "shield",
         function (painter, x, y, size) {
             painter.strokeStyle = "blue";
@@ -61,7 +60,8 @@ function addSkinOn(board) {
     board.addGridMark(
         function (grid) {
             if (!window.game) return false;
-            return game.board.history[board.history.length - 1] === grid.crd;
+            var board = window.game.board;
+            return board.history[board.history.length - 1] === grid.crd;
         },
         painter => painter.strokeStyle = "blue"
     );
