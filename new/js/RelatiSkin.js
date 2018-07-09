@@ -185,4 +185,8 @@ function addSkinOn(board) {
             painter.stroke();
         }
     );
+    board.addGridMark(
+        () => true,
+        painter => painter.strokeStyle = "black"
+    );
 }
