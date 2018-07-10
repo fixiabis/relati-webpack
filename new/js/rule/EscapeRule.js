@@ -1,12 +1,19 @@
 function addEscapeRule(game) {
     var board = game.board;
     var dirO = ["F", "B", "R", "L", "FR", "FL", "BR", "BL"];
+
+    var escapeAction = {
+        enable: true
+    };
     var validSource = "owner valid";
     var inSpaceRoute = "space|owner";
 
     var escape = {
         condition: function (grid) {
-            if (!grid.is("space-real")) return false;
+            if (
+                !escapeAction.enable ||
+                !grid.is("space-real")
+            ) return false;
 
             for (var i = 0; i < dirO.length; i++) {
                 var nowDir = dirO[i];

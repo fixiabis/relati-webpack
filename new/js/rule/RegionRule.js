@@ -1,11 +1,18 @@
 function addRegionRule(game) {
     var board = game.board;
     var regions = [];
+
+    var regionAction = {
+        enable: true,
+        forbid: false
+    };
     var validSource = "owner valid|owner forbid|owner shield";
     var regionRule = "first"
     var isValidSource = (grid, sym) => grid.is(validSource, sym);
 
     function regionExist(grid) {
+        if (!regionAction.enable) return false;
+
         var gridSym = grid.symbol;
 
         for (var x = 0; x < board.width; x++) {
@@ -65,9 +72,10 @@ function addRegionRule(game) {
         if (regionRule === "split") return owner.length > 1 ? [] : owner;
     }
 
-    var regionBlock = {
+    var regionForbid = {
         condition: function (grid) {
-            return false;
+            if (!regionAction.forbid) return false;
+
             var regionOwners = regionOwner(grid);
             var sym = game.symbol[game.turn % game.players];
 
@@ -87,6 +95,6 @@ function addRegionRule(game) {
 
     game.regionOwner = regionOwner;
 
-    game.actions.push(regionBlock);
+    game.actions.push(regionForbid);
     game.rules.push(regionExist);
 }

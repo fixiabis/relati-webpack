@@ -1,6 +1,13 @@
 function addRelatiRule(game) {
     var board = game.board;
     var dirO = ["F", "B", "R", "L", "FR", "FL", "BR", "BL"];
+
+    var relatiAction = {
+        normal: true,
+        remote: true,
+        remoteStable: true,
+        forbid: true
+    };
     var validSource = "owner valid";
     var inSpaceRoute = "space";
 
@@ -70,6 +77,7 @@ function addRelatiRule(game) {
         for (var i = 0; i < 8; i++) {
             var sourceGrid = normalSourceGrid[i];
             var sourceGridIsOwnerValid = () => (
+                relatiAction.normal &&
                 sourceGrid &&
                 sourceGrid.is(validSource, gridSym)
             );
@@ -80,6 +88,7 @@ function addRelatiRule(game) {
             var sourceGrid = remoteSourceGrid[i];
             var spacesGrid = remoteSpacesGrid[i];
             var isRemoteRelati = (
+                relatiAction.remote &&
                 sourceGridIsOwnerValid() &&
                 spacesGrid.is(inSpaceRoute, gridSym)
             );
@@ -89,7 +98,7 @@ function addRelatiRule(game) {
             var sourceGrid = remoteStableSourceGrid[i];
             var allSpacesGrids = remoteStableSpacesGrid[i];
 
-            if (sourceGridIsOwnerValid()) {
+            if (relatiAction.remoteStable && sourceGridIsOwnerValid()) {
                 for (var j = 0; j < allSpacesGrids.length; j++) {
                     var spacesGrids = allSpacesGrids[j];
                     var isValidSpaceRoute = (
@@ -109,9 +118,9 @@ function addRelatiRule(game) {
     }
 
     function relatiForbid() {
+        if (!relatiAction.forbid) return;
         var sourceGrid = [];
         var related = [];
-
         board.query("forbid").forEach(grid => grid.status = "normal");
         board.query("source").forEach(grid => sourceGrid.push(grid));
 
@@ -131,7 +140,6 @@ function addRelatiRule(game) {
             related.push(grid);
             relatiTree(grid);
         });
-
         board.query("normal").forEach(function (grid) {
             if (
                 related.indexOf(grid) < 0 &&
