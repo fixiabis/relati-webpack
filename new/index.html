@@ -27,17 +27,17 @@
         header {
             color: #eee;
             background-color: rgb(15, 85, 102);
-            font-size: 35px;
-            line-height: 45px;
+            font-size: 25px;
+            line-height: 20px;
             width: 100%;
-            height: 60px;
+            height: 40px;
             padding: 10px;
             box-sizing: border-box;
         }
 
         main {
             width: 100%;
-            height: calc(100% - 60px);
+            height: calc(100% - 40px);
             box-sizing: border-box;
             display: flex;
             flex-direction: column;
@@ -70,14 +70,14 @@
     <main>
     </main>
     <script>
-        window.game = new RelatiGame(2, document.querySelector("main"));
-        addSkinOn(game.board);
-        [
+        var ruleNames = [
             "Attack", "Bomber", "Pincer", "Relati",
             "Escape", "Defend", "Region"
-        ].forEach(
-            ruleName => window[`add${ruleName}Rule`](game)
-        );
+        ];
+
+        window.game = new RelatiGame(2, document.querySelector("main"));
+        addSkinOn(game.board);
+        ruleNames.forEach(ruleName => window[`add${ruleName}Rule`](game));
     </script>
 </body>
 
