@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Relati 規則</title>
+    <style>
+        body {
+            font-size: 18px;
+            padding: 10px;
+            margin: 0px;
+        }
+
+        h1 {
+            font-size: 45px;
+            margin: 10px;
+        }
+
+        h2 {
+            font-size: 30px;
+            margin: 15px;
+        }
+
+        ol {
+            padding-left: 30px;
+        }
+    </style>
+    <script src="js/GridBoard.js"></script>
+    <script src="js/RelatiSkin.js"></script>
+</head>
+
+<body>
+    <h1>Relati</h1>
+    <ol>
+        <li>玩家: 2 - 6 人</li>
+        <li>棋盤大小: 玩家 * 2 + 11 平方</li>
+    </ol>
+    <h2>基本規則</h2>
+    <ol>
+        <li>標記符號於棋盤格時，必須為空格</li>
+        <li>標記符號(依照玩家順序)，如下圖
+            <div board="normal"></div>
+        </li>
+    </ol>
+    <h2>開始遊戲</h2>
+    <ol>
+        <li>所有玩家分別標記一枚符號於棋盤格中</li>
+        <li>開始的第一枚符號狀態為來源，如下圖
+            <div board="source"></div>
+        </li>
+    </ol>
+    <h2>進行遊戲</h2>
+    <ol>
+        <li>除了第一枚符號，標記符號時需遵守
+            <a href="#relati">連結規範</a>
+            ，標記於可連結的位置</li>
+    </ol>
+    <h2>勝負判定</h2>
+    <ol>
+        <li>當玩家無法標記符號時判定為淘汰，最後一位玩家為本局遊戲的贏家</li>
+    </ol>
+    <h2 id="relati">連結規範</h2>
+    <ol>
+        <li>一般連結，如下圖，可參考紅線
+            <div board="relati-normal"></div>
+        </li>
+        <li>遠程連結，如下圖，可參考紅線，紅線經過的位置必須為空格
+            <div board="relati-remote"></div>
+        </li>
+        <li>遠程穩定連結，如下圖，可參考紅線，紅線經過的位置必須為空格
+            <div board="relati-remote-stable"></div>
+        </li>
+        <li>連結阻斷，如下圖
+            <div board="relati-forbid"></div>
+            若符號無法與來源符號直接或是間接連結時，狀態為阻斷
+            <br> 狀態為阻斷的符號，在標記符號時，不能作為連結的對象
+            <br> 若符號能與來源符號直接或是間接連結時，狀態轉為一般
+        </li>
+    </ol>
+    <script>
+        var symbols = "OXDUAH";
+
+        function createBoard(name, width, height) {
+            var board = new GridBoard(width, height);
+            var element = document.querySelector(`[board=${name}]`);
+
+            addSkinOn(board);
+            board.viewer.width = 40 * width;
+            board.viewer.style.margin = "5px";
+            element.appendChild(board.viewer);
+
+            return board;
+        }
+
+        function relatiRoute(painter, begin, ...final) {
+            painter.beginPath();
+            painter.moveTo(begin.x, begin.y);
+            for (var final of final) {
+                painter.lineTo(final.x, final.y);
+            }
+            painter.stroke();
+            painter.closePath();
+        }
+
+        (function () {
+            {
+                var board = createBoard("normal", 6, 1);
+
+                for (var i = 0; i < symbols.length; i++) {
+                    var symbol = symbols[i];
+                    board.grids[i][0].symbol = symbol;
+                    board.grids[i][0].status = "normal";
+                }
+
+                board.viewerRefresh();
+            } {
+                var board = createBoard("source", 6, 1);
+
+                for (var i = 0; i < symbols.length; i++) {
+                    var symbol = symbols[i];
+                    board.grids[i][0].symbol = symbol;
+                    board.grids[i][0].status = "source";
+                }
+
+                board.viewerRefresh();
+            } {
+                var board = createBoard("relati-normal", 5, 5);
+                board.gridOf.C3.getGridsFromDir("O,C").forEach(
+                    grid => grid.symbol = "O"
+                );
+                board.gridOf.C3.status = "source";
+                board.addGridMark(
+                    grid => grid.crd === "C3",
+                    function (painter, x, y, gridSize) {
+                        var routeLength = gridSize * 0.2;
+                        var beginX = x + routeLength;
+                        var finalX = x + gridSize - routeLength;
+                        var beginY = y + routeLength;
+                        var finalY = x + gridSize - routeLength;
+                        var centerX = x + gridSize * 0.5;
+                        var centerY = y + gridSize * 0.5;
+                        var endX = x + gridSize;
+                        var endY = y + gridSize;
+
+                        painter.strokeStyle = "red";
+                        painter.lineWidth = 2;
+
+                        relatiRoute(painter, {
+                            x: beginX,
+                            y: beginY
+                        }, {
+                            x: x - routeLength,
+                            y: y - routeLength
+                        });
+
+                        relatiRoute(painter, {
+                            x: finalX,
+                            y: finalY
+                        }, {
+                            x: endX + routeLength,
+                            y: endY + routeLength
+                        });
+
+                        relatiRoute(painter, {
+                            x: beginX,
+                            y: finalY
+                        }, {
+                            x: x - routeLength,
+                            y: endY + routeLength
+                        });
+
+                        relatiRoute(painter, {
+                            x: finalX,
+                            y: beginY
+                        }, {
+                            x: endX + routeLength,
+                            y: y - routeLength
+                        });
+
+                        relatiRoute(painter, {
+                            x: centerX,
+                            y: beginY
+                        }, {
+                            x: centerX,
+                            y: y - routeLength
+                        });
+
+                        relatiRoute(painter, {
+                            x: centerX,
+                            y: finalY
+                        }, {
+                            x: centerX,
+                            y: endY + routeLength
+                        });
+
+                        relatiRoute(painter, {
+                            x: beginX,
+                            y: centerY
+                        }, {
+                            x: x - routeLength,
+                            y: centerY
+                        });
+
+                        relatiRoute(painter, {
+                            x: finalX,
+                            y: centerY
+                        }, {
+                            x: endX + routeLength,
+                            y: centerY
+                        });
+
+                        painter.strokeStyle = "black";
+                    }
+                );
+                board.viewerRefresh();
+            } {
+                var board = createBoard("relati-remote", 5, 5);
+                board.gridOf.C3.getGridsFromDir("OO,C").forEach(
+                    grid => grid.symbol = "O"
+                );
+                board.gridOf.C3.status = "source";
+                board.addGridMark(
+                    grid => grid.crd === "C3",
+                    function (painter, x, y, gridSize) {
+                        painter.strokeStyle = "red";
+                        painter.lineWidth = 2;
+
+                        var routeLength = gridSize * 0.2;
+                        var beginX = x + routeLength;
+                        var finalX = x + gridSize - routeLength;
+                        var beginY = y + routeLength;
+                        var finalY = y + gridSize - routeLength;
+                        var centerX = x + gridSize * 0.5;
+                        var centerY = y + gridSize * 0.5;
+                        var endX = x + gridSize;
+                        var endY = y + gridSize;
+                        routeLength += gridSize;
+
+                        relatiRoute(painter, {
+                            x: beginX,
+                            y: beginY
+                        }, {
+                            x: x - routeLength,
+                            y: y - routeLength
+                        });
+
+                        relatiRoute(painter, {
+                            x: finalX,
+                            y: finalY
+                        }, {
+                            x: endX + routeLength,
+                            y: endY + routeLength
+                        });
+
+                        relatiRoute(painter, {
+                            x: beginX,
+                            y: finalY
+                        }, {
+                            x: x - routeLength,
+                            y: endY + routeLength
+                        });
+
+                        relatiRoute(painter, {
+                            x: finalX,
+                            y: beginY
+                        }, {
+                            x: endX + routeLength,
+                            y: y - routeLength
+                        });
+
+                        relatiRoute(painter, {
+                            x: centerX,
+                            y: beginY
+                        }, {
+                            x: centerX,
+                            y: y - routeLength
+                        });
+
+                        relatiRoute(painter, {
+                            x: centerX,
+                            y: finalY
+                        }, {
+                            x: centerX,
+                            y: endY + routeLength
+                        });
+
+                        relatiRoute(painter, {
+                            x: beginX,
+                            y: centerY
+                        }, {
+                            x: x - routeLength,
+                            y: centerY
+                        });
+
+                        relatiRoute(painter, {
+                            x: finalX,
+                            y: centerY
+                        }, {
+                            x: endX + routeLength,
+                            y: centerY
+                        });
+
+                        painter.strokeStyle = "black";
+                    }
+                );
+                board.viewerRefresh();
+            } {
+                var board = createBoard("relati-remote-stable", 5, 5);
+                board.gridOf.C3.getGridsFromDir("IIH,IHH,C").forEach(
+                    grid => grid.symbol = "O"
+                );
+                board.gridOf.C3.status = "source";
+                board.addGridMark(
+                    grid => grid.crd === "C3",
+                    function (painter, x, y, gridSize) {
+                        painter.strokeStyle = "red";
+                        painter.lineWidth = 2;
+
+                        var routeLength = gridSize * 0.2;
+                        var beginX = x + routeLength;
+                        var finalX = x + gridSize - routeLength;
+                        var beginY = y + routeLength;
+                        var finalY = x + gridSize - routeLength;
+                        var leftX = x + gridSize * 0.4;
+                        var rightX = x + gridSize * 0.6;
+                        var topY = y + gridSize * 0.4;
+                        var bottomY = y + gridSize * 0.6;
+                        routeLength += gridSize;
+
+                        relatiRoute(painter, {
+                            x: leftX,
+                            y: beginY
+                        }, {
+                            x: leftX,
+                            y: beginY - gridSize * 1.5
+                        }, {
+                            x: leftX - gridSize * 0.6,
+                            y: beginY - gridSize * 1.5
+                        });
+
+                        relatiRoute(painter, {
+                            x: rightX,
+                            y: beginY
+                        }, {
+                            x: rightX,
+                            y: beginY - gridSize * 1.5
+                        }, {
+                            x: rightX + gridSize * 0.6,
+                            y: beginY - gridSize * 1.5
+                        });
+
+                        relatiRoute(painter, {
+                            x: leftX,
+                            y: finalY
+                        }, {
+                            x: leftX,
+                            y: finalY + gridSize * 1.5
+                        }, {
+                            x: leftX - gridSize * 0.6,
+                            y: finalY + gridSize * 1.5
+                        });
+
+                        relatiRoute(painter, {
+                            x: rightX,
+                            y: finalY
+                        }, {
+                            x: rightX,
+                            y: finalY + gridSize * 1.5
+                        }, {
+                            x: rightX + gridSize * 0.6,
+                            y: finalY + gridSize * 1.5
+                        });
+
+                        painter.strokeStyle = "indianred";
+
+                        relatiRoute(painter, {
+                            x: beginX,
+                            y: topY
+                        }, {
+                            x: beginX - gridSize * 1.5,
+                            y: topY
+                        }, {
+                            x: beginX - gridSize * 1.5,
+                            y: topY - gridSize * 0.6
+                        });
+
+                        relatiRoute(painter, {
+                            x: beginX,
+                            y: bottomY
+                        }, {
+                            x: beginX - gridSize * 1.5,
+                            y: bottomY
+                        }, {
+                            x: beginX - gridSize * 1.5,
+                            y: bottomY + gridSize * 0.6
+                        });
+
+                        relatiRoute(painter, {
+                            x: finalX,
+                            y: topY
+                        }, {
+                            x: finalX + gridSize * 1.5,
+                            y: topY
+                        }, {
+                            x: finalX + gridSize * 1.5,
+                            y: topY - gridSize * 0.6
+                        });
+
+                        relatiRoute(painter, {
+                            x: finalX,
+                            y: bottomY
+                        }, {
+                            x: finalX + gridSize * 1.5,
+                            y: bottomY
+                        }, {
+                            x: finalX + gridSize * 1.5,
+                            y: bottomY + gridSize * 0.6
+                        });
+
+                        painter.strokeStyle = "black";
+                    }
+                );
+                board.viewerRefresh();
+            } {
+                var board = createBoard("relati-remote-stable", 5, 5);
+                board.gridOf.C3.getGridsFromDir("IIH,IHH,C").forEach(
+                    grid => grid.symbol = "O"
+                );
+                board.gridOf.C3.status = "source";
+                board.addGridMark(
+                    grid => grid.crd === "C3",
+                    function (painter, x, y, gridSize) {
+                        painter.strokeStyle = "red";
+                        painter.lineWidth = 2;
+
+                        var routeLength = gridSize * 0.2;
+                        var beginX = x + routeLength;
+                        var finalX = x + gridSize - routeLength;
+                        var beginY = y + routeLength;
+                        var finalY = x + gridSize - routeLength;
+                        var leftX = x + gridSize * 0.4;
+                        var rightX = x + gridSize * 0.6;
+                        var topY = y + gridSize * 0.4;
+                        var bottomY = y + gridSize * 0.6;
+                        routeLength += gridSize;
+
+                        relatiRoute(painter, {
+                            x: leftX,
+                            y: beginY
+                        }, {
+                            x: leftX,
+                            y: beginY - gridSize * 0.4
+                        }, {
+                            x: leftX - gridSize * 1.7,
+                            y: beginY - gridSize * 0.4
+                        });
+
+                        relatiRoute(painter, {
+                            x: rightX,
+                            y: beginY
+                        }, {
+                            x: rightX,
+                            y: beginY - gridSize * 0.4
+                        }, {
+                            x: rightX + gridSize * 1.7,
+                            y: beginY - gridSize * 0.4
+                        });
+
+                        relatiRoute(painter, {
+                            x: leftX,
+                            y: finalY
+                        }, {
+                            x: leftX,
+                            y: finalY + gridSize * 0.4
+                        }, {
+                            x: leftX - gridSize * 1.7,
+                            y: finalY + gridSize * 0.4
+                        });
+
+                        relatiRoute(painter, {
+                            x: rightX,
+                            y: finalY
+                        }, {
+                            x: rightX,
+                            y: finalY + gridSize * 0.4
+                        }, {
+                            x: rightX + gridSize * 1.7,
+                            y: finalY + gridSize * 0.4
+                        });
+
+                        painter.strokeStyle = "indianred";
+
+                        relatiRoute(painter, {
+                            x: beginX,
+                            y: topY
+                        }, {
+                            x: beginX - gridSize * 0.4,
+                            y: topY
+                        }, {
+                            x: beginX - gridSize * 0.4,
+                            y: topY - gridSize * 1.7
+                        });
+
+                        relatiRoute(painter, {
+                            x: beginX,
+                            y: bottomY
+                        }, {
+                            x: beginX - gridSize * 0.4,
+                            y: bottomY
+                        }, {
+                            x: beginX - gridSize * 0.4,
+                            y: bottomY + gridSize * 1.7
+                        });
+
+                        relatiRoute(painter, {
+                            x: finalX,
+                            y: topY
+                        }, {
+                            x: finalX + gridSize * 0.4,
+                            y: topY
+                        }, {
+                            x: finalX + gridSize * 0.4,
+                            y: topY - gridSize * 1.7
+                        });
+
+                        relatiRoute(painter, {
+                            x: finalX,
+                            y: bottomY
+                        }, {
+                            x: finalX + gridSize * 0.4,
+                            y: bottomY
+                        }, {
+                            x: finalX + gridSize * 0.4,
+                            y: bottomY + gridSize * 1.7
+                        });
+
+                        painter.strokeStyle = "black";
+                    }
+                );
+                board.viewerRefresh();
+            } {
+                var board = createBoard("relati-remote-stable", 5, 5);
+                board.gridOf.C3.getGridsFromDir("IIH,IHH,C").forEach(
+                    grid => grid.symbol = "O"
+                );
+                board.gridOf.C3.status = "source";
+                board.addGridMark(
+                    grid => grid.crd === "C3",
+                    function (painter, x, y, gridSize) {
+                        painter.strokeStyle = "red";
+                        painter.lineWidth = 2;
+
+                        var routeLength = gridSize * 0.2;
+                        var beginX = x + routeLength;
+                        var finalX = x + gridSize - routeLength;
+                        var beginY = y + routeLength;
+                        var finalY = x + gridSize - routeLength;
+                        var leftX = x + gridSize * 0.4;
+                        var rightX = x + gridSize * 0.6;
+                        var topY = y + gridSize * 0.4;
+                        var bottomY = y + gridSize * 0.6;
+                        routeLength += gridSize;
+
+                        relatiRoute(painter, {
+                            x: leftX,
+                            y: beginY
+                        }, {
+                            x: leftX,
+                            y: beginY - gridSize * 0.6
+                        }, {
+                            x: leftX - gridSize * 0.6,
+                            y: beginY - gridSize * 0.6
+                        }, {
+                            x: leftX - gridSize * 0.6,
+                            y: beginY - gridSize * 1.5
+                        });
+
+                        relatiRoute(painter, {
+                            x: rightX,
+                            y: beginY
+                        }, {
+                            x: rightX,
+                            y: beginY - gridSize * 0.6
+                        }, {
+                            x: rightX + gridSize * 0.6,
+                            y: beginY - gridSize * 0.6
+                        }, {
+                            x: rightX + gridSize * 0.6,
+                            y: beginY - gridSize * 1.5
+                        });
+
+                        relatiRoute(painter, {
+                            x: leftX,
+                            y: finalY
+                        }, {
+                            x: leftX,
+                            y: finalY + gridSize * 0.6
+                        }, {
+                            x: leftX - gridSize * 0.6,
+                            y: finalY + gridSize * 0.6
+                        }, {
+                            x: leftX - gridSize * 0.6,
+                            y: finalY + gridSize * 1.5
+                        });
+
+                        relatiRoute(painter, {
+                            x: rightX,
+                            y: finalY
+                        }, {
+                            x: rightX,
+                            y: finalY + gridSize * 0.6
+                        }, {
+                            x: rightX + gridSize * 0.6,
+                            y: finalY + gridSize * 0.6
+                        }, {
+                            x: rightX + gridSize * 0.6,
+                            y: finalY + gridSize * 1.5
+                        });
+
+                        painter.strokeStyle = "indianred";
+
+                        relatiRoute(painter, {
+                            x: beginX,
+                            y: topY
+                        }, {
+                            x: beginX - gridSize * 0.6,
+                            y: topY
+                        }, {
+                            x: beginX - gridSize * 0.6,
+                            y: topY - gridSize * 0.6
+                        }, {
+                            x: beginX - gridSize * 1.5,
+                            y: topY - gridSize * 0.6
+                        });
+
+                        relatiRoute(painter, {
+                            x: beginX,
+                            y: bottomY
+                        }, {
+                            x: beginX - gridSize * 0.6,
+                            y: bottomY
+                        }, {
+                            x: beginX - gridSize * 0.6,
+                            y: bottomY + gridSize * 0.6
+                        }, {
+                            x: beginX - gridSize * 1.5,
+                            y: bottomY + gridSize * 0.6
+                        });
+
+                        relatiRoute(painter, {
+                            x: finalX,
+                            y: topY
+                        }, {
+                            x: finalX + gridSize * 0.6,
+                            y: topY
+                        }, {
+                            x: finalX + gridSize * 0.6,
+                            y: topY - gridSize * 0.6
+                        }, {
+                            x: finalX + gridSize * 1.5,
+                            y: topY - gridSize * 0.6
+                        });
+
+                        relatiRoute(painter, {
+                            x: finalX,
+                            y: bottomY
+                        }, {
+                            x: finalX + gridSize * 0.6,
+                            y: bottomY
+                        }, {
+                            x: finalX + gridSize * 0.6,
+                            y: bottomY + gridSize * 0.6
+                        }, {
+                            x: finalX + gridSize * 1.5,
+                            y: bottomY + gridSize * 0.6
+                        });
+
+                        painter.strokeStyle = "black";
+                    }
+                );
+                board.viewerRefresh();
+            } {
+                var board = createBoard("relati-forbid", 5, 5);
+                board.gridOf.A1.symbol = "O";
+                board.gridOf.A1.status = "forbid";
+                board.gridOf.E2.symbol = "O";
+                board.gridOf.E2.status = "forbid";
+                board.gridOf.C3.symbol = "O";
+                board.gridOf.C3.status = "source";
+                board.gridOf.D2.symbol = "X";
+                board.gridOf.D3.symbol = "X";
+                board.gridOf.D2.status = "source";
+                board.gridOf.B2.symbol = "X";
+                board.viewerRefresh();
+            } {
+                var board = createBoard("relati-forbid", 5, 5);
+                board.gridOf.A1.symbol = "O";
+                board.gridOf.A1.status = "forbid";
+                board.gridOf.E2.symbol = "O";
+                board.gridOf.E4.symbol = "O";
+                board.gridOf.C3.symbol = "O";
+                board.gridOf.C3.status = "source";
+                board.gridOf.D2.symbol = "X";
+                board.gridOf.D3.symbol = "X";
+                board.gridOf.D2.status = "source";
+                board.gridOf.B2.symbol = "X";
+                board.addGridMark(
+                    grid => grid.crd === "C3",
+                    function (painter, x, y, gridSize) {
+                        painter.strokeStyle = "red";
+                        painter.lineWidth = 2;
+
+                        var routeLength = gridSize * 0.2;
+                        var beginX = x + routeLength;
+                        var finalX = x + gridSize - routeLength;
+                        var beginY = y + routeLength;
+                        var finalY = x + gridSize - routeLength;
+                        var leftX = x + gridSize * 0.4;
+                        var rightX = x + gridSize * 0.6;
+                        var topY = y + gridSize * 0.4;
+                        var bottomY = y + gridSize * 0.6;
+                        routeLength += gridSize;
+
+                        relatiRoute(painter, {
+                            x: rightX,
+                            y: finalY
+                        }, {
+                            x: rightX,
+                            y: finalY + gridSize * 0.4
+                        }, {
+                            x: rightX + gridSize * 1.7,
+                            y: finalY + gridSize * 0.4
+                        });
+
+                        painter.strokeStyle = "black";
+                    }
+                );
+
+                board.addGridMark(
+                    grid => grid.crd === "E2",
+                    function (painter, x, y, gridSize) {
+                        painter.strokeStyle = "red";
+                        painter.lineWidth = 2;
+
+                        var routeLength = gridSize * 0.2;
+                        var beginX = x + routeLength;
+                        var finalX = x + gridSize - routeLength;
+                        var beginY = y + routeLength;
+                        var finalY = y + gridSize - routeLength;
+                        var centerX = x + gridSize * 0.5;
+                        var centerY = y + gridSize * 0.5;
+                        var endX = x + gridSize;
+                        var endY = y + gridSize;
+                        routeLength += gridSize;
+
+                        relatiRoute(painter, {
+                            x: centerX,
+                            y: finalY
+                        }, {
+                            x: centerX,
+                            y: endY + routeLength
+                        });
+
+                        painter.strokeStyle = "black";
+                    }
+                );
+
+                board.viewerRefresh();
+            }
+        })();
+    </script>
+</body>
+
+</html>
