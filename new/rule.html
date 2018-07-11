@@ -23,8 +23,17 @@
             margin: 15px;
         }
 
+        h3 {
+            font-size: 25px;
+            margin: 20px;
+        }
+
         ol {
             padding-left: 30px;
+        }
+
+        label {
+            user-select: none;
         }
     </style>
     <script src="js/GridBoard.js"></script>
@@ -33,36 +42,43 @@
 
 <body>
     <h1>Relati</h1>
-    <ol>
+    <ul>
         <li>玩家: 2 - 6 人</li>
         <li>棋盤大小: 玩家 * 2 + 11 平方</li>
-    </ol>
+    </ul>
     <h2>基本規則</h2>
-    <ol>
+    <ul>
         <li>標記符號於棋盤格時，必須為空格</li>
         <li>標記符號(依照玩家順序)，如下圖
             <div board="normal"></div>
         </li>
-    </ol>
+    </ul>
     <h2>開始遊戲</h2>
-    <ol>
+    <ul>
         <li>所有玩家分別標記一枚符號於棋盤格中</li>
         <li>開始的第一枚符號狀態為來源，如下圖
             <div board="source"></div>
         </li>
-    </ol>
+    </ul>
     <h2>進行遊戲</h2>
-    <ol>
+    <ul>
+        <li>以下行為可擇一進行，進行後便換下一個玩家</li>
         <li>除了第一枚符號，標記符號時需遵守
             <a href="#relati">連結規範</a>
             ，標記於可連結的位置</li>
-    </ol>
+        <li>標記符號可依照
+            <a href="#escape">逃脫規範</a>
+            ，標記於可逃脫的位置</li>
+        <li>可選擇對方的符號，進行
+            <a href="#attack">攻擊行動</a>
+        </li>
+    </ul>
     <h2>勝負判定</h2>
-    <ol>
+    <ul>
         <li>當玩家無法標記符號時判定為淘汰，最後一位玩家為本局遊戲的贏家</li>
-    </ol>
+    </ul>
     <h2 id="relati">連結規範</h2>
-    <ol>
+    <ul>
         <li>一般連結，如下圖，可參考紅線
             <div board="relati-normal"></div>
         </li>
@@ -74,703 +90,264 @@
         </li>
         <li>連結阻斷，如下圖
             <div board="relati-forbid"></div>
-            若符號無法與來源符號直接或是間接連結時，狀態為阻斷
-            <br> 狀態為阻斷的符號，在標記符號時，不能作為連結的對象
+            若符號無法與來源符號直接或是間接連結時，狀態轉為阻斷
+            <br> 狀態為阻斷、防盾、死亡的符號，在標記符號時，不能作為連結的來源
             <br> 若符號能與來源符號直接或是間接連結時，狀態轉為一般
+            <br> 符號狀態為阻斷，如下圖
+            <div board="forbid"></div>
         </li>
-    </ol>
-    <script>
-        var symbols = "OXDUAH";
-
-        function createBoard(name, width, height) {
-            var board = new GridBoard(width, height);
-            var element = document.querySelector(`[board=${name}]`);
-
-            addSkinOn(board);
-            board.viewer.width = 40 * width;
-            board.viewer.style.margin = "5px";
-            element.appendChild(board.viewer);
-
-            return board;
-        }
-
-        function relatiRoute(painter, begin, ...final) {
-            painter.beginPath();
-            painter.moveTo(begin.x, begin.y);
-            for (var final of final) {
-                painter.lineTo(final.x, final.y);
-            }
-            painter.stroke();
-            painter.closePath();
-        }
-
-        (function () {
-            {
-                var board = createBoard("normal", 6, 1);
-
-                for (var i = 0; i < symbols.length; i++) {
-                    var symbol = symbols[i];
-                    board.grids[i][0].symbol = symbol;
-                    board.grids[i][0].status = "normal";
-                }
-
-                board.viewerRefresh();
-            } {
-                var board = createBoard("source", 6, 1);
-
-                for (var i = 0; i < symbols.length; i++) {
-                    var symbol = symbols[i];
-                    board.grids[i][0].symbol = symbol;
-                    board.grids[i][0].status = "source";
-                }
-
-                board.viewerRefresh();
-            } {
-                var board = createBoard("relati-normal", 5, 5);
-                board.gridOf.C3.getGridsFromDir("O,C").forEach(
-                    grid => grid.symbol = "O"
-                );
-                board.gridOf.C3.status = "source";
-                board.addGridMark(
-                    grid => grid.crd === "C3",
-                    function (painter, x, y, gridSize) {
-                        var routeLength = gridSize * 0.2;
-                        var beginX = x + routeLength;
-                        var finalX = x + gridSize - routeLength;
-                        var beginY = y + routeLength;
-                        var finalY = x + gridSize - routeLength;
-                        var centerX = x + gridSize * 0.5;
-                        var centerY = y + gridSize * 0.5;
-                        var endX = x + gridSize;
-                        var endY = y + gridSize;
-
-                        painter.strokeStyle = "red";
-                        painter.lineWidth = 2;
-
-                        relatiRoute(painter, {
-                            x: beginX,
-                            y: beginY
-                        }, {
-                            x: x - routeLength,
-                            y: y - routeLength
-                        });
-
-                        relatiRoute(painter, {
-                            x: finalX,
-                            y: finalY
-                        }, {
-                            x: endX + routeLength,
-                            y: endY + routeLength
-                        });
-
-                        relatiRoute(painter, {
-                            x: beginX,
-                            y: finalY
-                        }, {
-                            x: x - routeLength,
-                            y: endY + routeLength
-                        });
-
-                        relatiRoute(painter, {
-                            x: finalX,
-                            y: beginY
-                        }, {
-                            x: endX + routeLength,
-                            y: y - routeLength
-                        });
-
-                        relatiRoute(painter, {
-                            x: centerX,
-                            y: beginY
-                        }, {
-                            x: centerX,
-                            y: y - routeLength
-                        });
-
-                        relatiRoute(painter, {
-                            x: centerX,
-                            y: finalY
-                        }, {
-                            x: centerX,
-                            y: endY + routeLength
-                        });
-
-                        relatiRoute(painter, {
-                            x: beginX,
-                            y: centerY
-                        }, {
-                            x: x - routeLength,
-                            y: centerY
-                        });
-
-                        relatiRoute(painter, {
-                            x: finalX,
-                            y: centerY
-                        }, {
-                            x: endX + routeLength,
-                            y: centerY
-                        });
-
-                        painter.strokeStyle = "black";
-                    }
-                );
-                board.viewerRefresh();
-            } {
-                var board = createBoard("relati-remote", 5, 5);
-                board.gridOf.C3.getGridsFromDir("OO,C").forEach(
-                    grid => grid.symbol = "O"
-                );
-                board.gridOf.C3.status = "source";
-                board.addGridMark(
-                    grid => grid.crd === "C3",
-                    function (painter, x, y, gridSize) {
-                        painter.strokeStyle = "red";
-                        painter.lineWidth = 2;
-
-                        var routeLength = gridSize * 0.2;
-                        var beginX = x + routeLength;
-                        var finalX = x + gridSize - routeLength;
-                        var beginY = y + routeLength;
-                        var finalY = y + gridSize - routeLength;
-                        var centerX = x + gridSize * 0.5;
-                        var centerY = y + gridSize * 0.5;
-                        var endX = x + gridSize;
-                        var endY = y + gridSize;
-                        routeLength += gridSize;
-
-                        relatiRoute(painter, {
-                            x: beginX,
-                            y: beginY
-                        }, {
-                            x: x - routeLength,
-                            y: y - routeLength
-                        });
-
-                        relatiRoute(painter, {
-                            x: finalX,
-                            y: finalY
-                        }, {
-                            x: endX + routeLength,
-                            y: endY + routeLength
-                        });
-
-                        relatiRoute(painter, {
-                            x: beginX,
-                            y: finalY
-                        }, {
-                            x: x - routeLength,
-                            y: endY + routeLength
-                        });
-
-                        relatiRoute(painter, {
-                            x: finalX,
-                            y: beginY
-                        }, {
-                            x: endX + routeLength,
-                            y: y - routeLength
-                        });
-
-                        relatiRoute(painter, {
-                            x: centerX,
-                            y: beginY
-                        }, {
-                            x: centerX,
-                            y: y - routeLength
-                        });
-
-                        relatiRoute(painter, {
-                            x: centerX,
-                            y: finalY
-                        }, {
-                            x: centerX,
-                            y: endY + routeLength
-                        });
-
-                        relatiRoute(painter, {
-                            x: beginX,
-                            y: centerY
-                        }, {
-                            x: x - routeLength,
-                            y: centerY
-                        });
-
-                        relatiRoute(painter, {
-                            x: finalX,
-                            y: centerY
-                        }, {
-                            x: endX + routeLength,
-                            y: centerY
-                        });
-
-                        painter.strokeStyle = "black";
-                    }
-                );
-                board.viewerRefresh();
-            } {
-                var board = createBoard("relati-remote-stable", 5, 5);
-                board.gridOf.C3.getGridsFromDir("IIH,IHH,C").forEach(
-                    grid => grid.symbol = "O"
-                );
-                board.gridOf.C3.status = "source";
-                board.addGridMark(
-                    grid => grid.crd === "C3",
-                    function (painter, x, y, gridSize) {
-                        painter.strokeStyle = "red";
-                        painter.lineWidth = 2;
-
-                        var routeLength = gridSize * 0.2;
-                        var beginX = x + routeLength;
-                        var finalX = x + gridSize - routeLength;
-                        var beginY = y + routeLength;
-                        var finalY = x + gridSize - routeLength;
-                        var leftX = x + gridSize * 0.4;
-                        var rightX = x + gridSize * 0.6;
-                        var topY = y + gridSize * 0.4;
-                        var bottomY = y + gridSize * 0.6;
-                        routeLength += gridSize;
-
-                        relatiRoute(painter, {
-                            x: leftX,
-                            y: beginY
-                        }, {
-                            x: leftX,
-                            y: beginY - gridSize * 1.5
-                        }, {
-                            x: leftX - gridSize * 0.6,
-                            y: beginY - gridSize * 1.5
-                        });
-
-                        relatiRoute(painter, {
-                            x: rightX,
-                            y: beginY
-                        }, {
-                            x: rightX,
-                            y: beginY - gridSize * 1.5
-                        }, {
-                            x: rightX + gridSize * 0.6,
-                            y: beginY - gridSize * 1.5
-                        });
-
-                        relatiRoute(painter, {
-                            x: leftX,
-                            y: finalY
-                        }, {
-                            x: leftX,
-                            y: finalY + gridSize * 1.5
-                        }, {
-                            x: leftX - gridSize * 0.6,
-                            y: finalY + gridSize * 1.5
-                        });
-
-                        relatiRoute(painter, {
-                            x: rightX,
-                            y: finalY
-                        }, {
-                            x: rightX,
-                            y: finalY + gridSize * 1.5
-                        }, {
-                            x: rightX + gridSize * 0.6,
-                            y: finalY + gridSize * 1.5
-                        });
-
-                        painter.strokeStyle = "indianred";
-
-                        relatiRoute(painter, {
-                            x: beginX,
-                            y: topY
-                        }, {
-                            x: beginX - gridSize * 1.5,
-                            y: topY
-                        }, {
-                            x: beginX - gridSize * 1.5,
-                            y: topY - gridSize * 0.6
-                        });
-
-                        relatiRoute(painter, {
-                            x: beginX,
-                            y: bottomY
-                        }, {
-                            x: beginX - gridSize * 1.5,
-                            y: bottomY
-                        }, {
-                            x: beginX - gridSize * 1.5,
-                            y: bottomY + gridSize * 0.6
-                        });
-
-                        relatiRoute(painter, {
-                            x: finalX,
-                            y: topY
-                        }, {
-                            x: finalX + gridSize * 1.5,
-                            y: topY
-                        }, {
-                            x: finalX + gridSize * 1.5,
-                            y: topY - gridSize * 0.6
-                        });
-
-                        relatiRoute(painter, {
-                            x: finalX,
-                            y: bottomY
-                        }, {
-                            x: finalX + gridSize * 1.5,
-                            y: bottomY
-                        }, {
-                            x: finalX + gridSize * 1.5,
-                            y: bottomY + gridSize * 0.6
-                        });
-
-                        painter.strokeStyle = "black";
-                    }
-                );
-                board.viewerRefresh();
-            } {
-                var board = createBoard("relati-remote-stable", 5, 5);
-                board.gridOf.C3.getGridsFromDir("IIH,IHH,C").forEach(
-                    grid => grid.symbol = "O"
-                );
-                board.gridOf.C3.status = "source";
-                board.addGridMark(
-                    grid => grid.crd === "C3",
-                    function (painter, x, y, gridSize) {
-                        painter.strokeStyle = "red";
-                        painter.lineWidth = 2;
-
-                        var routeLength = gridSize * 0.2;
-                        var beginX = x + routeLength;
-                        var finalX = x + gridSize - routeLength;
-                        var beginY = y + routeLength;
-                        var finalY = x + gridSize - routeLength;
-                        var leftX = x + gridSize * 0.4;
-                        var rightX = x + gridSize * 0.6;
-                        var topY = y + gridSize * 0.4;
-                        var bottomY = y + gridSize * 0.6;
-                        routeLength += gridSize;
-
-                        relatiRoute(painter, {
-                            x: leftX,
-                            y: beginY
-                        }, {
-                            x: leftX,
-                            y: beginY - gridSize * 0.4
-                        }, {
-                            x: leftX - gridSize * 1.7,
-                            y: beginY - gridSize * 0.4
-                        });
-
-                        relatiRoute(painter, {
-                            x: rightX,
-                            y: beginY
-                        }, {
-                            x: rightX,
-                            y: beginY - gridSize * 0.4
-                        }, {
-                            x: rightX + gridSize * 1.7,
-                            y: beginY - gridSize * 0.4
-                        });
-
-                        relatiRoute(painter, {
-                            x: leftX,
-                            y: finalY
-                        }, {
-                            x: leftX,
-                            y: finalY + gridSize * 0.4
-                        }, {
-                            x: leftX - gridSize * 1.7,
-                            y: finalY + gridSize * 0.4
-                        });
-
-                        relatiRoute(painter, {
-                            x: rightX,
-                            y: finalY
-                        }, {
-                            x: rightX,
-                            y: finalY + gridSize * 0.4
-                        }, {
-                            x: rightX + gridSize * 1.7,
-                            y: finalY + gridSize * 0.4
-                        });
-
-                        painter.strokeStyle = "indianred";
-
-                        relatiRoute(painter, {
-                            x: beginX,
-                            y: topY
-                        }, {
-                            x: beginX - gridSize * 0.4,
-                            y: topY
-                        }, {
-                            x: beginX - gridSize * 0.4,
-                            y: topY - gridSize * 1.7
-                        });
-
-                        relatiRoute(painter, {
-                            x: beginX,
-                            y: bottomY
-                        }, {
-                            x: beginX - gridSize * 0.4,
-                            y: bottomY
-                        }, {
-                            x: beginX - gridSize * 0.4,
-                            y: bottomY + gridSize * 1.7
-                        });
-
-                        relatiRoute(painter, {
-                            x: finalX,
-                            y: topY
-                        }, {
-                            x: finalX + gridSize * 0.4,
-                            y: topY
-                        }, {
-                            x: finalX + gridSize * 0.4,
-                            y: topY - gridSize * 1.7
-                        });
-
-                        relatiRoute(painter, {
-                            x: finalX,
-                            y: bottomY
-                        }, {
-                            x: finalX + gridSize * 0.4,
-                            y: bottomY
-                        }, {
-                            x: finalX + gridSize * 0.4,
-                            y: bottomY + gridSize * 1.7
-                        });
-
-                        painter.strokeStyle = "black";
-                    }
-                );
-                board.viewerRefresh();
-            } {
-                var board = createBoard("relati-remote-stable", 5, 5);
-                board.gridOf.C3.getGridsFromDir("IIH,IHH,C").forEach(
-                    grid => grid.symbol = "O"
-                );
-                board.gridOf.C3.status = "source";
-                board.addGridMark(
-                    grid => grid.crd === "C3",
-                    function (painter, x, y, gridSize) {
-                        painter.strokeStyle = "red";
-                        painter.lineWidth = 2;
-
-                        var routeLength = gridSize * 0.2;
-                        var beginX = x + routeLength;
-                        var finalX = x + gridSize - routeLength;
-                        var beginY = y + routeLength;
-                        var finalY = x + gridSize - routeLength;
-                        var leftX = x + gridSize * 0.4;
-                        var rightX = x + gridSize * 0.6;
-                        var topY = y + gridSize * 0.4;
-                        var bottomY = y + gridSize * 0.6;
-                        routeLength += gridSize;
-
-                        relatiRoute(painter, {
-                            x: leftX,
-                            y: beginY
-                        }, {
-                            x: leftX,
-                            y: beginY - gridSize * 0.6
-                        }, {
-                            x: leftX - gridSize * 0.6,
-                            y: beginY - gridSize * 0.6
-                        }, {
-                            x: leftX - gridSize * 0.6,
-                            y: beginY - gridSize * 1.5
-                        });
-
-                        relatiRoute(painter, {
-                            x: rightX,
-                            y: beginY
-                        }, {
-                            x: rightX,
-                            y: beginY - gridSize * 0.6
-                        }, {
-                            x: rightX + gridSize * 0.6,
-                            y: beginY - gridSize * 0.6
-                        }, {
-                            x: rightX + gridSize * 0.6,
-                            y: beginY - gridSize * 1.5
-                        });
-
-                        relatiRoute(painter, {
-                            x: leftX,
-                            y: finalY
-                        }, {
-                            x: leftX,
-                            y: finalY + gridSize * 0.6
-                        }, {
-                            x: leftX - gridSize * 0.6,
-                            y: finalY + gridSize * 0.6
-                        }, {
-                            x: leftX - gridSize * 0.6,
-                            y: finalY + gridSize * 1.5
-                        });
-
-                        relatiRoute(painter, {
-                            x: rightX,
-                            y: finalY
-                        }, {
-                            x: rightX,
-                            y: finalY + gridSize * 0.6
-                        }, {
-                            x: rightX + gridSize * 0.6,
-                            y: finalY + gridSize * 0.6
-                        }, {
-                            x: rightX + gridSize * 0.6,
-                            y: finalY + gridSize * 1.5
-                        });
-
-                        painter.strokeStyle = "indianred";
-
-                        relatiRoute(painter, {
-                            x: beginX,
-                            y: topY
-                        }, {
-                            x: beginX - gridSize * 0.6,
-                            y: topY
-                        }, {
-                            x: beginX - gridSize * 0.6,
-                            y: topY - gridSize * 0.6
-                        }, {
-                            x: beginX - gridSize * 1.5,
-                            y: topY - gridSize * 0.6
-                        });
-
-                        relatiRoute(painter, {
-                            x: beginX,
-                            y: bottomY
-                        }, {
-                            x: beginX - gridSize * 0.6,
-                            y: bottomY
-                        }, {
-                            x: beginX - gridSize * 0.6,
-                            y: bottomY + gridSize * 0.6
-                        }, {
-                            x: beginX - gridSize * 1.5,
-                            y: bottomY + gridSize * 0.6
-                        });
-
-                        relatiRoute(painter, {
-                            x: finalX,
-                            y: topY
-                        }, {
-                            x: finalX + gridSize * 0.6,
-                            y: topY
-                        }, {
-                            x: finalX + gridSize * 0.6,
-                            y: topY - gridSize * 0.6
-                        }, {
-                            x: finalX + gridSize * 1.5,
-                            y: topY - gridSize * 0.6
-                        });
-
-                        relatiRoute(painter, {
-                            x: finalX,
-                            y: bottomY
-                        }, {
-                            x: finalX + gridSize * 0.6,
-                            y: bottomY
-                        }, {
-                            x: finalX + gridSize * 0.6,
-                            y: bottomY + gridSize * 0.6
-                        }, {
-                            x: finalX + gridSize * 1.5,
-                            y: bottomY + gridSize * 0.6
-                        });
-
-                        painter.strokeStyle = "black";
-                    }
-                );
-                board.viewerRefresh();
-            } {
-                var board = createBoard("relati-forbid", 5, 5);
-                board.gridOf.A1.symbol = "O";
-                board.gridOf.A1.status = "forbid";
-                board.gridOf.E2.symbol = "O";
-                board.gridOf.E2.status = "forbid";
-                board.gridOf.C3.symbol = "O";
-                board.gridOf.C3.status = "source";
-                board.gridOf.D2.symbol = "X";
-                board.gridOf.D3.symbol = "X";
-                board.gridOf.D2.status = "source";
-                board.gridOf.B2.symbol = "X";
-                board.viewerRefresh();
-            } {
-                var board = createBoard("relati-forbid", 5, 5);
-                board.gridOf.A1.symbol = "O";
-                board.gridOf.A1.status = "forbid";
-                board.gridOf.E2.symbol = "O";
-                board.gridOf.E4.symbol = "O";
-                board.gridOf.C3.symbol = "O";
-                board.gridOf.C3.status = "source";
-                board.gridOf.D2.symbol = "X";
-                board.gridOf.D3.symbol = "X";
-                board.gridOf.D2.status = "source";
-                board.gridOf.B2.symbol = "X";
-                board.addGridMark(
-                    grid => grid.crd === "C3",
-                    function (painter, x, y, gridSize) {
-                        painter.strokeStyle = "red";
-                        painter.lineWidth = 2;
-
-                        var routeLength = gridSize * 0.2;
-                        var beginX = x + routeLength;
-                        var finalX = x + gridSize - routeLength;
-                        var beginY = y + routeLength;
-                        var finalY = x + gridSize - routeLength;
-                        var leftX = x + gridSize * 0.4;
-                        var rightX = x + gridSize * 0.6;
-                        var topY = y + gridSize * 0.4;
-                        var bottomY = y + gridSize * 0.6;
-                        routeLength += gridSize;
-
-                        relatiRoute(painter, {
-                            x: rightX,
-                            y: finalY
-                        }, {
-                            x: rightX,
-                            y: finalY + gridSize * 0.4
-                        }, {
-                            x: rightX + gridSize * 1.7,
-                            y: finalY + gridSize * 0.4
-                        });
-
-                        painter.strokeStyle = "black";
-                    }
-                );
-
-                board.addGridMark(
-                    grid => grid.crd === "E2",
-                    function (painter, x, y, gridSize) {
-                        painter.strokeStyle = "red";
-                        painter.lineWidth = 2;
-
-                        var routeLength = gridSize * 0.2;
-                        var beginX = x + routeLength;
-                        var finalX = x + gridSize - routeLength;
-                        var beginY = y + routeLength;
-                        var finalY = y + gridSize - routeLength;
-                        var centerX = x + gridSize * 0.5;
-                        var centerY = y + gridSize * 0.5;
-                        var endX = x + gridSize;
-                        var endY = y + gridSize;
-                        routeLength += gridSize;
-
-                        relatiRoute(painter, {
-                            x: centerX,
-                            y: finalY
-                        }, {
-                            x: centerX,
-                            y: endY + routeLength
-                        });
-
-                        painter.strokeStyle = "black";
-                    }
-                );
-
-                board.viewerRefresh();
-            }
-        })();
-    </script>
+    </ul>
+    <h2 id="escape">逃脫規範</h2>
+    <ul>
+        <li>如下圖，可參考紅線，紅線經過的位置必須為空格
+            <div board="escape"></div>
+            可逃脫於我方符號8個方位不限距離長處
+            <br> 放置後符號狀態為來源，其他符號除了狀態為防盾，狀態轉為死亡
+            <br> 狀態為阻斷、防盾、死亡的符號，在標記符號時，不能作為逃脫的來源
+            <br> 符號狀態為死亡，如下圖
+            <div board="broken"></div>
+        </li>
+    </ul>
+    <h2 id="attack">攻擊行動</h2>
+    <ul>
+        <li>如下圖，可參考紅線，紅線經過的位置必須為空格或我方符號
+            <div board="attack"></div>
+            可攻擊他方符號於我方符號8個方位不限距離長處
+            <br> 攻擊方向的反方向一格需有我方的一般符號作為耗材
+            <br> 攻擊後他方符號狀態轉為死亡，我方需選擇耗材，狀態轉為死亡
+            <br> 狀態為防盾、死亡的符號，在攻擊符號時，不能作為攻擊的媒介
+        </li>
+    </ul>
+    <h2>規則調整</h2>
+    <h3>連結規範調整</h3>
+    <ul>
+        <li>
+            <input type="checkbox" id="use-relati-normal" checked/>
+            <label for="use-relati-normal">使用一般連結</label>
+        </li>
+        <li>
+
+            <input type="checkbox" id="use-relati-remote" checked/>
+            <label for="use-relati-remote">使用遠程連結</label>
+        </li>
+        <li>
+            <input type="checkbox" id="use-relati-remote-stable" checked/>
+            <label for="use-relati-remote-stable">使用遠程穩定連結</label>
+        </li>
+        <li>
+            <input type="checkbox" id="use-relati-forbid" checked/>
+            <label for="use-relati-forbid">使用連結阻斷</label>
+        </li>
+        <li>連結經過的位置必須為
+            <ul>
+                <li>
+                    <input type="radio" id="relati-route-space" name="relati-route-space" checked>
+                    <label for="relati-route-space">空格</label>
+                </li>
+                <li>
+                    <input type="radio" id="relati-route-space-real" name="relati-route-space">
+                    <label for="relati-route-space-real">實質空格</label>
+                </li>
+                <li>
+                    <input type="radio" id="relati-route-space-fake" name="relati-route-space" />
+                    <label for="relati-route-space-fake">視為空格(狀態為死亡或我方防盾)</label>
+                </li>
+                <li>
+                    <input type="radio" id="relati-route-space-none" name="relati-route-space" />
+                    <label for="relati-route-space-none">非空格</label>
+                </li>
+                <li>
+                    <input type="checkbox" id="relati-route-owner" name="relati-route-addon" />
+                    <label for="relati-route-owner">我方符號</label>
+                </li>
+                <li>
+                    <input type="checkbox" id="relati-route-other" name="relati-route-addon" />
+                    <label for="relati-route-other">他方符號</label>
+                </li>
+            </ul>
+        </li>
+        <li>標記符號時，連結來源可為
+            <ul>
+                <li>
+                    <input type="checkbox" id="relati-source-normal" name="relati-source" checked/>
+                    <label for="relati-source-normal">一般</label>
+                </li>
+                <li>
+                    <input type="checkbox" id="relati-source-shield" name="relati-source" />
+                    <label for="relati-source-shield">防盾</label>
+                </li>
+                <li>
+                    <input type="checkbox" id="relati-source-broken" name="relati-source" />
+                    <label for="relati-source-broken">死亡</label>
+                </li>
+                <li>
+                    <input type="checkbox" id="relati-source-forbid" name="relati-source" />
+                    <label for="relati-source-forbid">阻斷</label>
+                </li>
+            </ul>
+        </li>
+    </ul>
+    <h3>逃脫規範調整</h3>
+    <ul>
+        <li>
+            <input type="checkbox" id="use-escape" checked/>
+            <label for="use-escape">使用逃脫</label>
+        </li>
+        <li>逃脫經過的位置必須為
+            <ul>
+                <li>
+                    <input type="radio" id="escape-route-space" name="escape-route-space" checked>
+                    <label for="escape-route-space">空格</label>
+                </li>
+                <li>
+                    <input type="radio" id="escape-route-space-real" name="escape-route-space">
+                    <label for="escape-route-space-real">實質空格</label>
+                </li>
+                <li>
+                    <input type="radio" id="escape-route-space-fake" name="escape-route-space" />
+                    <label for="escape-route-space-fake">視為空格(狀態為死亡或我方防盾)</label>
+                </li>
+                <li>
+                    <input type="radio" id="escape-route-space-none" name="escape-route-space" />
+                    <label for="escape-route-space-none">非空格</label>
+                </li>
+                <li>
+                    <input type="checkbox" id="escape-route-owner" name="escape-route-addon" />
+                    <label for="escape-route-owner">我方符號</label>
+                </li>
+                <li>
+                    <input type="checkbox" id="escape-route-other" name="escape-route-addon" />
+                    <label for="escape-route-other">他方符號</label>
+                </li>
+            </ul>
+        </li>
+        <li>標記符號時，逃脫來源可為
+            <ul>
+                <li>
+                    <input type="checkbox" id="escape-source-normal" name="escape-source" checked/>
+                    <label for="escape-source-normal">一般</label>
+                </li>
+                <li>
+                    <input type="checkbox" id="escape-source-shield" name="escape-source" />
+                    <label for="escape-source-shield">防盾</label>
+                </li>
+                <li>
+                    <input type="checkbox" id="escape-source-broken" name="escape-source" />
+                    <label for="escape-source-broken">死亡</label>
+                </li>
+                <li>
+                    <input type="checkbox" id="escape-source-forbid" name="escape-source" />
+                    <label for="escape-source-forbid">阻斷</label>
+                </li>
+            </ul>
+        </li>
+    </ul>
+    <h3>攻擊行動調整</h3>
+    <ul>
+        <li>
+            <input type="checkbox" id="use-attack" checked/>
+            <label for="use-attack">使用逃脫</label>
+        </li>
+        <li>攻擊經過的位置必須為
+            <ul>
+                <li>
+                    <input type="radio" id="attack-route-space" name="attack-route-space" checked>
+                    <label for="attack-route-space">空格</label>
+                </li>
+                <li>
+                    <input type="radio" id="attack-route-space-real" name="attack-route-space">
+                    <label for="attack-route-space-real">實質空格</label>
+                </li>
+                <li>
+                    <input type="radio" id="attack-route-space-fake" name="attack-route-space" />
+                    <label for="attack-route-space-fake">視為空格(狀態為死亡或我方防盾)</label>
+                </li>
+                <li>
+                    <input type="radio" id="attack-route-space-none" name="attack-route-space" />
+                    <label for="attack-route-space-none">非空格</label>
+                </li>
+                <li>
+                    <input type="checkbox" id="attack-route-owner" name="attack-route-addon" checked/>
+                    <label for="attack-route-owner">我方符號</label>
+                </li>
+                <li>
+                    <input type="checkbox" id="attack-route-other" name="attack-route-addon" />
+                    <label for="attack-route-other">他方符號</label>
+                </li>
+            </ul>
+        </li>
+        <li>攻擊符號時，攻擊媒介可為
+            <ul>
+                <li>
+                    <input type="checkbox" id="attack-medium-normal" name="attack-medium" checked/>
+                    <label for="attack-medium-normal">一般</label>
+                </li>
+                <li>
+                    <input type="checkbox" id="attack-medium-source" name="attack-medium" checked/>
+                    <label for="attack-medium-source">來源</label>
+                </li>
+                <li>
+                    <input type="checkbox" id="attack-medium-shield" name="attack-medium" />
+                    <label for="attack-medium-shield">防盾</label>
+                </li>
+                <li>
+                    <input type="checkbox" id="attack-medium-broken" name="attack-medium" />
+                    <label for="attack-medium-broken">死亡</label>
+                </li>
+                <li>
+                    <input type="checkbox" id="attack-medium-forbid" name="attack-medium" />
+                    <label for="attack-medium-forbid">阻斷</label>
+                </li>
+            </ul>
+        </li>
+        <li>攻擊符號時，攻擊耗材可為
+            <ul>
+                <li>
+                    <input type="checkbox" id="attack-bullet-normal" name="attack-bullet" checked/>
+                    <label for="attack-bullet-normal">一般</label>
+                </li>
+                <li>
+                    <input type="checkbox" id="attack-bullet-shield" name="attack-bullet" />
+                    <label for="attack-bullet-shield">防盾</label>
+                </li>
+                <li>
+                    <input type="checkbox" id="attack-bullet-forbid" name="attack-bullet" />
+                    <label for="attack-bullet-forbid">阻斷</label>
+                </li>
+            </ul>
+        </li>
+        <li>攻擊符號時，攻擊對象可為
+            <ul>
+                <li>
+                    <input type="checkbox" id="attack-target-normal" name="attack-target" checked/>
+                    <label for="attack-target-normal">一般</label>
+                </li>
+                <li>
+                    <input type="checkbox" id="attack-target-source" name="attack-target" checked/>
+                    <label for="attack-target-source">來源</label>
+                </li>
+                <li>
+                    <input type="checkbox" id="attack-target-shield" name="attack-target" />
+                    <label for="attack-target-shield">防盾</label>
+                </li>
+                <li>
+                    <input type="checkbox" id="attack-target-forbid" name="attack-target" checked/>
+                    <label for="attack-target-forbid">阻斷</label>
+                </li>
+            </ul>
+        </li>
+    </ul>
+    <script src="js/board-image/creator.js"></script>
+    <script src="js/board-image/normal-status.js"></script>
+    <script src="js/board-image/source-status.js"></script>
+    <script src="js/board-image/forbid-status.js"></script>
+    <script src="js/board-image/relati-normal.js"></script>
+    <script src="js/board-image/relati-remote.js"></script>
+    <script src="js/board-image/relati-remote-stable.js"></script>
+    <script src="js/board-image/relati-forbid.js"></script>
+    <script src="js/board-image/escape.js"></script>
+    <script src="js/board-image/broken-status.js"></script>
+    <script src="js/board-image/attack.js"></script>
 </body>
 
 </html>

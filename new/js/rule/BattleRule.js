@@ -18,6 +18,7 @@ function addAttackRule(game) {
             );
         },
         configure: function (grid) {
+            if (grid.status !== "select") return;
             grid.status = "broken";
             board.query("select").forEach(
                 grid => grid.status = "normal"
