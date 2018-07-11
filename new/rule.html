@@ -72,6 +72,12 @@
         <li>可選擇對方的符號，進行
             <a href="#attack">攻擊行動</a>
         </li>
+        <li>可選擇我方的符號，進行
+            <a href="#defend">防禦行動</a>
+        </li>
+        <li>可選擇我方的符號，進行
+            <a href="#bomber">轟炸行動</a>
+        </li>
     </ul>
     <h2>勝負判定</h2>
     <ul>
@@ -102,7 +108,7 @@
         <li>如下圖，可參考紅線，紅線經過的位置必須為空格
             <div board="escape"></div>
             可逃脫於我方符號8個方位不限距離長處
-            <br> 放置後符號狀態為來源，其他符號除了狀態為防盾，狀態轉為死亡
+            <br> 放置後符號狀態為來源，除了狀態為防盾的符號，其他符號狀態轉為死亡
             <br> 狀態為阻斷、防盾、死亡的符號，在標記符號時，不能作為逃脫的來源
             <br> 符號狀態為死亡，如下圖
             <div board="broken"></div>
@@ -116,238 +122,82 @@
             <br> 攻擊方向的反方向一格需有我方的一般符號作為耗材
             <br> 攻擊後他方符號狀態轉為死亡，我方需選擇耗材，狀態轉為死亡
             <br> 狀態為防盾、死亡的符號，在攻擊符號時，不能作為攻擊的媒介
+            <br> 耗材的選擇，如下圖
+            <div board="select"></div>
+        </li>
+    </ul>
+    <h2 id="defend">防禦行動</h2>
+    <ul>
+        <li>若我方符號狀態為一般，狀態轉為防盾
+            <br> 狀態為防盾，如下圖
+            <div board="shield"></div>
+        </li>
+    </ul>
+    <h2 id="bomber">轟炸行動</h2>
+    <ul>
+        <li>如下圖
+            <div board="bomber"></div>
+            若我方符號狀態為防盾，狀態轉為死亡
+            <br> 若該符號八方有符號，皆變更為死亡符號
+        </li>
+    </ul>
+    <h2 id="pincer">夾擊機能</h2>
+    <ul>
+        <li>如下圖
+            <div board="pincer"></div>
+            他方符號正四方或斜四方皆為我方符號時，他方符號狀態轉為死亡
+        </li>
+    </ul>
+    <h2 id="region">區域機能</h2>
+    <ul>
+        <li>如下圖
+            <div board="region"></div>
+            由我方四個非死亡符號圍成矩型
+            <br> 區域內部的對方符號不能進行攻擊行動
+            <br> 區域內部的我方符號不會被作為攻擊對象
         </li>
     </ul>
     <h2>規則調整</h2>
     <h3>連結規範調整</h3>
-    <ul>
-        <li>
-            <input type="checkbox" id="use-relati-normal" checked/>
-            <label for="use-relati-normal">使用一般連結</label>
-        </li>
-        <li>
-
-            <input type="checkbox" id="use-relati-remote" checked/>
-            <label for="use-relati-remote">使用遠程連結</label>
-        </li>
-        <li>
-            <input type="checkbox" id="use-relati-remote-stable" checked/>
-            <label for="use-relati-remote-stable">使用遠程穩定連結</label>
-        </li>
-        <li>
-            <input type="checkbox" id="use-relati-forbid" checked/>
-            <label for="use-relati-forbid">使用連結阻斷</label>
-        </li>
-        <li>連結經過的位置必須為
-            <ul>
-                <li>
-                    <input type="radio" id="relati-route-space" name="relati-route-space" checked>
-                    <label for="relati-route-space">空格</label>
-                </li>
-                <li>
-                    <input type="radio" id="relati-route-space-real" name="relati-route-space">
-                    <label for="relati-route-space-real">實質空格</label>
-                </li>
-                <li>
-                    <input type="radio" id="relati-route-space-fake" name="relati-route-space" />
-                    <label for="relati-route-space-fake">視為空格(狀態為死亡或我方防盾)</label>
-                </li>
-                <li>
-                    <input type="radio" id="relati-route-space-none" name="relati-route-space" />
-                    <label for="relati-route-space-none">非空格</label>
-                </li>
-                <li>
-                    <input type="checkbox" id="relati-route-owner" name="relati-route-addon" />
-                    <label for="relati-route-owner">我方符號</label>
-                </li>
-                <li>
-                    <input type="checkbox" id="relati-route-other" name="relati-route-addon" />
-                    <label for="relati-route-other">他方符號</label>
-                </li>
-            </ul>
-        </li>
-        <li>標記符號時，連結來源可為
-            <ul>
-                <li>
-                    <input type="checkbox" id="relati-source-normal" name="relati-source" checked/>
-                    <label for="relati-source-normal">一般</label>
-                </li>
-                <li>
-                    <input type="checkbox" id="relati-source-shield" name="relati-source" />
-                    <label for="relati-source-shield">防盾</label>
-                </li>
-                <li>
-                    <input type="checkbox" id="relati-source-broken" name="relati-source" />
-                    <label for="relati-source-broken">死亡</label>
-                </li>
-                <li>
-                    <input type="checkbox" id="relati-source-forbid" name="relati-source" />
-                    <label for="relati-source-forbid">阻斷</label>
-                </li>
-            </ul>
-        </li>
+    <ul list="relati">
     </ul>
     <h3>逃脫規範調整</h3>
-    <ul>
-        <li>
-            <input type="checkbox" id="use-escape" checked/>
-            <label for="use-escape">使用逃脫</label>
-        </li>
-        <li>逃脫經過的位置必須為
-            <ul>
-                <li>
-                    <input type="radio" id="escape-route-space" name="escape-route-space" checked>
-                    <label for="escape-route-space">空格</label>
-                </li>
-                <li>
-                    <input type="radio" id="escape-route-space-real" name="escape-route-space">
-                    <label for="escape-route-space-real">實質空格</label>
-                </li>
-                <li>
-                    <input type="radio" id="escape-route-space-fake" name="escape-route-space" />
-                    <label for="escape-route-space-fake">視為空格(狀態為死亡或我方防盾)</label>
-                </li>
-                <li>
-                    <input type="radio" id="escape-route-space-none" name="escape-route-space" />
-                    <label for="escape-route-space-none">非空格</label>
-                </li>
-                <li>
-                    <input type="checkbox" id="escape-route-owner" name="escape-route-addon" />
-                    <label for="escape-route-owner">我方符號</label>
-                </li>
-                <li>
-                    <input type="checkbox" id="escape-route-other" name="escape-route-addon" />
-                    <label for="escape-route-other">他方符號</label>
-                </li>
-            </ul>
-        </li>
-        <li>標記符號時，逃脫來源可為
-            <ul>
-                <li>
-                    <input type="checkbox" id="escape-source-normal" name="escape-source" checked/>
-                    <label for="escape-source-normal">一般</label>
-                </li>
-                <li>
-                    <input type="checkbox" id="escape-source-shield" name="escape-source" />
-                    <label for="escape-source-shield">防盾</label>
-                </li>
-                <li>
-                    <input type="checkbox" id="escape-source-broken" name="escape-source" />
-                    <label for="escape-source-broken">死亡</label>
-                </li>
-                <li>
-                    <input type="checkbox" id="escape-source-forbid" name="escape-source" />
-                    <label for="escape-source-forbid">阻斷</label>
-                </li>
-            </ul>
-        </li>
+    <ul list="escape">
     </ul>
     <h3>攻擊行動調整</h3>
-    <ul>
-        <li>
-            <input type="checkbox" id="use-attack" checked/>
-            <label for="use-attack">使用逃脫</label>
-        </li>
-        <li>攻擊經過的位置必須為
-            <ul>
-                <li>
-                    <input type="radio" id="attack-route-space" name="attack-route-space" checked>
-                    <label for="attack-route-space">空格</label>
-                </li>
-                <li>
-                    <input type="radio" id="attack-route-space-real" name="attack-route-space">
-                    <label for="attack-route-space-real">實質空格</label>
-                </li>
-                <li>
-                    <input type="radio" id="attack-route-space-fake" name="attack-route-space" />
-                    <label for="attack-route-space-fake">視為空格(狀態為死亡或我方防盾)</label>
-                </li>
-                <li>
-                    <input type="radio" id="attack-route-space-none" name="attack-route-space" />
-                    <label for="attack-route-space-none">非空格</label>
-                </li>
-                <li>
-                    <input type="checkbox" id="attack-route-owner" name="attack-route-addon" checked/>
-                    <label for="attack-route-owner">我方符號</label>
-                </li>
-                <li>
-                    <input type="checkbox" id="attack-route-other" name="attack-route-addon" />
-                    <label for="attack-route-other">他方符號</label>
-                </li>
-            </ul>
-        </li>
-        <li>攻擊符號時，攻擊媒介可為
-            <ul>
-                <li>
-                    <input type="checkbox" id="attack-medium-normal" name="attack-medium" checked/>
-                    <label for="attack-medium-normal">一般</label>
-                </li>
-                <li>
-                    <input type="checkbox" id="attack-medium-source" name="attack-medium" checked/>
-                    <label for="attack-medium-source">來源</label>
-                </li>
-                <li>
-                    <input type="checkbox" id="attack-medium-shield" name="attack-medium" />
-                    <label for="attack-medium-shield">防盾</label>
-                </li>
-                <li>
-                    <input type="checkbox" id="attack-medium-broken" name="attack-medium" />
-                    <label for="attack-medium-broken">死亡</label>
-                </li>
-                <li>
-                    <input type="checkbox" id="attack-medium-forbid" name="attack-medium" />
-                    <label for="attack-medium-forbid">阻斷</label>
-                </li>
-            </ul>
-        </li>
-        <li>攻擊符號時，攻擊耗材可為
-            <ul>
-                <li>
-                    <input type="checkbox" id="attack-bullet-normal" name="attack-bullet" checked/>
-                    <label for="attack-bullet-normal">一般</label>
-                </li>
-                <li>
-                    <input type="checkbox" id="attack-bullet-shield" name="attack-bullet" />
-                    <label for="attack-bullet-shield">防盾</label>
-                </li>
-                <li>
-                    <input type="checkbox" id="attack-bullet-forbid" name="attack-bullet" />
-                    <label for="attack-bullet-forbid">阻斷</label>
-                </li>
-            </ul>
-        </li>
-        <li>攻擊符號時，攻擊對象可為
-            <ul>
-                <li>
-                    <input type="checkbox" id="attack-target-normal" name="attack-target" checked/>
-                    <label for="attack-target-normal">一般</label>
-                </li>
-                <li>
-                    <input type="checkbox" id="attack-target-source" name="attack-target" checked/>
-                    <label for="attack-target-source">來源</label>
-                </li>
-                <li>
-                    <input type="checkbox" id="attack-target-shield" name="attack-target" />
-                    <label for="attack-target-shield">防盾</label>
-                </li>
-                <li>
-                    <input type="checkbox" id="attack-target-forbid" name="attack-target" checked/>
-                    <label for="attack-target-forbid">阻斷</label>
-                </li>
-            </ul>
-        </li>
+    <ul list="attack">
+    </ul>
+    <h3>防禦行動調整</h3>
+    <ul list="defend">
+    </ul>
+    <h3>轟炸行動調整</h3>
+    <ul list="bomber">
+    </ul>
+    <h3>夾擊機能調整</h3>
+    <ul list="pincer">
+    </ul>
+    <h3>區域機能調整</h3>
+    <ul list="region">
     </ul>
     <script src="js/board-image/creator.js"></script>
-    <script src="js/board-image/normal-status.js"></script>
-    <script src="js/board-image/source-status.js"></script>
-    <script src="js/board-image/forbid-status.js"></script>
+    <script src="js/board-image/status.js"></script>
     <script src="js/board-image/relati-normal.js"></script>
     <script src="js/board-image/relati-remote.js"></script>
     <script src="js/board-image/relati-remote-stable.js"></script>
     <script src="js/board-image/relati-forbid.js"></script>
     <script src="js/board-image/escape.js"></script>
-    <script src="js/board-image/broken-status.js"></script>
     <script src="js/board-image/attack.js"></script>
+    <script src="js/board-image/bomber.js"></script>
+    <script src="js/board-image/pincer.js"></script>
+    <script src="js/board-image/region.js"></script>
+    <script src="js/config-list/creator.js"></script>
+    <script src="js/config-list/relati.js"></script>
+    <script src="js/config-list/escape.js"></script>
+    <script src="js/config-list/attack.js"></script>
+    <script src="js/config-list/defend.js"></script>
+    <script src="js/config-list/bomber.js"></script>
+    <script src="js/config-list/pincer.js"></script>
+    <script src="js/config-list/region.js"></script>
 </body>
 
 </html>

@@ -6,7 +6,7 @@ function addEscapeRule(game) {
         enable: true
     };
     var validSource = "owner valid";
-    var inSpaceRoute = "space|owner";
+    var inRoute = "space|owner";
 
     var escape = {
         condition: function (grid) {
@@ -20,7 +20,7 @@ function addEscapeRule(game) {
 
                 do {
                     var escapeGrid = grid.getGridFromDir(nowDir);
-                    if (!escapeGrid || !escapeGrid.is(inSpaceRoute)) break;
+                    if (!escapeGrid || !escapeGrid.is(inRoute)) break;
                     if (escapeGrid.is(validSource, escapeGrid.symbol)) return true;
                     nowDir += dirO[i];
                 } while (grid.getGridFromDir(nowDir));

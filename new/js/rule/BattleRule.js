@@ -8,7 +8,7 @@ function addAttackRule(game) {
     var attackTarget = "other normal|other source|other forbid";
     var validMedium = "owner valid";
     var validBullet = "owner normal";
-    var inSpaceRoute = "space|owner";
+    var inRoute = "space|owner";
 
     var select = {
         condition: function () {
@@ -30,8 +30,7 @@ function addAttackRule(game) {
     var attack = {
         condition: function (grid) {
             if (
-                !grid.is(attackTarget) ||
-                game.regionOwner(grid).indexOf(grid.symbol) > -1
+                !grid.is(attackTarget)
             ) return false;
 
             var selected = false;
@@ -41,7 +40,7 @@ function addAttackRule(game) {
 
                 do {
                     var attackGrid = grid.getGridFromDir(nowDir);
-                    if (!attackGrid || !attackGrid.is(inSpaceRoute)) break;
+                    if (!attackGrid || !attackGrid.is(inRoute)) break;
 
                     if (attackGrid.is(validMedium)) {
                         var consumGrid = attackGrid.getGridFromDir(dirO[i]);
@@ -72,12 +71,13 @@ function addDefendRule(game) {
     var defendAction = {
         enable: true
     };
+    var defendSource = "owner normal";
 
     var defend = {
         condition: function (grid) {
             return (
                 defendAction.enable &&
-                grid.is("owner normal")
+                grid.is(defendSource)
             );
         },
         configure: function (grid) {

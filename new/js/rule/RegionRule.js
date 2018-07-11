@@ -4,7 +4,8 @@ function addRegionRule(game) {
 
     var regionAction = {
         enable: true,
-        forbid: false
+        forbid: true,
+        forbidAttack: true
     };
     var validSource = "owner valid|owner forbid|owner shield";
     var regionRule = "first"
@@ -74,27 +75,45 @@ function addRegionRule(game) {
 
     var regionForbid = {
         condition: function (grid) {
-            if (!regionAction.forbid) return false;
-
             var regionOwners = regionOwner(grid);
             var sym = game.symbol[game.turn % game.players];
 
-            return (
-                grid.is("space-real") && (
-                    regionOwners.indexOf(sym) > -1 ||
-                    !regionOwners[0]
-                )
-            );
+            if (
+                !regionOwners[0] ||
+                !regionAction.forbid
+            ) return false;
+
+            if (regionOwners.indexOf(sym) < 0) {
+                return true;
+            }
         },
         configure: function (grid) {
-            grid.symbol = game.symbol[game.turn % game.players];
-            grid.status = "normal";
-            game.turn++;
+            console.log("region forbid");
         }
     };
 
-    game.regionOwner = regionOwner;
+    var regionForbidAttack = {
+        condition: function (grid) {
+            var regionOwners = regionOwner(grid);
+            var sym = game.symbol[game.turn % game.players];
 
-    game.actions.push(regionForbid);
+            if (
+                !regionOwners[0] ||
+                !regionAction.forbidAttack
+            ) return false;
+
+            if (
+                board.query("select").length > 0 &&
+                regionOwners.indexOf(sym) < 0 ||
+                regionOwners.indexOf(grid.symbol) > -1
+            ) {
+                return true;
+            }
+        },
+        configure: function (grid) { }
+    };
+
+    game.actions.unshift(regionForbidAttack);
+    game.actions.unshift(regionForbid);
     game.rules.push(regionExist);
 }

@@ -9,7 +9,7 @@ function addRelatiRule(game) {
         forbid: true
     };
     var validSource = "owner valid";
-    var inSpaceRoute = "space";
+    var inRoute = "space";
 
     var locate = {
         condition: function (grid) {
@@ -90,7 +90,7 @@ function addRelatiRule(game) {
             var isRemoteRelati = (
                 relatiAction.remote &&
                 sourceGridIsOwnerValid() &&
-                spacesGrid.is(inSpaceRoute, gridSym)
+                spacesGrid.is(inRoute, gridSym)
             );
 
             if (isRemoteRelati) relatiList.push(sourceGrid);
@@ -102,8 +102,8 @@ function addRelatiRule(game) {
                 for (var j = 0; j < allSpacesGrids.length; j++) {
                     var spacesGrids = allSpacesGrids[j];
                     var isValidSpaceRoute = (
-                        spacesGrids[0].is(inSpaceRoute, gridSym) &&
-                        spacesGrids[1].is(inSpaceRoute, gridSym)
+                        spacesGrids[0].is(inRoute, gridSym) &&
+                        spacesGrids[1].is(inRoute, gridSym)
                     );
 
                     if (isValidSpaceRoute) {
@@ -148,7 +148,7 @@ function addRelatiRule(game) {
         });
     }
 
-    game.actions.push(locate);
+    game.actions.unshift(locate);
     game.actions.push(relati);
     game.rules.push(relatiForbid);
 }

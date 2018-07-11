@@ -8,6 +8,8 @@ const RelatiGame = (function () {
                 return grid.symbol === "";
             case "space-fake":
                 return typeIs("broken|owner shield");
+            case "space-none":
+                return !typeIs("space");
             case "space":
                 return typeIs("space-real|space-fake");
             case "valid":
