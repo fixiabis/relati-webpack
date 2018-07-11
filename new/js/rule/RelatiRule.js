@@ -1,15 +1,26 @@
-function addRelatiRule(game) {
+function addRelatiRule(game, options) {
     var board = game.board;
     var dirO = ["F", "B", "R", "L", "FR", "FL", "BR", "BL"];
 
-    var relatiAction = {
+    var config = {
         normal: true,
         remote: true,
         remoteStable: true,
-        forbid: true
+        forbid: true,
+        route: "space",
+        source: "owner valid"
     };
-    var validSource = "owner valid";
-    var inRoute = "space";
+
+    if (options) {
+        config = {
+            normal: options["use-relati-normal"],
+            remote: options["use-relati-remote"],
+            remoteStable: options["use-relati-remote-stable"],
+            forbid: options["use-relati-forbid"],
+            route: options["relati-route"],
+            source: options["relati-source"]
+        }
+    }
 
     var locate = {
         condition: function (grid) {
@@ -77,9 +88,9 @@ function addRelatiRule(game) {
         for (var i = 0; i < 8; i++) {
             var sourceGrid = normalSourceGrid[i];
             var sourceGridIsOwnerValid = () => (
-                relatiAction.normal &&
+                config.normal &&
                 sourceGrid &&
-                sourceGrid.is(validSource, gridSym)
+                sourceGrid.is(config.source, gridSym)
             );
             var isNormalRelati = sourceGridIsOwnerValid();
 
@@ -88,9 +99,9 @@ function addRelatiRule(game) {
             var sourceGrid = remoteSourceGrid[i];
             var spacesGrid = remoteSpacesGrid[i];
             var isRemoteRelati = (
-                relatiAction.remote &&
+                config.remote &&
                 sourceGridIsOwnerValid() &&
-                spacesGrid.is(inRoute, gridSym)
+                spacesGrid.is(config.route, gridSym)
             );
 
             if (isRemoteRelati) relatiList.push(sourceGrid);
@@ -98,12 +109,12 @@ function addRelatiRule(game) {
             var sourceGrid = remoteStableSourceGrid[i];
             var allSpacesGrids = remoteStableSpacesGrid[i];
 
-            if (relatiAction.remoteStable && sourceGridIsOwnerValid()) {
+            if (config.remoteStable && sourceGridIsOwnerValid()) {
                 for (var j = 0; j < allSpacesGrids.length; j++) {
                     var spacesGrids = allSpacesGrids[j];
                     var isValidSpaceRoute = (
-                        spacesGrids[0].is(inRoute, gridSym) &&
-                        spacesGrids[1].is(inRoute, gridSym)
+                        spacesGrids[0].is(config.route, gridSym) &&
+                        spacesGrids[1].is(config.route, gridSym)
                     );
 
                     if (isValidSpaceRoute) {
@@ -118,7 +129,7 @@ function addRelatiRule(game) {
     }
 
     function relatiForbid() {
-        if (!relatiAction.forbid) return;
+        if (!config.forbid) return;
         var sourceGrid = [];
         var related = [];
         board.query("forbid").forEach(grid => grid.status = "normal");

@@ -1,19 +1,29 @@
-function addAttackRule(game) {
+function addAttackRule(game, options) {
     var board = game.board;
     var dirO = ["F", "B", "R", "L", "FR", "FL", "BR", "BL"];
 
-    var attackAction = {
-        enable: true
+    var config = {
+        attack: true,
+        target: "other normal|other source|other forbid",
+        route: "space|owner",
+        medium: "owner valid",
+        bullet: "owner normal"
     };
-    var attackTarget = "other normal|other source|other forbid";
-    var validMedium = "owner valid";
-    var validBullet = "owner normal";
-    var inRoute = "space|owner";
+
+    if (options) {
+        config = {
+            attack: options["use-attack"],
+            target: options["attack-target"],
+            route: options["attack-route"],
+            medium: options["attack-medium"],
+            bullet: options["attack-bullet"]
+        }
+    }
 
     var select = {
         condition: function () {
             return (
-                attackAction.enable &&
+                config.attack &&
                 board.query("select").length > 0
             );
         },
@@ -30,7 +40,7 @@ function addAttackRule(game) {
     var attack = {
         condition: function (grid) {
             if (
-                !grid.is(attackTarget)
+                !grid.is(config.target)
             ) return false;
 
             var selected = false;
@@ -40,12 +50,12 @@ function addAttackRule(game) {
 
                 do {
                     var attackGrid = grid.getGridFromDir(nowDir);
-                    if (!attackGrid || !attackGrid.is(inRoute)) break;
+                    if (!attackGrid || !attackGrid.is(config.route)) break;
 
-                    if (attackGrid.is(validMedium)) {
+                    if (attackGrid.is(config.medium)) {
                         var consumGrid = attackGrid.getGridFromDir(dirO[i]);
 
-                        if (consumGrid && consumGrid.is(validBullet)) {
+                        if (consumGrid && consumGrid.is(config.bullet)) {
                             consumGrid.status = "select";
                             selected = true;
                             break;
@@ -67,17 +77,24 @@ function addAttackRule(game) {
     game.actions.push(attack);
 }
 
-function addDefendRule(game) {
-    var defendAction = {
-        enable: true
+function addDefendRule(game, options) {
+    var config = {
+        defend: true,
+        source: "other valid|other forbid"
     };
-    var defendSource = "owner normal";
+
+    if (options) {
+        config = {
+            defend: options["use-defend"],
+            source: options["defend-source"]
+        }
+    }
 
     var defend = {
         condition: function (grid) {
             return (
-                defendAction.enable &&
-                grid.is(defendSource)
+                config.defend &&
+                grid.is(config.source)
             );
         },
         configure: function (grid) {
@@ -89,25 +106,34 @@ function addDefendRule(game) {
     game.actions.push(defend);
 }
 
-function addBomberRule(game) {
+function addBomberRule(game, options) {
     var board = game.board;
 
-    var bomberAction = {
-        enable: true
+    var config = {
+        bomber: true,
+        target: "owner|other",
+        source: "owner shield"
     };
-    var bomberSource = "owner shield";
-    var bomberTarget = "owner|other";
+
+    if (options) {
+        config = {
+            bomber: options["use-bomber"],
+            target: options["bomber-target"] + "|" +
+                options["bomber-target"].replace(/other/g, "owner"),
+            source: options["bomber-source"]
+        }
+    }
 
     var bomber = {
         condition: function (grid) {
             return (
-                bomberAction.enable &&
-                grid.is(bomberSource)
+                config.bomber &&
+                grid.is(config.source)
             );
         },
         configure: function (grid) {
             grid.status = "broken";
-            board.query(bomberTarget, grid.getGridsFromDir("O")).forEach(
+            board.query(config.target, grid.getGridsFromDir("O")).forEach(
                 grid => grid.status = "broken"
             );
             game.turn++;
@@ -117,30 +143,41 @@ function addBomberRule(game) {
     game.actions.push(bomber);
 }
 
-function addPincerRule(game) {
+function addPincerRule(game, options) {
     var board = game.board;
 
-    var pincerAction = {
-        enable: true
+    var config = {
+        pincer: true,
+        target: "owner valid|owner forbid",
+        source: "other valid|other forbid",
+        dir: ["T", "X"]
     };
-    var pincerSource = "other valid|other forbid";
-    var pincerTarget = "owner valid|owner forbid";
-    var pincerDir = ["T", "X"];
+
+    if (options) {
+        config = {
+            pincer: options["use-pincer"],
+            target: options["pincer-target"].replace(/other/g, "owner"),
+            source: options["pincer-source"].replace(/owner/g, "other"),
+            dir: options["pincer-dir"].split("|")
+        }
+    }
 
     function pincer() {
-        if (!pincerAction.enable) return;
+        if (!config.pincer) return;
 
         for (var x = 1; x < board.width - 1; x++) {
             for (var y = 1; y < board.height - 1; y++) {
                 var grid = board.grids[x][y];
                 var gridSym = grid.symbol;
-                if (!grid.is(pincerTarget, gridSym)) continue;
+                if (!grid.is(config.target, gridSym)) continue;
                 var broken = false;
 
-                for (var i = 0; i < pincerDir.length; i++) {
-                    var pincerSourceGrid = grid.getGridsFromDir(pincerDir[i]);
+                for (var i = 0; i < config.dir.length; i++) {
+                    if (!config.dir[i]) break;
+
+                    var pincerSourceGrid = grid.getGridsFromDir(config.dir[i]);
                     broken = board.query(
-                        pincerSource,
+                        config.source,
                         pincerSourceGrid,
                         gridSym
                     ).length === pincerSourceGrid.length;

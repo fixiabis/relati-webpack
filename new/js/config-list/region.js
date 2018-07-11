@@ -56,3 +56,33 @@ createList(
         }
     ]
 );
+
+createList(
+    "region", {
+        id: "region-rule",
+        name: "region-rule",
+        description: "圍成區域時，矩型四端來源"
+    }, [
+        {
+            id: "first",
+            type: "radio",
+            checked: true,
+            description: "優先"
+        },
+        {
+            id: "final",
+            type: "radio",
+            description: "佔有"
+        },
+        {
+            id: "share",
+            type: "radio",
+            description: "共有"
+        },
+        {
+            id: "split",
+            type: "radio",
+            description: "分隔"
+        }
+    ]
+);

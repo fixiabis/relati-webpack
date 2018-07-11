@@ -15,6 +15,7 @@ function createList(name, group, list) {
         input.id = `${group.id}-${item.id}`;
         input.type = item.type;
         input.checked = item.checked;
+        input.value = item.id;
         label.innerHTML = item.description;
         label.htmlFor = `${group.id}-${item.id}`;
 

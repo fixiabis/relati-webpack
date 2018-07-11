@@ -1,4 +1,4 @@
-function addSkinOn(board) {
+function addSkinOn(board, game) {
     board.addGridMark(
         grid => grid.status === "normal",
         painter => painter.strokeStyle = "black"
@@ -59,8 +59,7 @@ function addSkinOn(board) {
     );
     board.addGridMark(
         function (grid) {
-            if (!window.game) return false;
-            var board = window.game.board;
+            if (!game) return false;
             return board.history[board.history.length - 1] === grid.crd;
         },
         painter => painter.strokeStyle = "blue"

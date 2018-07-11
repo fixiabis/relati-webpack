@@ -1,18 +1,29 @@
-function addRegionRule(game) {
+function addRegionRule(game, options) {
     var board = game.board;
     var regions = [];
 
-    var regionAction = {
-        enable: true,
-        forbid: true,
-        forbidAttack: true
+    var config = {
+        region: true,
+        forbid: false,
+        forbidAttack: true,
+        rule: "first",
+        source: "owner valid|owner forbid|owner shield"
     };
-    var validSource = "owner valid|owner forbid|owner shield";
-    var regionRule = "first"
-    var isValidSource = (grid, sym) => grid.is(validSource, sym);
+
+    if (options) {
+        config = {
+            region: options["use-region"],
+            forbid: options["use-region-forbid"],
+            forbidAttack: options["use-region-forbid-attack"],
+            rule: options["region-rule"],
+            source: options["region-source"]
+        }
+    }
+
+    var isValidSource = (grid, sym) => grid.is(config.source, sym);
 
     function regionExist(grid) {
-        if (!regionAction.enable) return false;
+        if (!config.region) return false;
 
         var gridSym = grid.symbol;
 
@@ -67,10 +78,10 @@ function addRegionRule(game) {
             }
         }
 
-        if (regionRule === "first") return [owner[0]];
-        if (regionRule === "final") return [owner[owner.length - 1]];
-        if (regionRule === "share") return owner;
-        if (regionRule === "split") return owner.length > 1 ? [] : owner;
+        if (config.rule === "first") return [owner[0]];
+        if (config.rule === "final") return [owner[owner.length - 1]];
+        if (config.rule === "share") return owner;
+        if (config.rule === "split") return owner.length > 1 ? [] : owner;
     }
 
     var regionForbid = {
@@ -80,7 +91,7 @@ function addRegionRule(game) {
 
             if (
                 !regionOwners[0] ||
-                !regionAction.forbid
+                !config.forbid
             ) return false;
 
             if (regionOwners.indexOf(sym) < 0) {
@@ -99,7 +110,7 @@ function addRegionRule(game) {
 
             if (
                 !regionOwners[0] ||
-                !regionAction.forbidAttack
+                !config.forbidAttack
             ) return false;
 
             if (

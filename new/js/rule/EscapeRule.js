@@ -1,17 +1,25 @@
-function addEscapeRule(game) {
+function addEscapeRule(game, options) {
     var board = game.board;
     var dirO = ["F", "B", "R", "L", "FR", "FL", "BR", "BL"];
 
-    var escapeAction = {
-        enable: true
+    var config = {
+        escape: true,
+        route: "space|owner",
+        source: "owner valid"
     };
-    var validSource = "owner valid";
-    var inRoute = "space|owner";
+
+    if (options) {
+        config = {
+            escape: options["use-escape"],
+            route: options["escape-route"],
+            source: options["escape-source"]
+        }
+    }
 
     var escape = {
         condition: function (grid) {
             if (
-                !escapeAction.enable ||
+                !config.escape ||
                 !grid.is("space-real")
             ) return false;
 
@@ -20,8 +28,8 @@ function addEscapeRule(game) {
 
                 do {
                     var escapeGrid = grid.getGridFromDir(nowDir);
-                    if (!escapeGrid || !escapeGrid.is(inRoute)) break;
-                    if (escapeGrid.is(validSource, escapeGrid.symbol)) return true;
+                    if (!escapeGrid || !escapeGrid.is(config.route)) break;
+                    if (escapeGrid.is(config.source, escapeGrid.symbol)) return true;
                     nowDir += dirO[i];
                 } while (grid.getGridFromDir(nowDir));
             }
@@ -29,7 +37,7 @@ function addEscapeRule(game) {
             return false;
         },
         configure: function (grid) {
-            board.query(validSource).forEach(
+            board.query(config.source).forEach(
                 grid => grid.status = "broken"
             );
 

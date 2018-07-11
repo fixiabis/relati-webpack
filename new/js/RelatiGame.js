@@ -71,16 +71,16 @@ const RelatiGame = (function () {
         viewerIn(container) {
             container.appendChild(this.viewer);
 
-            function viewerResize() {
+            var viewerResize = function () {
                 var viewerSize = Math.min(
                     container.clientWidth,
                     container.clientHeight
                 );
                 this.viewerResize(viewerSize, viewerSize);
-            }
+            }.bind(this);
 
-            window.addEventListener("load", viewerResize.bind(this));
-            window.addEventListener("resize", viewerResize.bind(this));
+            window.addEventListener("resize", viewerResize);
+            viewerResize();
         }
     }
 
