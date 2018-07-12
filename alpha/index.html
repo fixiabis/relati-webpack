@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Relati</title>
+    <style>
+        @import "css/cover.css";
+        @import "css/start-page.css";
+        @import "css/select-page.css";
+    </style>
+</head>
+
+<body>
+    <div class="cover" id="start-page">
+        <div id="start-title">Relati</div>
+        <div id="start-button">開始</div>
+    </div>
+    <div class="cover" id="select-page">
+        <h1>選擇遊戲模式</h1>
+        <div id="select-mode">
+            <div>簡易模式</div>
+            <div>進階模式</div>
+            <div>擴充規則</div>
+            <div>自訂規則</div>
+        </div>
+    </div>
+    <script>
+        var startButton = document.getElementById("start-button");
+        var startPage = document.getElementById("start-page");
+        var selectPage = document.getElementById("select-page");
+
+        startButton.addEventListener("click", function () {
+            document.body.style.background = "#eee";
+            document.body.style.color = "#0b6d5d";
+            startPage.style.opacity = 0;
+            selectPage.style.transform = "scale(1)";
+        });
+    </script>
+</body>
+
+</html>

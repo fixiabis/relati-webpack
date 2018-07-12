@@ -1,0 +1,32 @@
+#select-mode {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+}
+
+#select-mode div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    user-select: none;
+    color: #eee;
+    font-size: 20px;
+    background-color: #0b6d5d;
+    width: 150px;
+    height: 150px;
+    margin: 5px;
+    border-radius: 10px;
+    transition: transform .5s;
+}
+
+#select-mode div:active {
+    transform: scale(0.8);
+}
+
+#select-mode div:hover {
+    background-color: #0a6353;
+}
