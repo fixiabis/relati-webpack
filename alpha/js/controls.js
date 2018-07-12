@@ -13,7 +13,7 @@ var easyModePage = elementId("easy-mode-page");
 var hardModePage = elementId("hard-mode-page");
 
 startPage.addEventListener("click", function () {
-    document.body.style.color = "#0b6d5d";
+    document.body.style.color = "#0a6050";
     document.body.style.background = "#eee";
     selectPage.style.transform = "scale(1)";
     startPage.style.opacity = 0;
