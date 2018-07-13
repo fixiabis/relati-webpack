@@ -10,6 +10,7 @@
         @import "css/main.css";
         @import "css/start-page.css";
         @import "css/select-page.css";
+        @import "css/easy-mode-page.css";
     </style>
     <script src="js/GridBoard.js"></script>
     <script src="js/RelatiGame.js"></script>
@@ -72,6 +73,15 @@
                 <div board="relati-normal"></div>
             </li>
         </ul>
+        <br> 遊戲人數:
+        <select id="easy-mode-players">
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+        </select>
+        <div id="easy-mode-start-button">開始遊戲</div>
     </div>
     <div id="easy-mode-board" class="page"></div>
     <div id="hard-mode-page" class="page">
