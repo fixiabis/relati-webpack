@@ -1,175 +1,172 @@
-(function (global) {
-    var toAsc = (val) => val.charCodeAt(),
-        toChr = (val) => String.fromCharCode(val),
-        toNum = (val) => val * 1,
-        maxVal = (val1, val2) => val1 > val2 ? val1 : val2,
-        minVal = (val1, val2) => val1 < val2 ? val1 : val2,
-        isExist = (obj, val) => obj.indexOf(val) > -1,
-        getColName = (crd) => crd[0],
-        getRowName = (crd) => crd.substr(1, 2);
-    class GridBoard {
-        constructor(w, h) {
-            this.grids = {};
-            this.height = h;
-            this.width = w;
-            for (var i = 0; i < w; i++)
-                for (var j = 0; j < h; j++) {
-                    var crd = String.fromCharCode(65 + i) + (j + 1),
-                        grid = new this.Grid(crd, this);
-                    this.grids[crd] = grid;
-                }
+const GridBoard = (function () {
+    class Grid {
+        constructor(crd, x, y, board) {
+            this.crd = crd;
+            this.x = x;
+            this.y = y;
+            this.board = board;
         }
-        getGridByCrd(crd) { return this.grids[crd]; }
-        getGridsByCrd(crd) {
-            var grids = [];
-            crd = crd.replace(/ /g, "");
-            if (isExist(crd, ",")) {
-                crd = crd.split(",");
-                for (var s = 0; s < crd.length; s++)
-                    grids = grids.concat(this.getGridsByCrd(crd[s]));
-                return grids;
+
+        getGridsFromDir(dirString) {
+            var result = [];
+
+            if (dirString.indexOf(",") > -1) {
+                dirString.split(",").forEach(
+                    dirStr => result = result.concat(
+                        this.getGridsFromDir(dirStr)
+                    )
+                );
+
+                return result;
             }
-            if (isExist(crd, ":")) {
-                var val = crd.split(":"),
-                    minColName, maxColName,
-                    minRowName, maxRowName;
-                for (var s = 0; s < 2; s++) {
-                    var colName, rowName;
-                    if (val[s].length < 2) {
-                        if (isNaN(val[s])) colName = val[s];
-                        else rowName = val[s];
-                    } else {
-                        if (isNaN(val[s])) {
-                            colName = getColName(val[s]);
-                            rowName = getRowName(val[s]);
-                        } else rowName = val[s];
-                    }
-                    if (!maxColName) {
-                        maxColName = colName;
-                        minColName = colName;
-                    } else if (colName) {
-                        var colName1 = maxColName,
-                            colName2 = colName;
-                        maxColName = maxVal(colName1, colName2);
-                        minColName = minVal(colName1, colName2);
-                    }
-                    if (!maxRowName) {
-                        maxRowName = rowName;
-                        minRowName = rowName;
-                    } else if (rowName) {
-                        var rowName1 = maxRowName,
-                            rowName2 = rowName;
-                        maxRowName = maxVal(rowName1 | 0, rowName2 | 0);
-                        minRowName = minVal(rowName1 | 0, rowName2 | 0);
-                    }
+
+            var shortDirs = [/I/g, /H/g, /T/g, /X/g, /O/g];
+            var fullDirs = [["F", "B"], ["R", "L"], ["I", "H"], ["IH"], ["T", "X"]];
+
+            for (var i = 0; i < shortDirs.length; i++) {
+                var shortDir = shortDirs[i];
+                var fullDir = fullDirs[i];
+
+                if (dirString.match(shortDir)) {
+                    result = result.concat(
+                        this.getGridsFromDir(
+                            fullDir.map(
+                                dir => dirString.replace(shortDir, dir)
+                            ).join(",")
+                        )
+                    );
+
+                    return result;
                 }
-                for (var col = toAsc(minColName); col < toAsc(maxColName) + 1; col++)
-                    for (var row = minRowName; row < toNum(maxRowName) + 1; row++)
-                        grids.push(this.grids[toChr(col) + row]);
-                return grids;
             }
-            if (crd.length == 1 && isNaN(crd))
-                return this.getGridsByCrd(crd + "1:" + this.height);
-            else if (!isNaN(crd))
-                return this.getGridsByCrd("A:" + toChr(this.height + 64) + crd);
-            return [this.grids[crd]];
+
+            if (dirString[0] === "~") {
+                var dir = dirString.substr(1, dirString.length - 1);
+                var nowDir = dir;
+
+                do {
+                    result.push(this.getGridFromDir(nowDir));
+                    nowDir += dir;
+                } while (this.getGridFromDir(nowDir));
+
+                return result;
+            }
+
+            return this.getGridFromDir(dirString);
+        }
+
+        getGridFromDir(dirString) {
+            var { x, y, board } = this;
+
+            for (var i = 0; i < dirString.length; i++) {
+                switch (dirString[i]) {
+                    case "F": y--; break;
+                    case "B": y++; break;
+                    case "R": x++; break;
+                    case "L": x--; break;
+                }
+            }
+
+            return board.grids[x] && board.grids[x][y];
         }
     }
-    GridBoard.prototype.Grid = class {
-        constructor(crd, board) {
-            this.crd = crd;
-            this.board = board;
-            this._ = {};
-        }
-        onget(name, func) { this.__defineGetter__(name, func); }
-        onset(name, func) { this.__defineSetter__(name, func); }
-        getColName(crd = this.crd) { return crd[0]; }
-        getRowName(crd = this.crd) { return crd.substr(1, 2); }
-        getRelCrdByCrd(crd) {
-            var gridColName = toAsc(this.getColName()),
-                crdColName = toAsc(getColName(crd)),
-                colChange = gridColName - crdColName,
-                gridRowName = toNum(this.getRowName()),
-                crdRowName = toNum(getRowName(crd)),
-                rowChange = gridRowName - crdRowName;
-            return (Math.sign(rowChange) > 0 ? (rowChange + "F") : Math.sign(rowChange) < 0 ? (Math.abs(rowChange) + "B") : "") +
-                (Math.sign(colChange) > 0 ? (colChange + "L") : Math.sign(colChange) < 0 ? (Math.abs(colChange) + "R") : "");
-        }
-        getRelCrdsByCrds() {
-            var crds = arguments, relCrds = [];
-            if (crds[0] instanceof Array) crds = crds[0];
-            for (var s = 0; s < crds.length; s++)
-                relCrds.push(this.getRelCrdByCrd(crds[s]));
-            return relCrds;
-        }
-        getRelCrdByGrid(grid) { return this.getRelCrdByCrd(grid.crd); }
-        getRelCrdsByGrids() {
-            var grids = arguments, relCrds = [];
-            if (grids[0] instanceof Array) grids = grids[0];
-            for (var s = 0; s < grids.length; s++)
-                relCrds.push(this.getRelCrdByCrd(grids[s].crd));
-            return relCrds;
-        }
-        getGridByRelCrd(relCrd) { return this.board.grids[this.getCrdByRelCrd(relCrd)]; }
-        getGridsByRelCrd(relCrd) {
-            var crds = this.getCrdsByRelCrd(relCrd), grids = [];
-            for (var s = 0; s < crds.length; s++)
-                grids.push(this.board.grids[crds[s]]);
-            return grids;
-        }
-        getCrdByRelCrd(relCrd) {
-            var colName = this.getColName(), colChange = 0,
-                rowName = this.getRowName(), rowChange = 0,
-                val = relCrd.replace(/F|B|R|L/g, "");
-            if (!isNaN(val) && val != "") {
-                var repeatRelCrd = relCrd.replace(val, "");
-                relCrd = "";
-                for (var i = 0; i < val; i++) relCrd += repeatRelCrd;
-                return this.getCrdByRelCrd(relCrd);
+
+    class GridBoard {
+        constructor(width, height) {
+            this.width = width;
+            this.height = height;
+            this.viewer = document.createElement("canvas");
+            this.painter = this.viewer.getContext("2d");
+            this.gridOf = {};
+            this.grids = [];
+            this.gridMarks = [];
+
+            for (var x = 0; x < width; x++) {
+                var gridCol = [];
+                this.grids.push(gridCol);
+
+                for (var y = 0; y < height; y++) {
+                    var crd = String.fromCharCode(x + 65) + (y + 1);
+                    var grid = new Grid(crd, x, y, this);
+                    this.gridOf[crd] = grid;
+                    gridCol.push(grid);
+                }
             }
-            for (var s = 0; s < relCrd.length; s++)
-                rowChange += relCrd[s] == "F" ? -1 : relCrd[s] == "B" ? 1 : 0,
-                    colChange += relCrd[s] == "R" ? 1 : relCrd[s] == "L" ? -1 : 0;
-            return toChr(toAsc(colName) + colChange) + (toNum(rowName) + rowChange);
+
+            this.viewer.addEventListener("click", function (event) {
+                var { offsetX: x, offsetY: y } = event;
+                var { viewer, width, grids, ongridselect } = this;
+                var gridSize = Math.floor((viewer.width - width - 1) / width);
+
+                if (ongridselect) {
+                    ongridselect(
+                        grids[(x / (gridSize + 1)) | 0][(y / (gridSize + 1)) | 0]
+                    );
+                }
+            }.bind(this));
         }
-        getCrdsByRelCrd(relCrd) {
-            var crds = [];
-            relCrd = relCrd.replace(/ /g, "");
-            if (isExist(relCrd, ",")) {
-                relCrd = relCrd.split(",");
-                for (var s = 0; s < relCrd.length; s++)
-                    crds = crds.concat(this.getCrdsByRelCrd(relCrd[s]));
-                return crds;
+
+        viewerRefresh() {
+            var { painter, viewer, width, height, gridOf, gridMarks } = this;
+            var gridSize = Math.floor((viewer.width - width - 1) / width);
+            viewer.width = gridSize * width + (width + 1);
+            viewer.height = gridSize * height + (height + 1);
+            painter.fillStyle = "#fff";
+            painter.strokeStyle = "#000";
+            painter.clearRect(0, 0, viewer.width, viewer.height);
+            painter.lineWidth = 1;
+            painter.setTransform(1, 0, 0, 1, 0.5, 0.5);
+
+            for (var x = 0; x <= width; x++) {
+                painter.beginPath();
+                painter.moveTo((gridSize + 1) * x, 0);
+                painter.lineTo((gridSize + 1) * x, viewer.height);
+                painter.stroke();
+                painter.closePath();
             }
-            var val = relCrd.replace(/F|B|R|L|E|X|O|I|H/g, "");
-            if (!isNaN(val) && val != "") {
-                var val = toNum(val),
-                    repeatRelCrd = relCrd.replace(val, "");
-                relCrd = "";
-                for (var i = 0; i < val; i++)
-                    relCrd += repeatRelCrd;
-                return this.getCrdsByRelCrd(relCrd);
+
+            for (var y = 0; y <= height; y++) {
+                painter.beginPath();
+                painter.moveTo(0, (gridSize + 1) * y);
+                painter.lineTo(viewer.width, (gridSize + 1) * y);
+                painter.stroke();
+                painter.closePath();
             }
-            if (isExist(relCrd, "E"))
-                return this.getCrdsByRelCrd(relCrd.replace(/E/g, "I") + "," + relCrd.replace(/E/g, "H"));
-            if (isExist(relCrd, "X"))
-                return this.getCrdsByRelCrd(relCrd.replace(/X/g, "IH"));
-            if (isExist(relCrd, "O"))
-                return this.getCrdsByRelCrd(relCrd.replace(/O/g, "E") + "," + relCrd.replace(/O/g, "X"));
-            if (isExist(relCrd, "I")) {
-                var dir = "FB";
-                for (var s = 0; s < 2; s++)
-                    crds = crds.concat(this.getCrdsByRelCrd(relCrd.replace(/I/g, dir[s])));
-                return crds;
+
+            for (var crd in gridOf) {
+                var grid = gridOf[crd];
+
+                for (var i = 0; i < gridMarks.length; i++) {
+                    var { condition, configure } = gridMarks[i];
+
+                    if (condition(grid)) {
+                        configure(
+                            painter,
+                            grid.x * (gridSize + 1) + 0.5,
+                            grid.y * (gridSize + 1) + 0.5,
+                            gridSize
+                        );
+                    }
+                }
             }
-            if (isExist(relCrd, "H")) {
-                var dir = "RL";
-                for (var s = 0; s < 2; s++)
-                    crds = crds.concat(this.getCrdsByRelCrd(relCrd.replace(/H/g, dir[s])));
-                return crds;
-            }
-            return [this.getCrdByRelCrd(relCrd)];
         }
-    };
-    global.GridBoard = GridBoard;
-})(this);
+
+        viewerResize(width, height) {
+            this.viewer.width = width;
+            this.viewer.height = height;
+            this.viewerRefresh();
+        }
+
+        addGridMark(condition, configure) {
+            this.gridMarks.push({ condition, configure });
+        }
+
+        selectGrid(crd) {
+            if (this.ongridselect) {
+                this.ongridselect(this.gridOf[crd]);
+            }
+        }
+    }
+
+    return GridBoard;
+})();
