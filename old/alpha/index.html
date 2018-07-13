@@ -10,6 +10,7 @@
         @import "css/main.css";
         @import "css/start-page.css";
         @import "css/select-page.css";
+        @import "css/easy-mode-page.css";
     </style>
     <script src="js/GridBoard.js"></script>
     <script src="js/RelatiGame.js"></script>
@@ -72,6 +73,15 @@
                 <div board="relati-normal"></div>
             </li>
         </ul>
+        <br> 遊戲人數:
+        <select id="easy-mode-players">
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+        </select>
+        <div id="easy-mode-start-button">開始遊戲</div>
     </div>
     <div id="easy-mode-board" class="page"></div>
     <div id="hard-mode-page" class="page">
@@ -116,7 +126,7 @@
             <li>連結阻斷，如下圖
                 <div board="relati-forbid"></div>
                 若符號無法與來源符號直接或是間接連結時，狀態轉為阻斷
-                <br> 狀態為阻斷、防盾、死亡的符號，在標記符號時，不能作為連結的來源
+                <br> 狀態為阻斷的符號，在標記符號時，不能作為連結的來源
                 <br> 若符號能與來源符號直接或是間接連結時，狀態轉為一般
                 <br> 符號狀態為阻斷，如下圖
                 <div board="forbid"></div>
