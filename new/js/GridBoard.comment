@@ -1,2 +1,36 @@
-GridBoard類別
-    
+GridBoard為棋盤的主資料結構，可查詢棋盤內部的所有格子
+
+dirs => [dir]
+
+crd>crd => dir
+crd>[crd] => [dir]
+crd<crd => dir
+crd<[crd] => [dir]
+-dir => dir
+-[dir] => [dir]
+crd.dir => crd
+crd.[dir] => crds
+
+crd~dir => crds
+crd~[dir] => [crds]
+
+crd:crd => crds
+crd:[crd] => [crds]
+
+crd?type=value
+
+[dir] + [dir] = [dir]
+
+H8.O ? symbol = "O"
+
+H8.2O ? symbol = "O" & -O.symbol = " "
+
+H8.IIH ? symbol = "O" & -(
+    H.symbol = " " & IH.symbol = " " |
+    I.symbol = " " & IH.symbol = " " |
+    I.symbol = " " & II.symbol = " "
+) + H8.IHH ? symbol = "O" & -(
+    I.symbol = " " & IH.symbol = " " |
+    H.symbol = " " & IH.symbol = " " |
+    H.symbol = " " & HH.symbol = " "
+)
