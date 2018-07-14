@@ -9,24 +9,15 @@
     <script src="js/GridBoard.js"></script>
     <script src="js/RelatiGame.js"></script>
     <script src="js/RelatiSkin.js"></script>
+    <script src="js/relati.js"></script>
     <style>
-        body {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 100vw;
-            height: 100vh;
-            margin: 0px;
-        }
+        @import "css/main.css";
     </style>
 </head>
 
 <body>
     <script>
-        (function () {
-            var game = new RelatiGame(2, document.body);
-            addSkinOn(game.board, game);
-        })();
+        gameStartIn(document.body);
     </script>
 </body>
 

@@ -96,11 +96,11 @@ const GridBoard = (function () {
             this.viewer.addEventListener("click", function (event) {
                 var { offsetX: x, offsetY: y } = event;
                 var { viewer, width, grids, ongridselect } = this;
-                var gridSize = Math.floor((viewer.width - width - 1) / width);
+                var gridSize = Math.floor((viewer.width - width - 1) / width) + 1;
 
                 if (ongridselect) {
                     ongridselect(
-                        grids[(x / (gridSize + 1)) | 0][(y / (gridSize + 1)) | 0]
+                        grids[(x / gridSize) | 0][(y / gridSize) | 0]
                     );
                 }
             }.bind(this));
