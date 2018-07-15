@@ -7,6 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Relati</title>
     <script src="js/GridBoard.js"></script>
+    <script src="js/relati.js"></script>
     <style>
         @import "css/main.css";
     </style>
@@ -14,20 +15,14 @@
 
 <body>
     <script>
-        var createSVG = (function () {
-            var svgNS = "http://www.w3.org/2000/svg";
-            return tag => document.createElementNS(svgNS, tag);
-        })();
-        var gridSize = (Math.min(innerWidth, innerHeight) * 0.8 / 5) | 0;
-        var gridLineSize = (gridSize / 10) | 0;
+        var game = new RelatiGame(document.body);
         var turn = 0;
         var symbol = "OX";
-        var board = new GridBoard(5, 5);
-        var viewer = createSVG("svg");
 
-        function createSym(sym, x, y) {
+        function createSym(sym, x, y, gridSize) {
+            var gridLineSize = (gridSize / 10) | 0;
+
             if (sym === "O") {
-                var symbolView = createSVG("g");
                 var circle = createSVG("circle");
                 x *= gridSize;
                 y *= gridSize;
@@ -37,10 +32,8 @@
                 circle.setAttribute("r", gridSize * 0.6 / 2);
                 circle.setAttribute("stroke", "#dc143c");
                 circle.setAttribute("fill", "none");
-                symbolView.appendChild(circle);
-                return symbolView;
+                return [circle];
             } else {
-                var symbolView = createSVG("g");
                 var lineL = createSVG("path");
                 var lineR = createSVG("path");
                 x *= gridSize;
@@ -55,52 +48,93 @@
                 lineR.setAttribute("stroke-width", gridLineSize);
                 lineR.setAttribute("d", `M ${startX} ${endY} L ${endX} ${startY}`);
                 lineR.setAttribute("stroke", "#4169e1");
-                symbolView.appendChild(lineL);
-                symbolView.appendChild(lineR);
-                return symbolView;
+                return [lineL, lineR];
             }
         }
 
-        viewer.setAttribute("width", gridSize * 5);
-        viewer.setAttribute("height", gridSize * 5);
-        viewer.addEventListener("click", function (event) {
-            var x = (event.offsetX / gridSize) | 0,
-                y = (event.offsetY / gridSize) | 0;
-            var grid = board.grids[x][y];
-            if (board.ongridselect) board.ongridselect(grid);
-        });
+        function resizeSym(grid, gridSize) {
+            var x = grid.x;
+            var y = grid.y;
+            var sym = grid.symbol;
+            var gridLineSize = (gridSize / 10) | 0;
 
-        for (let x = 1; x < 5; x++) {
-            let line = createSVG("path");
-            line.setAttribute("stroke-width", (gridLineSize / 2) | 0);
-            line.setAttribute("d", `M ${x * gridSize} 0 V ${gridSize * 5}`);
-            line.setAttribute("stroke", "#888");
-            viewer.appendChild(line);
+            if (!grid.symbolView) return;
+
+            if (sym === "O") {
+                var circle = grid.symbolView[0];
+                x *= gridSize;
+                y *= gridSize;
+                circle.setAttribute("stroke-width", gridLineSize);
+                circle.setAttribute("cx", x + gridSize / 2);
+                circle.setAttribute("cy", y + gridSize / 2);
+                circle.setAttribute("r", gridSize * 0.6 / 2);
+            } else {
+                var lineL = grid.symbolView[0];
+                var lineR = grid.symbolView[1];
+                x *= gridSize;
+                y *= gridSize;
+                var startX = x + gridSize / 5;
+                var startY = y + gridSize / 5;
+                var endX = x + gridSize * 0.8;
+                var endY = y + gridSize * 0.8;
+                lineL.setAttribute("stroke-width", gridLineSize);
+                lineL.setAttribute("d", `M ${startX} ${startY} L ${endX} ${endY}`);
+                lineR.setAttribute("stroke-width", gridLineSize);
+                lineR.setAttribute("d", `M ${startX} ${endY} L ${endX} ${startY}`);
+            }
         }
 
-        for (let y = 1; y < 5; y++) {
-            let line = createSVG("path");
-            line.setAttribute("stroke-width", (gridLineSize / 2) | 0);
-            line.setAttribute("d", `M 0 ${y * gridSize} H ${gridSize * 5}`)
-            line.setAttribute("stroke", "#888");
-            viewer.appendChild(line);
+        function isRelati(grid, sym) {
+            return grid.getGridsFromDir("O").map(
+                grid => grid && grid.symbol
+            ).includes(sym);
         }
 
-        document.body.appendChild(viewer);
-
-        board.ongridselect = function (grid) {
+        game.board.ongridselect = function (grid) {
             if (grid.symbol) return;
             var sym = symbol[turn % 2];
 
             if (turn > 1) {
-                var gridO = grid.getGridsFromDir("O").map(grid => grid && grid.symbol);
-                if (!gridO.includes(sym)) return;
+                if (!isRelati(grid, sym)) return;
             }
 
-            grid.symbol = sym;
-            viewer.appendChild(createSym(sym, grid.x, grid.y));
             turn++;
-        };
+            grid.symbol = sym;
+            grid.symbolView = createSym(sym, grid.x, grid.y, this.gridSize);
+
+            for (var i = 0; i < grid.symbolView.length; i++) {
+                this.viewer.appendChild(grid.symbolView[i]);
+            }
+
+            if (turn > 1 && turn < 24) {
+                sym = symbol[turn % 2];
+                for (var crd in game.board.gridOf) {
+                    var grid = game.board.gridOf[crd];
+                    if (grid.symbol) continue;
+                    if (isRelati(grid, sym)) return;
+                }
+
+                for (var crd in game.board.gridOf) {
+                    var grid = game.board.gridOf[crd];
+
+                    if (grid.symbol === sym) {
+                        var symbolView = grid.symbolView;
+
+                        for (var i = 0; i < symbolView.length; i++) {
+                            symbolView[i].setAttribute("stroke", "#ddd");
+                        }
+                    }
+                }
+            }
+        }.bind(game);
+
+        window.addEventListener("resize", function () {
+            this.viewerResize();
+
+            for (var crd in this.board.gridOf) {
+                resizeSym(this.board.gridOf[crd], this.gridSize);
+            }
+        }.bind(game));
     </script>
 </body>
 

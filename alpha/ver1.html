@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Relati</title>
+    <script src="js/GridBoard.js"></script>
+    <style>
+        @import "css/main.css";
+    </style>
+</head>
+
+<body>
+    <script>
+        var createSVG = (function () {
+            var svgNS = "http://www.w3.org/2000/svg";
+            return tag => document.createElementNS(svgNS, tag);
+        })();
+        var gridSize = (Math.min(innerWidth, innerHeight) * 0.8 / 5) | 0;
+        var gridLineSize = (gridSize / 10) | 0;
+        var turn = 0;
+        var symbol = "OX";
+        var board = new GridBoard(5, 5);
+        var viewer = createSVG("svg");
+
+        function createSym(sym, x, y) {
+            if (sym === "O") {
+                var symbolView = createSVG("g");
+                var circle = createSVG("circle");
+                x *= gridSize;
+                y *= gridSize;
+                circle.setAttribute("stroke-width", gridLineSize);
+                circle.setAttribute("cx", x + gridSize / 2);
+                circle.setAttribute("cy", y + gridSize / 2);
+                circle.setAttribute("r", gridSize * 0.6 / 2);
+                circle.setAttribute("stroke", "#dc143c");
+                circle.setAttribute("fill", "none");
+                symbolView.appendChild(circle);
+                return symbolView;
+            } else {
+                var symbolView = createSVG("g");
+                var lineL = createSVG("path");
+                var lineR = createSVG("path");
+                x *= gridSize;
+                y *= gridSize;
+                var startX = x + gridSize / 5;
+                var startY = y + gridSize / 5;
+                var endX = x + gridSize * 0.8;
+                var endY = y + gridSize * 0.8;
+                lineL.setAttribute("stroke-width", gridLineSize);
+                lineL.setAttribute("d", `M ${startX} ${startY} L ${endX} ${endY}`);
+                lineL.setAttribute("stroke", "#4169e1");
+                lineR.setAttribute("stroke-width", gridLineSize);
+                lineR.setAttribute("d", `M ${startX} ${endY} L ${endX} ${startY}`);
+                lineR.setAttribute("stroke", "#4169e1");
+                symbolView.appendChild(lineL);
+                symbolView.appendChild(lineR);
+                return symbolView;
+            }
+        }
+
+        viewer.setAttribute("width", gridSize * 5);
+        viewer.setAttribute("height", gridSize * 5);
+        viewer.addEventListener("click", function (event) {
+            var x = (event.offsetX / gridSize) | 0,
+                y = (event.offsetY / gridSize) | 0;
+            var grid = board.grids[x][y];
+            if (board.ongridselect) board.ongridselect(grid);
+        });
+
+        for (let x = 1; x < 5; x++) {
+            let line = createSVG("path");
+            line.setAttribute("stroke-width", (gridLineSize / 2) | 0);
+            line.setAttribute("d", `M ${x * gridSize} 0 V ${gridSize * 5}`);
+            line.setAttribute("stroke", "#888");
+            viewer.appendChild(line);
+        }
+
+        for (let y = 1; y < 5; y++) {
+            let line = createSVG("path");
+            line.setAttribute("stroke-width", (gridLineSize / 2) | 0);
+            line.setAttribute("d", `M 0 ${y * gridSize} H ${gridSize * 5}`)
+            line.setAttribute("stroke", "#888");
+            viewer.appendChild(line);
+        }
+
+        document.body.appendChild(viewer);
+
+        board.ongridselect = function (grid) {
+            if (grid.symbol) return;
+            var sym = symbol[turn % 2];
+
+            if (turn > 1) {
+                var gridO = grid.getGridsFromDir("O").map(grid => grid && grid.symbol);
+                if (!gridO.includes(sym)) return;
+            }
+
+            grid.symbol = sym;
+            viewer.appendChild(createSym(sym, grid.x, grid.y));
+            turn++;
+        };
+    </script>
+</body>
+
+</html>

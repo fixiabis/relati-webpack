@@ -7,3 +7,14 @@ body {
     overflow: hidden;
     margin: 0px;
 }
+
+svg {
+    animation: show 0.5s;
+}
+
+@keyframes show {
+    from {
+        opacity: 0;
+        transform: scale(0.5);
+    }
+}
