@@ -20,7 +20,7 @@
         var symbol = "OX";
 
         function createSym(sym, x, y, gridSize) {
-            var gridLineSize = (gridSize / 10) | 0;
+            var gridLineSize = gridSize / 10;
 
             if (sym === "O") {
                 var circle = createSVG("circle");
@@ -56,7 +56,7 @@
             var x = grid.x;
             var y = grid.y;
             var sym = grid.symbol;
-            var gridLineSize = (gridSize / 10) | 0;
+            var gridLineSize = gridSize / 10;
 
             if (!grid.symbolView) return;
 
