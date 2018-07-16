@@ -81,9 +81,43 @@ var getRelatiList = (function () {
     }
 })();
 
+class RelatiBoard extends GridBoard {
+    constructor(width, height) {
+        super(width, height);
+        var viewer = createSVG("svg");
+        var canvas = createSVG("svg");
+
+        canvas.setAttribute("width", width * 40);
+        canvas.setAttribute("height", height * 40);
+
+        for (let x = 1; x < width; x++) {
+            let line = createSVG("path");
+            line.setAttribute("stroke-width", 2);
+            line.setAttribute("d", `M ${x * 40} 0 V ${40 * width}`);
+            line.setAttribute("stroke", "#888");
+            canvas.appendChild(line);
+        }
+
+        for (let y = 1; y < height; y++) {
+            let line = createSVG("path");
+            line.setAttribute("stroke-width", 2);
+            line.setAttribute("d", `M 0 ${y * 40} H ${40 * height}`)
+            line.setAttribute("stroke", "#888");
+            canvas.appendChild(line);
+        }
+
+        viewer.appendChild(canvas);
+        viewer.setAttribute("viewbox", `0 0 ${width} ${height}`);
+
+        this.viewer = viewer;
+        this.canvas = canvas;
+    }
+}
+
 var gameStartButton = document.getElementById("game-start");
 var welcomePage = document.getElementById("welcome-page");
 var selectPage = document.getElementById("select-page");
+var boardPage = document.getElementById("board-page");
 var board5x5 = document.getElementById("board-5x5");
 var board7x7 = document.getElementById("board-7x7");
 var board9x9 = document.getElementById("board-9x9");
