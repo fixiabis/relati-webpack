@@ -2,19 +2,137 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+    color: #085555;
+    background-color: #f2f2f2;
     width: 100vw;
     height: 100vh;
+    position: relative;
     overflow: hidden;
     margin: 0px;
 }
 
-svg {
-    animation: show 0.5s;
+.page {
+    width: 100vw;
+    height: 100vh;
+    position: absolute;
+    transform: scale(0);
+    opacity: 0;
+    transition: all 0.5s;
 }
 
-@keyframes show {
+.page.active {
+    transform: scale(1);
+    opacity: 1;
+}
+
+#welcome-page {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#welcome {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    flex-direction: column;
+    color: #085555;
+    font-size: 40px;
+    width: 300px;
+    height: 200px;
+    animation: slide-up 1s;
+}
+
+#welcome div {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    flex-direction: row;
+}
+
+#welcome>div {
+    width: 280px;
+}
+
+#welcome>div div {
+    font-size: 20px;
+    width: 120px;
+    height: 40px;
+    border-style: solid;
+    border-width: 2px;
+    margin: 0px auto;
+}
+
+.click-control {
+    user-select: none;
+    cursor: pointer;
+    box-sizing: border-box;
+    transition: all 0.5s;
+}
+
+.click-control:hover {
+    color: #f2f2f2;
+    background-color: #085555;
+    border-color: #085555;
+}
+
+.click-control:active {
+    transform: scale(0.8);
+}
+
+
+#select {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+#select div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+    width: 150px;
+    height: 150px;
+    border-style: solid;
+    border-width: 2px;
+    margin: 10px;
+}
+
+@keyframes slide-up {
     from {
         opacity: 0;
-        transform: scale(0.5);
+        transform: translateY(calc(50vh - 200px));
     }
+}
+
+h1 {
+    font-size: 30px;
+    margin: 10px;
+}
+
+h2 {
+    font-size: 30px;
+    margin: 15px;
+}
+
+h3 {
+    font-size: 25px;
+    margin: 20px;
+}
+
+ol {
+    padding-left: 30px;
+}
+
+label {
+    user-select: none;
+}
+
+select,
+option {
+    font-size: inherit;
+    text-align: center;
 }
