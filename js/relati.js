@@ -209,6 +209,10 @@ function relati() {
             }
             grid.symbolViews = [];
         }
+        for (var i = 0; i < domainViews.length; i++) {
+            board.viewer.removeChild(domainViews[i]);
+        }
+        domainViews = [];
         turn = 0;
         messageBox.style.display = "none";
     }
@@ -317,12 +321,7 @@ function relati() {
         }
     }
     function relatiDomain(board, easy) {
-        var domain = {
-            O: [],
-            X: [],
-            P: [],
-            V: []
-        };
+        var domain = { O: [], X: [], P: [] };
         for (var i = 0; i < domainViews.length; i++) {
             board.viewer.removeChild(domainViews[i]);
         }
@@ -350,12 +349,6 @@ function relati() {
                     }
                 }
             }
-        }
-        domain.V = domain.V.concat(domain.P).concat(domain.O).concat(domain.X);
-        for (var crd in board.gridOf) {
-            var grid = board.gridOf[crd];
-            if (grid.symbol || domain.V.indexOf(grid) > -1)
-                continue;
         }
     }
     return {
