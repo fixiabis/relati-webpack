@@ -219,11 +219,11 @@ function relati() {
 
             if (symbolViews) {
                 for (var i = 0; i < symbolViews.length; i++) {
-                    if (board.viewer.contains(symbolViews[i])) {
-                        board.viewer.removeChild(symbolViews[i]);
-                    }
+                    board.viewer.removeChild(symbolViews[i]);
                 }
             }
+
+            grid.symbolViews = [];
         }
 
         turn = 0;
