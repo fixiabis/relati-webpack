@@ -279,9 +279,12 @@ function relati() {
                 }
 
                 if (!nextExist) {
-                    message.innerHTML = turn === width ** 2
-                        ? "平手"
-                        : `${sym}方輸了`;
+                    cleanBoardButton.className = `click-control for-${sym}`;
+                    message.innerHTML = `${sym}方輸了`;
+                    if (turn === width ** 2) {
+                        message.innerHTML = "平手";
+                        cleanBoardButton.className = `click-control`;
+                    }
                     messageBox.style.display = "flex";
                 }
 

@@ -239,9 +239,12 @@ function relati() {
                     }
                 }
                 if (!nextExist) {
-                    message.innerHTML = turn === Math.pow(width, 2)
-                        ? "平手"
-                        : sym + "\u65B9\u8F38\u4E86";
+                    cleanBoardButton.className = "click-control for-" + sym;
+                    message.innerHTML = sym + "\u65B9\u8F38\u4E86";
+                    if (turn === Math.pow(width, 2)) {
+                        message.innerHTML = "平手";
+                        cleanBoardButton.className = "click-control";
+                    }
                     messageBox.style.display = "flex";
                 }
                 if (!easy)
