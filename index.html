@@ -80,7 +80,7 @@
         <ul>
             <li>同簡易規則，標記的第一枚符號為來源</li>
             <li>
-                標記符號範圍增加，但中途路徑必須為空格，此型式又稱為連結
+                標記符號範圍增加，但中途路徑必須為空格
                 <div class="board">
                     <svg width="200" height="200">
                         <path stroke-width="2" d="M 40 0 V 200" stroke="#888"></path>
@@ -149,7 +149,53 @@
                 </div>
             </li>
             <li>
-                所有符號最終必須直接或是間接能夠與來源連結，連結的路徑中間的空格被對方符號佔據時，符號為阻斷
+                標記的方式稱為連結， 所有符號必須直接或是間接能夠與來源連結， 連結的路徑中間的空格被對方符號佔據時， 符號為阻斷
+                <div class="board">
+                    <svg width="200" height="200">
+                        <path stroke-width="2" d="M 40 0 V 200" stroke="#888"></path>
+                        <path stroke-width="2" d="M 80 0 V 200" stroke="#888"></path>
+                        <path stroke-width="2" d="M 120 0 V 200" stroke="#888"></path>
+                        <path stroke-width="2" d="M 160 0 V 200" stroke="#888"></path>
+                        <path stroke-width="2" d="M 0 40 H 200" stroke="#888"></path>
+                        <path stroke-width="2" d="M 0 80 H 200" stroke="#888"></path>
+                        <path stroke-width="2" d="M 0 120 H 200" stroke="#888"></path>
+                        <path stroke-width="2" d="M 0 160 H 200" stroke="#888"></path>
+                        <circle stroke-width="5" cx="100" cy="100" r="12" stroke="#dc143c" fill="none"></circle>
+                        <path stroke-width="5" d="M 128 48 L 152 72" stroke="#4169e1"></path>
+                        <path stroke-width="5" d="M 128 72 L 152 48" stroke="#4169e1"></path>
+                        <circle stroke-width="3" cx="180" cy="100" r="12" stroke="#bbb" fill="none"></circle>
+                        <path stroke-width="3" d="M 128 88 L 152 112" stroke="#4169e1"></path>
+                        <path stroke-width="3" d="M 128 112 L 152 88" stroke="#4169e1"></path>
+                        <circle stroke-width="3" cx="20" cy="20" r="12" stroke="#bbb" fill="none"></circle>
+                        <path stroke-width="3" d="M 48 48 L 72 72" stroke="#4169e1"></path>
+                        <path stroke-width="3" d="M 48 72 L 72 48" stroke="#4169e1"></path>
+                    </svg>
+                </div>
+            </li>
+            <li>
+                阻斷符號若能直接或是間接能夠與來源連結時，將會取消阻斷
+                <div class="board">
+                    <svg width="200" height="200">
+                        <path stroke-width="2" d="M 40 0 V 200" stroke="#888"></path>
+                        <path stroke-width="2" d="M 80 0 V 200" stroke="#888"></path>
+                        <path stroke-width="2" d="M 120 0 V 200" stroke="#888"></path>
+                        <path stroke-width="2" d="M 160 0 V 200" stroke="#888"></path>
+                        <path stroke-width="2" d="M 0 40 H 200" stroke="#888"></path>
+                        <path stroke-width="2" d="M 0 80 H 200" stroke="#888"></path>
+                        <path stroke-width="2" d="M 0 120 H 200" stroke="#888"></path>
+                        <path stroke-width="2" d="M 0 160 H 200" stroke="#888"></path>
+                        <circle stroke-width="5" cx="100" cy="100" r="12" stroke="#dc143c" fill="none"></circle>
+                        <path stroke-width="5" d="M 128 48 L 152 72" stroke="#4169e1"></path>
+                        <path stroke-width="5" d="M 128 72 L 152 48" stroke="#4169e1"></path>
+                        <circle stroke-width="3" cx="180" cy="100" r="12" stroke="#dc143c" fill="none"></circle>
+                        <path stroke-width="3" d="M 128 88 L 152 112" stroke="#4169e1"></path>
+                        <path stroke-width="3" d="M 128 112 L 152 88" stroke="#4169e1"></path>
+                        <circle stroke-width="3" cx="20" cy="20" r="12" stroke="#bbb" fill="none"></circle>
+                        <path stroke-width="3" d="M 48 48 L 72 72" stroke="#4169e1"></path>
+                        <path stroke-width="3" d="M 48 72 L 72 48" stroke="#4169e1"></path>
+                        <circle stroke-width="3" cx="140" cy="140" r="12" stroke="#dc143c" fill="none"></circle>
+                    </svg>
+                </div>
             </li>
             <li>阻斷符號無法用於標記符號</li>
         </ul>
