@@ -122,6 +122,9 @@ var RelatiBoard = /** @class */ (function (_super) {
 var gameStartButton = document.getElementById("game-start");
 var gameRulesButton = document.getElementById("game-rules");
 var selectModeButton = document.getElementById("select-mode");
+var cleanBoardButton = document.getElementById("clean-board");
+var messageBox = document.getElementById("message-box");
+var message = document.getElementById("message");
 var welcomePage = document.getElementById("welcome-page");
 var selectPage = document.getElementById("select-page");
 var boardPage = document.getElementById("board-page");
@@ -182,6 +185,21 @@ function relati() {
             return [lineL, lineR];
         }
     };
+    function clean(board) {
+        for (var crd in board.gridOf) {
+            var grid = board.gridOf[crd];
+            grid.symbol = "";
+            grid.status = "";
+            var symbolViews = grid.symbolViews;
+            if (symbolViews) {
+                for (var i = 0; i < symbolViews.length; i++) {
+                    board.viewer.removeChild(symbolViews[i]);
+                }
+            }
+        }
+        turn = 0;
+        messageBox.style.display = "none";
+    }
     function initialize(board, width, easy) {
         function viewerResize() {
             var size = (Math.min(window.innerWidth, window.innerHeight) * 0.9) | 0;
@@ -192,10 +210,6 @@ function relati() {
         boardPage.appendChild(board.viewer);
         viewerResize();
         window.addEventListener("resize", viewerResize);
-        for (var crd in board.gridOf) {
-            board.gridOf[crd].symbol = "";
-            board.gridOf[crd].status = "";
-        }
         board.ongridselect = function (grid) {
             if (grid.symbol)
                 return;
@@ -209,14 +223,35 @@ function relati() {
                 for (var i = 0; i < grid.symbolViews.length; i++) {
                     var symbolView = grid.symbolViews[i];
                     if (isSource)
-                        symbolView.setAttribute("stroke-width", 6);
+                        symbolView.setAttribute("stroke-width", 5);
                     board.viewer.appendChild(symbolView);
                 }
                 turn++;
+                var sym = symbol[turn % 2];
+                var nextExist = turn < 2;
+                for (var crd in board.gridOf) {
+                    var grid = board.gridOf[crd];
+                    if (grid.symbol !== "")
+                        continue;
+                    var list = getRelatiList(grid, sym, easy);
+                    if (list.length > 0) {
+                        nextExist = true;
+                    }
+                }
+                if (!nextExist) {
+                    message.innerHTML = turn === Math.pow(width, 2)
+                        ? "平手"
+                        : sym + "\u65B9\u8F38\u4E86";
+                    messageBox.style.display = "flex";
+                }
                 if (!easy)
                     relatiForbid(board);
             }
         };
+        clean(board);
+        cleanBoardButton.addEventListener("click", function () {
+            clean(board);
+        });
     }
     function relatiForbid(board) {
         var sourceGrid = [];

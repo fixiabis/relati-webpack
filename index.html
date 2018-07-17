@@ -42,7 +42,7 @@
         <ul>
             <li>兩位玩家分別標記一枚符號於棋盤格中</li>
             <li>
-                之後輪流標記符號於自己任何的符號附近
+                之後輪流標記符號於自己的符號附近
                 <div class="board">
                     <svg width="200" height="200">
                         <path stroke-width="2" d="M 40 0 V 200" stroke="#888"></path>
@@ -78,9 +78,9 @@
         <h1>進階規則 (適用於9x9, 11x11的棋盤)</h1>
         <h2>開始遊戲</h2>
         <ul>
-            <li>同簡易規則</li>
+            <li>同簡易規則，標記的第一枚符號為來源</li>
             <li>
-                標記符號範圍增加，但中途路徑必須為空格
+                標記符號範圍增加，但中途路徑必須為空格，此型式又稱為連結
                 <div class="board">
                     <svg width="200" height="200">
                         <path stroke-width="2" d="M 40 0 V 200" stroke="#888"></path>
@@ -91,7 +91,7 @@
                         <path stroke-width="2" d="M 0 80 H 200" stroke="#888"></path>
                         <path stroke-width="2" d="M 0 120 H 200" stroke="#888"></path>
                         <path stroke-width="2" d="M 0 160 H 200" stroke="#888"></path>
-                        <circle stroke-width="3" cx="100" cy="100" r="12" stroke="#dc143c" fill="none"></circle>
+                        <circle stroke-width="5" cx="100" cy="100" r="12" stroke="#dc143c" fill="none"></circle>
                         <circle stroke-width="3" cx="180" cy="20" r="12" stroke="#888" fill="none"></circle>
                         <circle stroke-width="3" cx="180" cy="100" r="12" stroke="#888" fill="none"></circle>
                         <circle stroke-width="3" cx="180" cy="180" r="12" stroke="#888" fill="none"></circle>
@@ -120,7 +120,7 @@
                         <path stroke-width="2" d="M 0 80 H 200" stroke="#888"></path>
                         <path stroke-width="2" d="M 0 120 H 200" stroke="#888"></path>
                         <path stroke-width="2" d="M 0 160 H 200" stroke="#888"></path>
-                        <circle stroke-width="3" cx="100" cy="100" r="12" stroke="#dc143c" fill="none"></circle>
+                        <circle stroke-width="5" cx="100" cy="100" r="12" stroke="#dc143c" fill="none"></circle>
                         <circle stroke-width="3" cx="20" cy="60" r="12" stroke="#888" fill="none"></circle>
                         <circle stroke-width="3" cx="20" cy="140" r="12" stroke="#888" fill="none"></circle>
                         <circle stroke-width="3" cx="60" cy="20" r="12" stroke="#888" fill="none"></circle>
@@ -149,10 +149,15 @@
                 </div>
             </li>
             <li>
-                以上擴增範圍的路徑倘若放置後，對方將空白處填滿時，符號將被阻斷，被阻斷的符號不能作為放置符號的參考
+                所有符號最終必須直接或是間接能夠與來源連結，連結的路徑中間的空格被對方符號佔據時，符號為阻斷
             </li>
+            <li>阻斷符號無法用於標記符號</li>
         </ul>
-        <div id="select-mode" class="click-control">選擇模式</div>
+        <div id="select-mode" class="click-control">選擇棋盤</div>
+    </div>
+    <div id="message-box">
+        <div id="message"></div>
+        <div id="clean-board" class="click-control">清除棋盤</div>
     </div>
     <script src="js/relati.js"></script>
 </body>
