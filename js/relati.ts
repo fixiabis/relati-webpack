@@ -219,7 +219,9 @@ function relati() {
 
             if (symbolViews) {
                 for (var i = 0; i < symbolViews.length; i++) {
-                    board.viewer.removeChild(symbolViews[i]);
+                    if (board.viewer.contains(symbolViews[i])) {
+                        board.viewer.removeChild(symbolViews[i]);
+                    }
                 }
             }
         }
