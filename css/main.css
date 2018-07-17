@@ -12,8 +12,10 @@ body {
 }
 
 .page {
+    background-color: #f2f2f2;
     width: 100vw;
     height: 100vh;
+    box-sizing: border-box;
     position: absolute;
     transform: scale(0);
     opacity: 0;
@@ -54,7 +56,8 @@ body {
     width: 280px;
 }
 
-#welcome>div div {
+#welcome>div div,
+#select-mode {
     font-size: 20px;
     width: 120px;
     height: 40px;
@@ -92,12 +95,18 @@ body {
     border-color: #dc143c;
 }
 
-#game-rules {
+#game-rules,
+#select-mode {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    flex-direction: row;
     color: #4169e1;
     background-color: #f2f2f2;
 }
 
-#game-rules:hover {
+#game-rules:hover,
+#select-mode:hover {
     color: #f2f2f2;
     background-color: #4169e1;
     border-color: #4169e1;
@@ -108,7 +117,9 @@ body {
     align-items: center;
     justify-content: center;
     flex-wrap: wrap;
-    width: 100%;
+    width: 340px;
+    height: 340px;
+    margin: 0 auto;
 }
 
 #select div {
@@ -127,6 +138,12 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+    overflow: hidden;
+}
+
+#rules-page {
+    overflow: auto;
+    padding: 10px;
 }
 
 @keyframes slide-up {
@@ -139,5 +156,19 @@ body {
 h1 {
     font-weight: normal;
     font-size: 30px;
+    margin: 10px;
+}
+
+h2 {
+    font-weight: normal;
+    font-size: 25px;
+    margin: 15px;
+}
+
+ul {
+    padding-left: 30px;
+}
+
+.board {
     margin: 10px;
 }
