@@ -24,7 +24,7 @@ var getRelatiList = (function () {
             var sourceGrid = grid.getGridFromDir(dirO[i]);
             if (!sourceGrid)
                 continue;
-            if (sourceGrid.symbol === sym && sourceGrid.symbol !== "forbid") {
+            if (sourceGrid.symbol === sym && sourceGrid.status !== "forbid") {
                 list.push(sourceGrid);
             }
         }
@@ -37,7 +37,7 @@ var getRelatiList = (function () {
             if (!sourceGrid)
                 continue;
             var spaceGrid = grid.getGridFromDir(dirO[i]);
-            if (sourceGrid.symbol === sym && sourceGrid.symbol !== "forbid") {
+            if (sourceGrid.symbol === sym && sourceGrid.status !== "forbid") {
                 if (spaceGrid.symbol === "") {
                     list.push(sourceGrid);
                 }
@@ -56,7 +56,7 @@ var getRelatiList = (function () {
             var spaceGridIH = grid.getGridFromDir(dirO[i % 4 + 4]);
             var spaceGridI = grid.getGridFromDir(dirO[((i / 2) | 0) % 2]);
             var spaceGridH = grid.getGridFromDir(dirO[i % 2 + 2]);
-            if (sourceGrid.symbol === sym && sourceGrid.symbol !== "forbid") {
+            if (sourceGrid.symbol === sym && sourceGrid.status !== "forbid") {
                 if (spaceGrid2T.symbol === "" &&
                     spaceGridT.symbol === "") {
                     list.push(sourceGrid);
@@ -185,6 +185,17 @@ function relati() {
             return [lineL, lineR];
         }
     };
+    var domainViews = [];
+    var domainViewCreate = function (x, y, sym) {
+        var dot = createSVG("circle");
+        x *= 40;
+        y *= 40;
+        dot.setAttribute("cx", x + 20);
+        dot.setAttribute("cy", y + 20);
+        dot.setAttribute("r", "" + 1);
+        dot.setAttribute("fill", "" + (sym === "O" ? "#dc143c" : "#4169e1"));
+        return dot;
+    };
     function clean(board) {
         for (var crd in board.gridOf) {
             var grid = board.gridOf[crd];
@@ -196,6 +207,7 @@ function relati() {
                     board.viewer.removeChild(symbolViews[i]);
                 }
             }
+            grid.symbolViews = [];
         }
         turn = 0;
         messageBox.style.display = "none";
@@ -249,6 +261,7 @@ function relati() {
                 }
                 if (!easy)
                     relatiForbid(board);
+                relatiDomain(board, easy);
             }
         };
         clean(board);
@@ -301,6 +314,48 @@ function relati() {
                     }
                 }
             }
+        }
+    }
+    function relatiDomain(board, easy) {
+        var domain = {
+            O: [],
+            X: [],
+            P: [],
+            V: []
+        };
+        for (var i = 0; i < domainViews.length; i++) {
+            board.viewer.removeChild(domainViews[i]);
+        }
+        domainViews = [];
+        for (var crd in board.gridOf) {
+            var grid = board.gridOf[crd];
+            if (grid.symbol)
+                continue;
+            var list = {};
+            for (var i = 0; i < symbol.length; i++) {
+                var sym = symbol[i];
+                list[sym] = getRelatiList(grid, sym, easy);
+            }
+            if (list["O"].length > 0 && list["X"].length > 0) {
+                domain.P.push(grid);
+            }
+            else {
+                for (var i = 0; i < symbol.length; i++) {
+                    var sym = symbol[i];
+                    if (list[sym].length > 0) {
+                        var domainView = domainViewCreate(grid.x, grid.y, sym);
+                        domainViews.push(domainView);
+                        board.viewer.appendChild(domainView);
+                        domain[sym].push(grid);
+                    }
+                }
+            }
+        }
+        domain.V = domain.V.concat(domain.P).concat(domain.O).concat(domain.X);
+        for (var crd in board.gridOf) {
+            var grid = board.gridOf[crd];
+            if (grid.symbol || domain.V.indexOf(grid) > -1)
+                continue;
         }
     }
     return {
