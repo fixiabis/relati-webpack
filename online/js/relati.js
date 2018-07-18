@@ -227,9 +227,7 @@ function relati() {
         joinArena(board, width);
         function viewerResize() {
             var size = (Math.min(window.innerWidth, window.innerHeight) * 0.9) | 0;
-            board.viewer.currentScale = size / (width * 40);
-            board.viewer.setAttribute("width", size);
-            board.viewer.setAttribute("height", size);
+            board.viewer.style.transform = "scale(" + size / (width * 40) + ")";
         }
         boardPage.appendChild(board.viewer);
         viewerResize();
