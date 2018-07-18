@@ -8,16 +8,18 @@
     <title>Relati</title>
     <script src="js/GridBoard.js"></script>
     <script src="js/RelatiGame.js"></script>
-    <script src="js/RelatiSkin.js"></script>
-    <script src="js/relati.js"></script>
     <style>
         @import "css/main.css";
     </style>
 </head>
 
 <body>
+    <div id="board-page" class="page active align-central"></div>
     <script>
-        gameStartIn(document.body);
+        var game = new RelatiGame();
+        var boardPage = document.getElementById("board-page");
+        boardPage.appendChild(game.board.viewer);
+        game.boardViewerResize();
     </script>
 </body>
 

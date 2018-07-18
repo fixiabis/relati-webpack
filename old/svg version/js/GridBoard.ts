@@ -1,9 +1,5 @@
 const GridBoard = (function () {
     class Grid {
-        x;
-        y;
-        crd;
-        board;
         constructor(x, y, board) {
             this.crd = String.fromCharCode(x + 65) + (y + 1);
             this.x = x;
@@ -73,11 +69,10 @@ const GridBoard = (function () {
 
             return board.grids[x] && board.grids[x][y];
         }
+        x; y; crd; board;
     }
 
     class GridBoard {
-        gridOf;
-        grids;
         constructor(width, height) {
             var gridOf = {};
             var grids = [];
@@ -97,6 +92,7 @@ const GridBoard = (function () {
             this.gridOf = gridOf;
             this.grids = grids;
         }
+        grids; gridOf;
     }
 
     return GridBoard;
