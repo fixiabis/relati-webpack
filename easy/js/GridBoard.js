@@ -94,6 +94,17 @@ var GridBoard = (function () {
             this.grids = grids;
             this.viewer = viewer;
         }
+        GridBoard.prototype.viewerResize = function (container) {
+            var size = Math.min(container.clientWidth, container.clientHeight) * 0.9 / 100;
+            this.viewer.style.transform = "scale(" + size + ")";
+        };
+        GridBoard.prototype.viewerIn = function (container) {
+            window.addEventListener("resize", function () {
+                this.viewerResize(container);
+            }.bind(this));
+            container.appendChild(this.viewer);
+            this.viewerResize(container);
+        };
         GridBoard.prototype.createView = function (tag, attribute) {
             var graphic = createSVG(tag);
             for (var name in attribute) {

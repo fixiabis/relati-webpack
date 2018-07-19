@@ -120,6 +120,22 @@ const GridBoard = (function () {
             this.viewer = viewer;
         }
 
+        viewerResize(container) {
+            var size = Math.min(
+                container.clientWidth,
+                container.clientHeight
+            ) * 0.9 / 100;
+            this.viewer.style.transform = "scale(" + size + ")";
+        }
+
+        viewerIn(container) {
+            window.addEventListener("resize", function () {
+                this.viewerResize(container);
+            }.bind(this));
+            container.appendChild(this.viewer);
+            this.viewerResize(container);
+        }
+
         createView(tag, attribute) {
             var graphic = createSVG(tag);
 

@@ -1,6 +1,6 @@
 const RelatiGame = (function () {
     var symbol = "OX";
-    var symbolCreate = {
+    var createSymbolView = {
         O: function (grid) {
             return this.board.createViews([
                 {
@@ -49,23 +49,6 @@ const RelatiGame = (function () {
         ).length > 0;
     }
 
-    function gridSelected(grid) {
-        if (grid.symbol) return;
-
-        var sym = symbol[this.turn % 2];
-
-        if (this.turn < 2 || isRelati(grid, sym)) {
-            grid.symbol = sym;
-            this.turn++;
-
-            var views = symbolCreate[sym].bind(this)(grid);
-
-            for (var i = 0; i < views.length; i++) {
-                this.board.viewer.appendChild(views[i]);
-            }
-        }
-    }
-
     class RelatiGame {
         constructor() {
             var board = new GridBoard(5, 5);
@@ -73,21 +56,41 @@ const RelatiGame = (function () {
             board.viewer.addEventListener("click", function (event) {
                 var x = Math.floor(event.offsetX / 20),
                     y = Math.floor(event.offsetY / 20);
-                gridSelected.bind(this)(board.grids[x][y]);
+                this.gridSelected(board.grids[x][y]);
             }.bind(this));
 
             this.turn = 0;
             this.board = board;
-            window.addEventListener("resize", this.boardViewerResize.bind(this));
         }
 
-        boardViewerResize() {
-            var size = Math.min(
-                window.innerWidth,
-                window.innerHeight
-            ) * 0.9 / 100;
+        gridSelected(grid) {
+            if (grid.symbol) return;
 
-            this.board.viewer.style.transform = "scale(" + size + ")";
+            var sym = symbol[this.turn % 2];
+
+            if (this.turn < 2 || isRelati(grid, sym)) {
+                grid.symbol = sym;
+                this.turn++;
+
+                var views = createSymbolView[sym].bind(this)(grid);
+
+                for (var i = 0; i < views.length; i++) {
+                    this.board.viewer.appendChild(views[i]);
+                }
+
+                if (this.turn >= 2) {
+                    var sym = symbol[this.turn % 2];
+
+                    for (var crd in this.board.gridOf) {
+                        var grid = this.board.gridOf[crd];
+                        if (grid.symbol) continue;
+
+                        if (isRelati(grid, sym)) return;
+                    }
+
+                    console.log(`${sym} lose`);
+                }
+            }
         }
 
         turn; board;

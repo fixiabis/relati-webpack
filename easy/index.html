@@ -14,12 +14,12 @@
 </head>
 
 <body>
-    <div id="board-page" class="page active align-central"></div>
+    <div id="board-page"></div>
     <script>
-        var game = new RelatiGame();
-        var boardPage = document.getElementById("board-page");
-        boardPage.appendChild(game.board.viewer);
-        game.boardViewerResize();
+        (function (container) {
+            var game = new RelatiGame();
+            game.board.viewerIn(container);
+        })(document.getElementById("board-page"));
     </script>
 </body>
 
