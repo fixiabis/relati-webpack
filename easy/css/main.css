@@ -4,13 +4,16 @@ body {
     margin: 0px;
 }
 
+.page {
+    background-color: #f2f2f2;
+    width: 100vw;
+    height: 100vh;
+}
+
 #board-page {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #f2f2f2;
-    width: 100vw;
-    height: 100vh;
 }
 
 #board-page svg {
@@ -22,4 +25,37 @@ body {
         opacity: 0;
         transform: scale(0);
     }
+}
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+    }
+}
+
+#show-rules,
+#hide-rules {
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+}
+
+#game-rules {
+    font-size: 20px;
+    box-sizing: border-box;
+    padding: 10px;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+}
+
+.hide {
+    display: none;
+    animation: fade-in 0.5s;
+}
+
+#nearby-of-symbol {
+    margin: 10px;
 }

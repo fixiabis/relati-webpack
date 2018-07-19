@@ -1,4 +1,5 @@
 var RelatiGame = (function () {
+    var GridBoard = this.GridBoard;
     var symbol = "OX";
     var createSymbolView = {
         O: function (grid) {

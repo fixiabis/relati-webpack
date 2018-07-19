@@ -14,12 +14,64 @@
 </head>
 
 <body>
-    <div id="board-page"></div>
+    <div id="board-page" class="page"></div>
+    <div id="show-rules">
+        <svg width="50" height="50" xmlns="http://www.w3.org/2000/svg">
+            <g>
+                <path d="M 17 20.5 A 8 8 0 1 1 25 28.5 V 32.5" stroke="#888" stroke-width="2" fill="none"></path>
+                <path d="M 25 34.5 V 37.5" stroke="#888" stroke-width="2" fill="none"></path>
+            </g>
+        </svg>
+    </div>
+    <div id="game-rules" class="page hide">
+        遊戲開始時，雙方分別標記一枚符號於棋盤格子中
+        <br>之後，雙方輪流標記符號於自己符號的附近，如下圖灰色部份
+        <div id="nearby-of-symbol">
+            <svg width="100" height="100">
+                <path stroke-width="1" d="M 20 0 V 100" stroke="#888"></path>
+                <path stroke-width="1" d="M 40 0 V 100" stroke="#888"></path>
+                <path stroke-width="1" d="M 60 0 V 100" stroke="#888"></path>
+                <path stroke-width="1" d="M 80 0 V 100" stroke="#888"></path>
+                <path stroke-width="1" d="M 0 20 H 100" stroke="#888"></path>
+                <path stroke-width="1" d="M 0 40 H 100" stroke="#888"></path>
+                <path stroke-width="1" d="M 0 60 H 100" stroke="#888"></path>
+                <path stroke-width="1" d="M 0 80 H 100" stroke="#888"></path>
+                <circle stroke-width="2" cx="50" cy="50" r="6" stroke="#dc143c" fill="none"></circle>
+                <circle stroke-width="2" cx="70" cy="50" r="6" stroke="#bbb" fill="none"></circle>
+                <circle stroke-width="2" cx="70" cy="70" r="6" stroke="#bbb" fill="none"></circle>
+                <circle stroke-width="2" cx="50" cy="70" r="6" stroke="#bbb" fill="none"></circle>
+                <circle stroke-width="2" cx="30" cy="70" r="6" stroke="#bbb" fill="none"></circle>
+                <circle stroke-width="2" cx="30" cy="50" r="6" stroke="#bbb" fill="none"></circle>
+                <circle stroke-width="2" cx="30" cy="30" r="6" stroke="#bbb" fill="none"></circle>
+                <circle stroke-width="2" cx="50" cy="30" r="6" stroke="#bbb" fill="none"></circle>
+                <circle stroke-width="2" cx="70" cy="30" r="6" stroke="#bbb" fill="none"></circle>
+            </svg>
+        </div>
+        對方無法標記符號時，即判我方勝利(佔滿棋盤時判平手)
+    </div>
+    <div id="hide-rules" class="hide">
+        <svg width="50" height="50" xmlns="http://www.w3.org/2000/svg">
+            <g>
+                <path d="M 10 10 L 40 40" stroke="#888" stroke-width="2" fill="none"></path>
+                <path d="M 40 10 L 10 40" stroke="#888" stroke-width="2" fill="none"></path>
+            </g>
+        </svg>
+    </div>
     <script>
         (function (container) {
             var game = new RelatiGame();
             game.board.viewerIn(container);
         })(document.getElementById("board-page"));
+
+        document.getElementById("show-rules").addEventListener("click", function () {
+            document.getElementById("game-rules").style.display = "block";
+            document.getElementById("hide-rules").style.display = "block";
+        });
+
+        document.getElementById("hide-rules").addEventListener("click", function () {
+            document.getElementById("game-rules").style.display = "none";
+            document.getElementById("hide-rules").style.display = "none";
+        });
     </script>
 </body>
 

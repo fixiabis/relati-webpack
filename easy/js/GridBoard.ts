@@ -1,4 +1,4 @@
-const GridBoard = (function () {
+var GridBoard = (function () {
     var createSVG = (function () {
         var svgNS = "http://www.w3.org/2000/svg";
         return tag => document.createElementNS(svgNS, tag);
