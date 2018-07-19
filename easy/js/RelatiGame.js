@@ -1,9 +1,8 @@
 var RelatiGame = (function () {
-    var GridBoard = this.GridBoard;
     var symbol = "OX";
     var createSymbolView = {
         O: function (grid) {
-            return this.board.createViews([
+            return grid.symbolView = this.board.createViews([
                 {
                     tag: "circle",
                     attribute: {
@@ -22,7 +21,7 @@ var RelatiGame = (function () {
             var startY = grid.y * 20 + 4;
             var endX = grid.x * 20 + 16;
             var endY = grid.y * 20 + 16;
-            return this.board.createViews([
+            return grid.symbolView = this.board.createViews([
                 {
                     tag: "path",
                     attribute: {
@@ -56,6 +55,18 @@ var RelatiGame = (function () {
             this.turn = 0;
             this.board = board;
         }
+        RelatiGame.prototype.restart = function () {
+            this.turn = 0;
+            for (var crd in this.board.gridOf) {
+                var grid = this.board.gridOf[crd];
+                if (grid.symbolView) {
+                    for (var i = 0; i < grid.symbolView.length; i++) {
+                        this.board.viewer.removeChild(grid.symbolView[i]);
+                    }
+                }
+                delete grid.symbol;
+            }
+        };
         RelatiGame.prototype.gridSelected = function (grid) {
             if (grid.symbol)
                 return;
@@ -76,7 +87,16 @@ var RelatiGame = (function () {
                         if (isRelati(grid, sym))
                             return;
                     }
-                    console.log(sym + " lose");
+                    if (this.turn === 25) {
+                        showMessage("平手", function () {
+                            this.restart();
+                        }.bind(this));
+                    }
+                    else {
+                        showMessage((sym === "O" ? "X" : "O") + "\u8D0F\u4E86", function () {
+                            this.restart();
+                        }.bind(this));
+                    }
                 }
             }
         };
