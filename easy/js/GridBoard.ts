@@ -117,6 +117,8 @@ var GridBoard = (function () {
 
             this.gridOf = gridOf;
             this.grids = grids;
+            this.width = width;
+            this.height = height;
             this.viewer = viewer;
         }
 
@@ -124,7 +126,7 @@ var GridBoard = (function () {
             var size = Math.min(
                 container.clientWidth,
                 container.clientHeight
-            ) * 0.9 / 100;
+            ) * 0.9 / (this.width * 20);
             this.viewer.style.transform = "scale(" + size + ")";
         }
 
@@ -158,7 +160,7 @@ var GridBoard = (function () {
             return graphics;
         }
 
-        grids; gridOf; viewer;
+        grids; gridOf; width; height; viewer;
     }
 
     return GridBoard;
