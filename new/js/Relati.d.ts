@@ -67,8 +67,7 @@ declare namespace Relati {
 }
 declare namespace Relati {
     class RelatiPlayer {
-        game: RelatiGame;
-        constructor(game: RelatiGame);
+        game?: RelatiGame;
         placement(grid: RelatiGrid): void;
     }
 }

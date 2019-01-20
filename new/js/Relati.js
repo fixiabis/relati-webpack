@@ -203,6 +203,10 @@ var Relati;
             this.board = board;
             this.players = players;
             this.turn = 0;
+            for (var _i = 0, players_1 = players; _i < players_1.length; _i++) {
+                var player = players_1[_i];
+                player.game = this;
+            }
         }
         RelatiGame.prototype.nowPlayer = function () {
             var game = this;
@@ -215,16 +219,30 @@ var Relati;
 var Relati;
 (function (Relati) {
     var RelatiPlayer = /** @class */ (function () {
-        function RelatiPlayer(game) {
-            this.game = game;
+        function RelatiPlayer() {
         }
         RelatiPlayer.prototype.placement = function (grid) {
             var game = this.game;
             var player = this;
+            if (!game)
+                return;
             if (game.nowPlayer() !== player)
                 return;
-            if (game.turn < 2 && !grid.role) {
+            if (grid.role)
+                return;
+            if (game.turn < 2) {
                 grid.role = new Relati.RelatiRole(this, grid);
+                grid.role.type = "leader";
+                grid.role.gain("relati-launcher");
+                game.turn++;
+            }
+            else if (Relati.RelatiRules.Relati.allow({
+                game: game, owner: this, grid: grid
+            })) {
+                grid.role = new Relati.RelatiRole(this, grid);
+                grid.role.gain("relati-recepter");
+                grid.role.gain("relati-repeater");
+                game.turn++;
             }
         };
         return RelatiPlayer;

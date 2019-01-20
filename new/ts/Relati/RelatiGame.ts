@@ -5,7 +5,11 @@ namespace Relati {
         constructor(
             public board: RelatiBoard,
             public players: RelatiPlayer[]
-        ) { }
+        ) {
+            for (var player of players) {
+                player.game = this;
+            }
+        }
 
         public nowPlayer() {
             var game = this;
