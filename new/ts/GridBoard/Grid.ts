@@ -1,11 +1,7 @@
 class Grid {
     public coordinate: string;
-    private _queryCache: {
-        [command: string]: Grid
-    } = {};
-    private _queriesCache: {
-        [command: string]: Grid[]
-    } = {};
+    private _queryCache: { [command: string]: Grid } = {};
+    private _queriesCache: { [command: string]: Grid[] } = {};
 
     static simplifyDirectionList = [/I/g, /H/g, /T/g, /X/g, /O/g];
     static originalDirectionLists = [
@@ -21,7 +17,6 @@ class Grid {
         public y: number
     ) {
         this.coordinate = `${String.fromCharCode(x + 65)}${y + 1}`;
-        this.board[this.coordinate] = this;
     }
 
     query(directionCommand: string): Grid {

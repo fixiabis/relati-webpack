@@ -1,14 +1,8 @@
 class GridBoard {
-    [gridCoor: string]: any;
-
     public grids: Grid[][] = [];
     public gridList: Grid[] = [];
-    private _queryCache: {
-        [command: string]: Grid
-    } = {};
-    private _queriesCache: {
-        [command: string]: Grid[]
-    } = {};
+    private _queryCache: { [command: string]: Grid } = {};
+    private _queriesCache: { [command: string]: Grid[] } = {};
 
     constructor(public width: number, public height: number) {
         for (var x = 0; x < width; x++) {
