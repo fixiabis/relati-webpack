@@ -12,9 +12,7 @@ class Grid {
     ];
 
     constructor(
-        public board: GridBoard,
-        public x: number,
-        public y: number
+        public board: GridBoard, public x: number, public y: number
     ) {
         this.coordinate = `${String.fromCharCode(x + 65)}${y + 1}`;
     }

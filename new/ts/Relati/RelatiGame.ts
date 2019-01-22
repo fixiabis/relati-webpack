@@ -1,25 +1,17 @@
 namespace Relati {
     export class RelatiGame {
         public turn = 0;
+        public players: RelatiPlayer[] = [];
 
-        constructor(
-            public board: RelatiBoard,
-            public players: RelatiPlayer[]
-        ) {
-            for (var player of players) {
-                player.game = this;
-            }
+        constructor(public board: RelatiBoard) { }
+
+        getNowPlayer() {
+            var totalPlayer = this.players.length;
+            return this.players[this.turn % totalPlayer];
         }
 
-        public nowPlayer() {
-            var game = this;
-            return game.players[game.turn % 2];
+        selectGrid(grid: RelatiGrid) {
+            
         }
-    }
-
-    export interface RelatiGameState {
-        game?: RelatiGame,
-        owner?: RelatiPlayer,
-        grid?: RelatiGrid
     }
 }

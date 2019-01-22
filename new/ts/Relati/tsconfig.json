@@ -1,8 +1,5 @@
 {
   "complieOnSave": true,
-  // "exclude": [
-  //   "GridBoard/*"
-  // ],
   "compilerOptions": {
     /* Basic Options */
     "target": "es5", /* Specify ECMAScript target version: "ES3" (default), "ES5", "ES2015", "ES2016", "ES2017","ES2018" or "ESNEXT". */
@@ -16,7 +13,7 @@
     // "jsx": "preserve",                     /* Specify JSX code generation: "preserve", "react-native", or "react". */
     "declaration": true,                   /* Generates corresponding ".d.ts" file. */
     "sourceMap": true, /* Generates corresponding ".map" file. */
-    "outFile": "../js/Relati.js", /* Concatenate and emit output to single file. */
+    "outFile": "../../js/Relati.js", /* Concatenate and emit output to single file. */
     // "outDir": "../js", /* Redirect output structure to the directory. */
     // "rootDir": "./",                       /* Specify the root directory of input files. Use to control the output directory structure with --outDir. */
     // "removeComments": true, /* Do not emit comments to output. */

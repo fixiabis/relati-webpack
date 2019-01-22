@@ -12,8 +12,7 @@ namespace Relati {
 
     export class RelatiRole {
         public type: RelatiRoleType = "normal";
-        public status: { [statusName: string]: boolean } = {};
-
+        public status: { [status: string]: boolean } = {};
         constructor(
             public owner: RelatiPlayer,
             public grid: RelatiGrid
@@ -52,7 +51,6 @@ namespace Relati {
         "relati-launcher" |
         "relati-repeater" |
         "relati-recepter" |
-        "relati-blocked" |
         RelatiRoleStatusRelatiNormal |
         RelatiRoleStatusRelatiRemote
     );
@@ -60,15 +58,13 @@ namespace Relati {
     export type RelatiRoleStatusRelatiNormal = (
         "relati-normal-launcher" |
         "relati-normal-repeater" |
-        "relati-normal-recepter" |
-        "relati-normal-blocked"
+        "relati-normal-recepter"
     );
 
     export type RelatiRoleStatusRelatiRemote = (
         "relati-remote-launcher" |
         "relati-remote-repeater" |
         "relati-remote-recepter" |
-        "relati-remote-blocked" |
         RelatiRoleStatusRelatiRemoteNormal |
         RelatiRoleStatusRelatiRemoteStable
     );
@@ -76,14 +72,12 @@ namespace Relati {
     export type RelatiRoleStatusRelatiRemoteNormal = (
         "relati-remote-normal-launcher" |
         "relati-remote-normal-repeater" |
-        "relati-remote-normal-recepter" |
-        "relati-remote-normal-blocked"
+        "relati-remote-normal-recepter"
     );
 
     export type RelatiRoleStatusRelatiRemoteStable = (
         "relati-remote-stable-launcher" |
         "relati-remote-stable-repeater" |
-        "relati-remote-stable-recepter" |
-        "relati-remote-stable-blocked"
+        "relati-remote-stable-recepter"
     );
 }
