@@ -29,7 +29,10 @@ declare namespace Relati {
         board: RelatiBoard;
         turn: number;
         players: RelatiPlayer[];
-        constructor(board: RelatiBoard);
+        view: {
+            [name: string]: SVGElement;
+        };
+        constructor(board: RelatiBoard, container: HTMLElement);
         getNowPlayer(): RelatiPlayer;
         selectGrid(grid: RelatiGrid): void;
     }
@@ -42,11 +45,10 @@ declare namespace Relati {
 declare namespace Relati {
     class RelatiPlayer {
         game: RelatiGame;
-        badge: RelatiBadge;
-        constructor(game: RelatiGame, badge: RelatiBadge);
+        badge: string;
+        constructor(game: RelatiGame, badge: string);
         selectGrid(grid: RelatiGrid): void;
     }
-    type RelatiBadge = "O" | "X";
 }
 declare namespace Relati {
     type RelatiRoleType = "normal" | "leader" | "wizard";
@@ -99,6 +101,12 @@ declare namespace Relati {
     interface RelatiRuleTrace {
         target: RelatiGrid;
         routes: RelatiGrid[];
+    }
+}
+declare namespace Relati {
+    namespace RelatiView {
+        function viewInitialize(board: RelatiBoard, gridSize: number, container: HTMLElement, view: RelatiGame["view"]): void;
+        function updateBoardView(board: RelatiBoard, view: RelatiGame["view"]): void;
     }
 }
 declare namespace Relati {

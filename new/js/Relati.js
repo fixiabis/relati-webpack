@@ -2,10 +2,16 @@
 var Relati;
 (function (Relati) {
     var RelatiGame = /** @class */ (function () {
-        function RelatiGame(board) {
+        function RelatiGame(board, container) {
             this.board = board;
             this.turn = 0;
             this.players = [];
+            this.view = {};
+            Relati.RelatiView.viewInitialize(board, 5, container, this.view);
+            this.view.board.addEventListener("click", function (event) {
+                var x = Math.floor(event.offsetX / 5), y = Math.floor(event.offsetY / 5), grid = board.grids[x] && board.grids[x][y];
+                this.selectGrid(grid);
+            }.bind(this));
         }
         RelatiGame.prototype.getNowPlayer = function () {
             var totalPlayer = this.players.length;
@@ -36,6 +42,7 @@ var Relati;
                     effect.do({ game: game, grid: grid_1, owner: owner });
                 }
             }
+            Relati.RelatiView.updateBoardView(this.board, this.view);
         };
         return RelatiGame;
     }());
@@ -162,6 +169,98 @@ var Relati;
         "relati-remote-normal-receiver",
         "relati-remote-stable-receiver"
     ];
+})(Relati || (Relati = {}));
+var Relati;
+(function (Relati) {
+    var RelatiView;
+    (function (RelatiView) {
+        function viewInitialize(board, gridSize, container, view) {
+            var width = board.width, height = board.height;
+            var boardView = createSVG("svg");
+            boardView.setAttribute("width", "" + width * gridSize);
+            boardView.setAttribute("height", "" + height * gridSize);
+            var background = createSVG("g");
+            boardView.appendChild(background);
+            var lineAttr = {
+                "d": "",
+                "stroke": "#888",
+                "stroke-width": "0.4"
+            };
+            for (var x = 1; x < width; x++) {
+                lineAttr.d = "M " + x * gridSize + " 0 V " + height * gridSize;
+                var gridLine = createSVG("path", lineAttr);
+                boardView.appendChild(gridLine);
+            }
+            for (var y = 1; y < height; y++) {
+                lineAttr.d = "M 0 " + y * gridSize + " H " + width * gridSize;
+                var gridLine = createSVG("path", lineAttr);
+                boardView.appendChild(gridLine);
+            }
+            boardView.style.transform = "scale(" + Math.min(container.clientWidth / (board.width * 5), container.clientHeight / (board.height * 5)) * 0.95 + ")";
+            window.addEventListener("resize", function () {
+                boardView.style.transform = "scale(" + Math.min(container.clientWidth / (width * 5), container.clientHeight / (height * 5)) * 0.95 + ")";
+            });
+            container.appendChild(boardView);
+            for (var _i = 0, _a = board.gridList; _i < _a.length; _i++) {
+                var grid = _a[_i];
+                var gridView = createSVG("g");
+                view[grid.coordinate] = gridView;
+                boardView.appendChild(gridView);
+            }
+            view.board = boardView;
+            view.background = background;
+        }
+        RelatiView.viewInitialize = viewInitialize;
+        function updateBoardView(board, view) {
+            for (var _i = 0, _a = board.gridList; _i < _a.length; _i++) {
+                var grid = _a[_i];
+                var gridView = view[grid.coordinate];
+                while (gridView.childNodes.length > 0) {
+                    gridView.removeChild(gridView.childNodes[0]);
+                }
+                updateGridBadge(grid, gridView);
+            }
+        }
+        RelatiView.updateBoardView = updateBoardView;
+        function updateGridBadge(grid, gridView) {
+            if (!grid.role)
+                return;
+            var srtX = grid.x * 5 + 1;
+            var srtY = grid.y * 5 + 1;
+            var endX = grid.x * 5 + 4;
+            var endY = grid.y * 5 + 4;
+            var badgeAttr = {
+                "d": "",
+                "stroke-width": "0.6",
+                "stroke": "",
+                "fill": "none"
+            };
+            switch (grid.role.owner.badge) {
+                case "O":
+                    badgeAttr["d"] = "\n                        M " + (srtX + 1.5) + " " + (srtY + 1.5) + "\n                        m 0 -1.5\n                        a 1.5 1.5 0 0 1, 0 3\n                        a 1.5 1.5 0 0 1, 0 -3\n                    ";
+                    badgeAttr["stroke"] = "crimson";
+                    break;
+                case "X":
+                    badgeAttr["d"] = "\n                        M " + srtX + " " + srtY + " L " + endX + " " + endY + "\n                        M " + endX + " " + srtY + " L " + srtX + " " + endY + "\n                    ";
+                    badgeAttr["stroke"] = "royalblue";
+                    break;
+            }
+            if (grid.role.is("relati-launcher")) {
+                badgeAttr["stroke-width"] = "1";
+                gridView.appendChild(createSVG("path", badgeAttr));
+                badgeAttr.stroke = "#f2f2f2";
+                badgeAttr["stroke-width"] = "0.5";
+                gridView.appendChild(createSVG("path", badgeAttr));
+            }
+            else if (grid.role.is("relati-repeater")) {
+                gridView.appendChild(createSVG("path", badgeAttr));
+            }
+            else {
+                badgeAttr.stroke = "#666";
+                gridView.appendChild(createSVG("path", badgeAttr));
+            }
+        }
+    })(RelatiView = Relati.RelatiView || (Relati.RelatiView = {}));
 })(Relati || (Relati = {}));
 var Relati;
 (function (Relati) {
@@ -388,8 +487,8 @@ var Relati;
                         sourceGrid.role.is(RelatiRules.RelatiRemoteStableSourceGridStatus, "any"));
                     if (!sourceReliable)
                         continue;
-                    var middleGrids = sourceGrids.slice(i + 1, i + 4);
-                    for (var j = 1; j < middleGrids.length - 1; j++) {
+                    var middleGrids = sourceGrids.slice(i + 1, i + 5);
+                    for (var j = 0; j < middleGrids.length - 1; j++) {
                         var middleGrid1 = middleGrids[j];
                         var middleGrid2 = middleGrids[j + 1];
                         var notBlocked = !middleGrid1.role && !middleGrid2.role;
@@ -413,8 +512,8 @@ var Relati;
                         sourceGrid.role.is(RelatiRules.RelatiRemoteStableSourceGridStatus, "any"));
                     if (!sourceReliable)
                         continue;
-                    var middleGrids = sourceGrids.slice(i + 1, i + 4);
-                    for (var j = 1; j < middleGrids.length - 1; j++) {
+                    var middleGrids = sourceGrids.slice(i + 1, i + 5);
+                    for (var j = 0; j < middleGrids.length - 1; j++) {
                         var middleGrid1 = middleGrids[j];
                         var middleGrid2 = middleGrids[j + 1];
                         var notBlocked = !middleGrid1.role && !middleGrid2.role;
@@ -571,8 +670,8 @@ var Relati;
                         targetGrid.role.is(RelatiRules.RelatiRemoteStableTargetGridStatus, "any"));
                     if (!targetReliable)
                         continue;
-                    var middleGrids = targetGrids.slice(i + 1, i + 4);
-                    for (var j = 1; j < middleGrids.length - 1; j++) {
+                    var middleGrids = targetGrids.slice(i + 1, i + 5);
+                    for (var j = 0; j < middleGrids.length - 1; j++) {
                         var middleGrid1 = middleGrids[j];
                         var middleGrid2 = middleGrids[j + 1];
                         var notBlocked = !middleGrid1.role && !middleGrid2.role;
@@ -596,8 +695,8 @@ var Relati;
                         targetGrid.role.is(RelatiRules.RelatiRemoteStableTargetGridStatus, "any"));
                     if (!targetReliable)
                         continue;
-                    var middleGrids = targetGrids.slice(i + 1, i + 4);
-                    for (var j = 1; j < middleGrids.length - 1; j++) {
+                    var middleGrids = targetGrids.slice(i + 1, i + 5);
+                    for (var j = 0; j < middleGrids.length - 1; j++) {
                         var middleGrid1 = middleGrids[j];
                         var middleGrid2 = middleGrids[j + 1];
                         var notBlocked = !middleGrid1.role && !middleGrid2.role;

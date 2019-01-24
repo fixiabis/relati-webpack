@@ -179,9 +179,9 @@ namespace Relati {
                     );
                     if (!targetReliable) continue;
 
-                    var middleGrids = targetGrids.slice(i + 1, i + 4);
+                    var middleGrids = targetGrids.slice(i + 1, i + 5);
 
-                    for (var j = 1; j < middleGrids.length - 1; j++) {
+                    for (var j = 0; j < middleGrids.length - 1; j++) {
                         var middleGrid1 = middleGrids[j];
                         var middleGrid2 = middleGrids[j + 1];
 
@@ -210,9 +210,9 @@ namespace Relati {
                     );
                     if (!targetReliable) continue;
 
-                    var middleGrids = targetGrids.slice(i + 1, i + 4);
+                    var middleGrids = targetGrids.slice(i + 1, i + 5);
 
-                    for (var j = 1; j < middleGrids.length - 1; j++) {
+                    for (var j = 0; j < middleGrids.length - 1; j++) {
                         var middleGrid1 = middleGrids[j];
                         var middleGrid2 = middleGrids[j + 1];
 
