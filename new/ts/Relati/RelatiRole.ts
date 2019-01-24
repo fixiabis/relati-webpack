@@ -13,6 +13,9 @@ namespace Relati {
     export class RelatiRole {
         public type: RelatiRoleType = "normal";
         public status: { [status: string]: boolean } = {};
+        public effects: RelatiAction[] = [];
+        public actions: RelatiAction[] = [];
+
         constructor(
             public owner: RelatiPlayer,
             public grid: RelatiGrid
@@ -36,48 +39,136 @@ namespace Relati {
             }
         }
 
-        gain(status: RelatiRoleStatus) {
-            this.status[status] = true;
+        gain(...statusList: RelatiRoleStatus[]) {
+            for (var status of statusList) {
+                this.status[status] = true;
+            }
         }
 
-        lost(status: RelatiRoleStatus) {
-            this.status[status] = false;
+        lost(...statusList: RelatiRoleStatus[]) {
+            for (var status of statusList) {
+                this.status[status] = false;
+            }
         }
     }
 }
 
 namespace Relati {
-    export type RelatiRoleStatusRelati = (
-        "relati-launcher" |
-        "relati-repeater" |
-        "relati-recepter" |
-        RelatiRoleStatusRelatiNormal |
-        RelatiRoleStatusRelatiRemote
+    export type RelatiRoleStatusRelatiRemoteStable = (
+        "relati-remote-stable-launcher" |
+        "relati-remote-stable-repeater" |
+        "relati-remote-stable-receiver"
     );
 
-    export type RelatiRoleStatusRelatiNormal = (
-        "relati-normal-launcher" |
-        "relati-normal-repeater" |
-        "relati-normal-recepter"
-    );
-
-    export type RelatiRoleStatusRelatiRemote = (
-        "relati-remote-launcher" |
-        "relati-remote-repeater" |
-        "relati-remote-recepter" |
-        RelatiRoleStatusRelatiRemoteNormal |
-        RelatiRoleStatusRelatiRemoteStable
-    );
+    export var RelatiRoleStatusRelatiRemoteStable: RelatiRoleStatusRelatiRemoteStable[] = [
+        "relati-remote-stable-launcher",
+        "relati-remote-stable-repeater",
+        "relati-remote-stable-receiver"
+    ];
 
     export type RelatiRoleStatusRelatiRemoteNormal = (
         "relati-remote-normal-launcher" |
         "relati-remote-normal-repeater" |
-        "relati-remote-normal-recepter"
+        "relati-remote-normal-receiver"
     );
 
-    export type RelatiRoleStatusRelatiRemoteStable = (
-        "relati-remote-stable-launcher" |
-        "relati-remote-stable-repeater" |
-        "relati-remote-stable-recepter"
+    export var RelatiRoleStatusRelatiRemoteNormal: RelatiRoleStatusRelatiRemoteNormal[] = [
+        "relati-remote-normal-launcher",
+        "relati-remote-normal-repeater",
+        "relati-remote-normal-receiver"
+    ];
+
+    export type RelatiRoleStatusRelatiRemote = (
+        "relati-remote-launcher" |
+        "relati-remote-repeater" |
+        "relati-remote-receiver" |
+        RelatiRoleStatusRelatiRemoteNormal |
+        RelatiRoleStatusRelatiRemoteStable
     );
+
+    export var RelatiRoleStatusRelatiRemote: RelatiRoleStatusRelatiRemote[] = [
+        "relati-remote-launcher",
+        "relati-remote-repeater",
+        "relati-remote-receiver",
+        ...RelatiRoleStatusRelatiRemoteNormal,
+        ...RelatiRoleStatusRelatiRemoteStable
+    ];
+
+    export type RelatiRoleStatusRelatiNormal = (
+        "relati-normal-launcher" |
+        "relati-normal-repeater" |
+        "relati-normal-receiver"
+    );
+
+    export var RelatiRoleStatusRelatiNormal: RelatiRoleStatusRelatiNormal[] = [
+        "relati-normal-launcher",
+        "relati-normal-repeater",
+        "relati-normal-receiver"
+    ];
+
+    export type RelatiRoleStatusRelati = (
+        "relati-launcher" |
+        "relati-repeater" |
+        "relati-receiver" |
+        RelatiRoleStatusRelatiNormal |
+        RelatiRoleStatusRelatiRemote
+    );
+
+    export var RelatiRoleStatusRelati: RelatiRoleStatusRelati[] = [
+        "relati-launcher",
+        "relati-repeater",
+        "relati-receiver",
+        ...RelatiRoleStatusRelatiNormal,
+        ...RelatiRoleStatusRelatiRemote
+    ];
+}
+
+namespace Relati {
+    export type RelatiRoleStatusRelatiLauncher = (
+        "relati-launcher" |
+        "relati-normal-launcher" |
+        "relati-remote-launcher" |
+        "relati-remote-normal-launcher" |
+        "relati-remote-stable-launcher"
+    );
+
+    export var RelatiRoleStatusRelatiLauncher: RelatiRoleStatusRelatiLauncher[] = [
+        "relati-launcher",
+        "relati-normal-launcher",
+        "relati-remote-launcher",
+        "relati-remote-normal-launcher",
+        "relati-remote-stable-launcher"
+    ];
+
+    export type RelatiRoleStatusRelatiRepeater = (
+        "relati-repeater" |
+        "relati-normal-repeater" |
+        "relati-remote-repeater" |
+        "relati-remote-normal-repeater" |
+        "relati-remote-stable-repeater"
+    );
+
+    export var RelatiRoleStatusRelatiRepeater: RelatiRoleStatusRelatiRepeater[] = [
+        "relati-repeater",
+        "relati-normal-repeater",
+        "relati-remote-repeater",
+        "relati-remote-normal-repeater",
+        "relati-remote-stable-repeater"
+    ];
+
+    export type RelatiRoleStatusRelatiReceiver = (
+        "relati-receiver" |
+        "relati-normal-receiver" |
+        "relati-remote-receiver" |
+        "relati-remote-normal-receiver" |
+        "relati-remote-stable-receiver"
+    );
+
+    export var RelatiRoleStatusRelatiReceiver: RelatiRoleStatusRelatiReceiver[] = [
+        "relati-receiver",
+        "relati-normal-receiver",
+        "relati-remote-receiver",
+        "relati-remote-normal-receiver",
+        "relati-remote-stable-receiver"
+    ];
 }
