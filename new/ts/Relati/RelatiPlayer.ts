@@ -2,7 +2,7 @@ namespace Relati {
     export class RelatiPlayer {
         constructor(
             public game: RelatiGame,
-            public badge: RelatiBadge
+            public badge: string
         ) { }
 
         selectGrid(grid: RelatiGrid) {
@@ -11,6 +11,4 @@ namespace Relati {
             this.game.selectGrid(grid);
         }
     }
-
-    export type RelatiBadge = "O" | "X";
 }
