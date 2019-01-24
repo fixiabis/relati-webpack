@@ -6,12 +6,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
+    <script src="js/TicTac.js"></script>
     <script src="js/SVGOperation.js"></script>
     <script src="js/GridBoard.js"></script>
+    <script src="js/Relati.js"></script>
 </head>
 
 <body>
     <script>
+        var board = new GridBoard(9, 9);
+        var game = new Relati.RelatiGame(board);
+        var player1 = new Relati.RelatiPlayer(game, "O");
+        var player2 = new Relati.RelatiPlayer(game, "X");
+        game.players = [player1, player2];
     </script>
 </body>
 

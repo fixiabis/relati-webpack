@@ -1,5 +1,8 @@
 function createSVG(svgTagName, attribute) {
-    var svgElement = document.createElementNS("http://www.w3.org/2000/svg", svgTagName);
+    var svgElement = document.createElementNS(
+        "http://www.w3.org/2000/svg",
+        svgTagName
+    );
     if (attribute) updateSVG(svgElement, attribute);
     return svgElement;
 }

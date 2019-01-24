@@ -28,7 +28,7 @@ namespace Relati {
                     if (!grid.role) continue;
                     if (grid.role.owner != owner) continue;
 
-                    if (relatiGridList.indexOf(grid) < 0) {
+                    if (relatiGridList.indexOf(grid) > -1) {
                         grid.role.gain("relati-repeater");
                     }
                 }

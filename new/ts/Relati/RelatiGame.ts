@@ -23,6 +23,8 @@ namespace Relati {
                 grid.role.gain("relati-receiver");
             } else return;
 
+            this.turn++;
+
             for (let grid of this.board.gridList) {
                 if (!grid.role) continue;
 
