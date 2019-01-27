@@ -1,3 +1,5 @@
+/// <reference path="GridBoard.d.ts" />
+
 declare namespace Relati {
     interface RelatiAction {
         name: string;

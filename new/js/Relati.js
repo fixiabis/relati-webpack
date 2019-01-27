@@ -269,49 +269,27 @@ var Relati;
 (function (Relati) {
     var RelatiEffects;
     (function (RelatiEffects) {
-        var relatiGridList = [];
         RelatiEffects.RelatiMaintain = {
             name: "連結維持",
             do: function (_a) {
                 var game = _a.game, grid = _a.grid;
-                if (!game || !grid)
-                    return;
-                if (!grid.role)
-                    return;
-                if (game.turn < game.players.length)
+                if (!game || !grid || !grid.role ||
+                    game.turn < game.players.length)
                     return;
                 var owner = grid.role.owner;
                 for (var _i = 0, _b = game.board.gridList; _i < _b.length; _i++) {
                     var grid_2 = _b[_i];
-                    if (!grid_2.role)
-                        continue;
-                    if (grid_2.role.owner != owner)
-                        continue;
-                    for (var _c = 0, RelatiRoleStatusRelatiRepeater_1 = Relati.RelatiRoleStatusRelatiRepeater; _c < RelatiRoleStatusRelatiRepeater_1.length; _c++) {
-                        var status = RelatiRoleStatusRelatiRepeater_1[_c];
-                        if (grid_2.role.is(status)) {
-                            grid_2.role.lost(status);
-                        }
+                    if (grid_2.role && grid_2.role.owner == owner) {
+                        grid_2.role.status["relati-repeater"] = false;
                     }
                 }
-                relatiGridList = [];
                 maintain(grid, owner);
-                for (var _d = 0, _e = game.board.gridList; _d < _e.length; _d++) {
-                    var grid_3 = _e[_d];
-                    if (!grid_3.role)
-                        continue;
-                    if (grid_3.role.owner != owner)
-                        continue;
-                    if (relatiGridList.indexOf(grid_3) > -1) {
-                        grid_3.role.gain("relati-repeater");
-                    }
-                }
             }
         };
         function maintain(grid, owner) {
-            if (relatiGridList.indexOf(grid) > -1)
+            if (!grid.role || grid.role.status["relati-repeater"])
                 return;
-            relatiGridList.push(grid);
+            grid.role.status["relati-repeater"] = true;
             var ruleTraces = Relati.RelatiRules.RelatiToTarget.trace({ owner: owner, grid: grid });
             for (var _i = 0, ruleTraces_1 = ruleTraces; _i < ruleTraces_1.length; _i++) {
                 var trace = ruleTraces_1[_i];

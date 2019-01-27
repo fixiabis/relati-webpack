@@ -3,10 +3,13 @@
 declare var RelatiRules: typeof Relati.RelatiRules, RelatiRole: typeof Relati.RelatiRole;
 declare type RelatiGame = Relati.RelatiGame;
 declare type RelatiGrid = Relati.RelatiGrid;
+declare type RelatiRole = Relati.RelatiRole;
 declare type RelatiPlayer = Relati.RelatiPlayer;
 declare class RelatiAI {
     game: RelatiGame;
+    leaderGrids: RelatiGrid[];
     constructor(game: RelatiGame);
+    initialize(): void;
     analysis(): number[];
     bestStep(playerIndex: number, nowPlayerIndex: number, level: number, alpha: {
         point: number;

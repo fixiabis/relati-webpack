@@ -4,10 +4,23 @@
 var { RelatiRules, RelatiRole } = Relati;
 type RelatiGame = Relati.RelatiGame;
 type RelatiGrid = Relati.RelatiGrid;
+type RelatiRole = Relati.RelatiRole;
 type RelatiPlayer = Relati.RelatiPlayer;
 
 class RelatiAI {
+    public leaderGrids: RelatiGrid[] = [];
     constructor(public game: RelatiGame) { }
+
+    initialize() {
+        var { game } = this;
+
+        for (var grid of game.board.gridList) {
+            if (
+                grid.role &&
+                grid.role.is("relati-launcher")
+            ) this.leaderGrids.push(grid);
+        }
+    }
 
     analysis() {
         var { game } = this;
@@ -19,7 +32,11 @@ class RelatiAI {
 
             for (var grid of game.board.gridList) {
                 if (!grid.role) continue;
-                var isValid = grid.role.is(["relati-launcher", "relati-repeater"], "any");
+
+                var isValid = (
+                    grid.role.status["relati-launcher"] ||
+                    grid.role.status["relati-repeater"]
+                );
 
                 if (grid.role.owner == owner) {
                     if (isValid) {
@@ -57,29 +74,11 @@ class RelatiAI {
                             playersPoint[i] += controllablePoint;
 
                             for (var j = 0; j < game.players.length; j++) {
-                                if (i == j) continue;
-                                playersPoint[j] -= controllablePoint;
+                                if (i != j) playersPoint[j] -= controllablePoint;
                             }
 
                             break;
                         }
-                    }
-
-                    if (RelatiRules.RelatiBySource.allow({ game, grid, owner })) {
-                        var isPrivateArea = true;
-
-                        for (var j = 0; j < game.players.length; j++) {
-                            if (i == j) continue;
-
-                            if (RelatiRules.RelatiBySource.allow({
-                                game, grid, owner: game.players[j]
-                            })) continue;
-
-                            isPrivateArea = false;
-                            playersPoint[j] -= 50;
-                        }
-
-                        if (isPrivateArea) playersPoint[i] += 50;
                     }
                 }
 
@@ -100,7 +99,7 @@ class RelatiAI {
     ) {
         var { game } = this;
 
-        // console.groupCollapsed(game.players[nowPlayerIndex].badge, level);
+        console.groupCollapsed(game.players[nowPlayerIndex].badge, level);
 
         if (nowPlayerIndex == playerIndex) {
             for (var grid of game.board.gridList) {
@@ -109,12 +108,10 @@ class RelatiAI {
                 })) continue;
 
                 grid.role = new RelatiRole(game.players[nowPlayerIndex], grid);
-                grid.role.gain("relati-receiver");
+                grid.role.status["relati-receiver"] = true;
 
-                game.board.gridList.forEach(grid =>
-                    grid.role && grid.role.effects.forEach(effect =>
-                        effect.do({ game, grid })
-                    )
+                this.leaderGrids.forEach(grid =>
+                    (<RelatiRole>grid.role).effects[0].do({ game, grid })
                 );
 
                 if (level) {
@@ -128,23 +125,21 @@ class RelatiAI {
                     var result = { point: playerPoint, grid };
                 }
 
-                // console.log(grid.coordinate, result.point);
+                console.log(grid.coordinate, result.point);
                 // Relati.RelatiView.updateBoardView(game.board, game.view);
                 // debugger;
                 delete grid.role;
                 result.grid = grid;
 
-                game.board.gridList.forEach(grid =>
-                    grid.role && grid.role.effects.forEach(effect =>
-                        effect.do({ game, grid })
-                    )
+                this.leaderGrids.forEach(grid =>
+                    (<RelatiRole>grid.role).effects[0].do({ game, grid })
                 );
 
                 if (alpha.point < result.point) alpha = result;
                 if (beta.point <= alpha.point) break;
             }
 
-            // console.groupEnd();
+            console.groupEnd();
 
             return alpha;
         } else {
@@ -154,12 +149,10 @@ class RelatiAI {
                 })) continue;
 
                 grid.role = new RelatiRole(game.players[nowPlayerIndex], grid);
-                grid.role.gain("relati-receiver");
+                grid.role.status["relati-receiver"] = true;
 
-                game.board.gridList.forEach(grid =>
-                    grid.role && grid.role.effects.forEach(effect =>
-                        effect.do({ game, grid })
-                    )
+                this.leaderGrids.forEach(grid =>
+                    (<RelatiRole>grid.role).effects[0].do({ game, grid })
                 );
 
                 if (level) {
@@ -173,23 +166,21 @@ class RelatiAI {
                     var result = { point: playerPoint, grid };
                 }
 
-                // console.log(grid.coordinate, result.point);
+                console.log(grid.coordinate, result.point);
                 // Relati.RelatiView.updateBoardView(game.board, game.view);
                 // debugger;
                 delete grid.role;
                 result.grid = grid;
 
-                game.board.gridList.forEach(grid =>
-                    grid.role && grid.role.effects.forEach(effect =>
-                        effect.do({ game, grid })
-                    )
+                this.leaderGrids.forEach(grid =>
+                    (<RelatiRole>grid.role).effects[0].do({ game, grid })
                 );
 
                 if (beta.point > result.point) beta = result;
                 if (beta.point <= alpha.point) break;
             }
 
-            // console.groupEnd();
+            console.groupEnd();
 
             return beta;
         }
