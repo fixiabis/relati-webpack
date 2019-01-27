@@ -14,14 +14,14 @@ class RelatiAI {
         var playersPoint = game.players.map(() => 0);
 
         for (var i = 0; i < game.players.length; i++) {
-            var player = game.players[i];
+            var owner = game.players[i];
             var gridVisited: RelatiGrid[] = [];
 
             for (var grid of game.board.gridList) {
                 if (!grid.role) continue;
                 var isValid = grid.role.is(["relati-launcher", "relati-repeater"], "any");
 
-                if (grid.role.owner == player) {
+                if (grid.role.owner == owner) {
                     if (isValid) {
                         gridVisited.push(grid);
                         playersPoint[i] += 500;
@@ -65,7 +65,7 @@ class RelatiAI {
                         }
                     }
 
-                    if (RelatiRules.RelatiBySource.allow({ game, grid, owner: player })) {
+                    if (RelatiRules.RelatiBySource.allow({ game, grid, owner })) {
                         var isPrivateArea = true;
 
                         for (var j = 0; j < game.players.length; j++) {
@@ -100,7 +100,7 @@ class RelatiAI {
     ) {
         var { game } = this;
 
-      // console.groupCollapsed(game.players[nowPlayerIndex].badge, level);
+        // console.groupCollapsed(game.players[nowPlayerIndex].badge, level);
 
         if (nowPlayerIndex == playerIndex) {
             for (var grid of game.board.gridList) {
@@ -128,7 +128,7 @@ class RelatiAI {
                     var result = { point: playerPoint, grid };
                 }
 
-              // console.log(grid.coordinate, result.point);
+                // console.log(grid.coordinate, result.point);
                 // Relati.RelatiView.updateBoardView(game.board, game.view);
                 // debugger;
                 delete grid.role;
@@ -144,7 +144,7 @@ class RelatiAI {
                 if (beta.point <= alpha.point) break;
             }
 
-          // console.groupEnd();
+            // console.groupEnd();
 
             return alpha;
         } else {
@@ -173,7 +173,7 @@ class RelatiAI {
                     var result = { point: playerPoint, grid };
                 }
 
-              // console.log(grid.coordinate, result.point);
+                // console.log(grid.coordinate, result.point);
                 // Relati.RelatiView.updateBoardView(game.board, game.view);
                 // debugger;
                 delete grid.role;
@@ -189,7 +189,7 @@ class RelatiAI {
                 if (beta.point <= alpha.point) break;
             }
 
-          // console.groupEnd();
+            // console.groupEnd();
 
             return beta;
         }
