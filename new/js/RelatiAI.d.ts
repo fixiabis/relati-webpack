@@ -1,0 +1,21 @@
+/// <reference path="../ts/RelatiAI/base/GridBoard.d.ts" />
+/// <reference path="../ts/RelatiAI/base/Relati.d.ts" />
+declare var RelatiRules: typeof Relati.RelatiRules, RelatiRole: typeof Relati.RelatiRole;
+declare type RelatiGame = Relati.RelatiGame;
+declare type RelatiGrid = Relati.RelatiGrid;
+declare type RelatiPlayer = Relati.RelatiPlayer;
+declare class RelatiAI {
+    game: RelatiGame;
+    constructor(game: RelatiGame);
+    analysis(): number[];
+    bestStep(playerIndex: number, nowPlayerIndex: number, level: number, alpha: {
+        point: number;
+        grid: RelatiGrid;
+    }, beta: {
+        point: number;
+        grid: RelatiGrid;
+    }): {
+        point: number;
+        grid: Relati.RelatiGrid;
+    };
+}

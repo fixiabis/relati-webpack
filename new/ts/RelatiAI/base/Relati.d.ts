@@ -1,6 +1,3 @@
-/// <reference path="../ts/Relati/base/GridBoard.d.ts" />
-/// <reference path="../ts/Relati/base/SVGOperation.d.ts" />
-/// <reference path="../ts/Relati/base/TicTac.d.ts" />
 declare namespace Relati {
     interface RelatiAction {
         name: string;

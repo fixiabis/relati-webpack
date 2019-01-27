@@ -10,6 +10,7 @@
     <script src="js/SVGOperation.js"></script>
     <script src="js/GridBoard.js"></script>
     <script src="js/Relati.js"></script>
+    <script src="js/RelatiAI.js"></script>
     <style>
         html, body {
             display: flex;
@@ -30,6 +31,7 @@
         var player1 = new Relati.RelatiPlayer(game, "O");
         var player2 = new Relati.RelatiPlayer(game, "X");
         game.players = [player1, player2];
+        var gameAI = new RelatiAI(game);
     </script>
 </body>
 

@@ -1,4 +1,7 @@
 "use strict";
+/// <reference path="base/GridBoard.d.ts" />
+/// <reference path="base/SVGOperation.d.ts" />
+/// <reference path="base/TicTac.d.ts" />
 var Relati;
 (function (Relati) {
     var RelatiGame = /** @class */ (function () {

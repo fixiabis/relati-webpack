@@ -1,3 +1,7 @@
+/// <reference path="base/GridBoard.d.ts" />
+/// <reference path="base/SVGOperation.d.ts" />
+/// <reference path="base/TicTac.d.ts" />
+
 namespace Relati {
     export class RelatiGame {
         public turn = 0;
