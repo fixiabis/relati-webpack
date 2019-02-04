@@ -14,6 +14,23 @@ var RelatiAI = /** @class */ (function () {
             if (grid.role &&
                 grid.role.is("relati-launcher"))
                 this.leaderGrids.push(grid);
+            grid.queries("O,2O,IIH,IHH");
+        }
+    };
+    RelatiAI.prototype.roleStatusStore = function () {
+        var cache = new Array(this.game.board.gridList.length);
+        for (var i = 0; i < cache.length; i++) {
+            var role = this.game.board.gridList[i].role;
+            if (role)
+                cache[i] = role.status["relati-repeater"];
+        }
+        return cache;
+    };
+    RelatiAI.prototype.roleStatusRestore = function (cache) {
+        for (var i = 0; i < cache.length; i++) {
+            var role = this.game.board.gridList[i].role;
+            if (role)
+                role.status["relati-repeater"] = cache[i];
         }
     };
     RelatiAI.prototype.analysis = function () {
@@ -26,7 +43,8 @@ var RelatiAI = /** @class */ (function () {
                 var grid = _a[_i];
                 if (!grid.role)
                     continue;
-                var isValid = grid.role.is(["relati-launcher", "relati-repeater"], "any");
+                var isValid = (grid.role.status["relati-launcher"] ||
+                    grid.role.status["relati-repeater"]);
                 if (grid.role.owner == owner) {
                     if (isValid) {
                         gridVisited.push(grid);
@@ -81,6 +99,7 @@ var RelatiAI = /** @class */ (function () {
     RelatiAI.prototype.bestStep = function (playerIndex, nowPlayerIndex, level, alpha, beta) {
         var game = this.game;
         console.groupCollapsed(game.players[nowPlayerIndex].badge, level);
+        var cache = this.roleStatusStore();
         if (nowPlayerIndex == playerIndex) {
             for (var _i = 0, _a = game.board.gridList; _i < _a.length; _i++) {
                 var grid = _a[_i];
@@ -105,9 +124,7 @@ var RelatiAI = /** @class */ (function () {
                 // debugger;
                 delete grid.role;
                 result.grid = grid;
-                this.leaderGrids.forEach(function (grid) {
-                    return grid.role.effects[0].do({ game: game, grid: grid });
-                });
+                this.roleStatusRestore(cache);
                 if (alpha.point < result.point)
                     alpha = result;
                 if (beta.point <= alpha.point)
@@ -140,9 +157,7 @@ var RelatiAI = /** @class */ (function () {
                 // debugger;
                 delete grid.role;
                 result.grid = grid;
-                this.leaderGrids.forEach(function (grid) {
-                    return grid.role.effects[0].do({ game: game, grid: grid });
-                });
+                this.roleStatusRestore(cache);
                 if (beta.point > result.point)
                     beta = result;
                 if (beta.point <= alpha.point)

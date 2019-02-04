@@ -10,6 +10,8 @@ declare class RelatiAI {
     leaderGrids: RelatiGrid[];
     constructor(game: RelatiGame);
     initialize(): void;
+    roleStatusStore(): boolean[];
+    roleStatusRestore(cache: boolean[]): void;
     analysis(): number[];
     bestStep(playerIndex: number, nowPlayerIndex: number, level: number, alpha: {
         point: number;
