@@ -45,23 +45,8 @@ var RelatiAI = /** @class */ (function () {
                     continue;
                 var isValid = (grid.role.status["relati-launcher"] ||
                     grid.role.status["relati-repeater"]);
-                if (grid.role.owner == owner) {
-                    if (isValid) {
-                        gridVisited.push(grid);
-                        playersPoint[i] += 500;
-                    }
-                    else {
-                        playersPoint[i] -= 500;
-                    }
-                }
-                else {
-                    if (isValid) {
-                        playersPoint[i] -= 500;
-                    }
-                    else {
-                        playersPoint[i] += 500;
-                    }
-                }
+                if (grid.role.owner == owner && isValid)
+                    gridVisited.push(grid);
             }
             var controllablGrids = [];
             var controllablePoint = 100;
@@ -71,9 +56,7 @@ var RelatiAI = /** @class */ (function () {
                 controllableGridFinded = false;
                 for (var _b = 0, _c = game.board.gridList; _b < _c.length; _b++) {
                     var grid = _c[_b];
-                    if (grid.role)
-                        continue;
-                    if (gridVisited.indexOf(grid) > -1)
+                    if (grid.role || gridVisited.indexOf(grid) > -1)
                         continue;
                     var nearByGrids = grid.queries("O");
                     for (var _d = 0, nearByGrids_1 = nearByGrids; _d < nearByGrids_1.length; _d++) {
@@ -109,9 +92,10 @@ var RelatiAI = /** @class */ (function () {
                     continue;
                 grid.role = new RelatiRole(game.players[nowPlayerIndex], grid);
                 grid.role.status["relati-receiver"] = true;
-                this.leaderGrids.forEach(function (grid) {
-                    return grid.role.effects[0].do({ game: game, grid: grid });
-                });
+                for (var _b = 0, _c = this.leaderGrids; _b < _c.length; _b++) {
+                    var leaderGrid = _c[_b];
+                    leaderGrid.role.effects[0].do({ game: game, grid: grid });
+                }
                 if (level) {
                     var result = this.bestStep(playerIndex, (nowPlayerIndex + 1) % game.players.length, level - 1, alpha, beta);
                 }
@@ -134,17 +118,18 @@ var RelatiAI = /** @class */ (function () {
             return alpha;
         }
         else {
-            for (var _b = 0, _c = game.board.gridList; _b < _c.length; _b++) {
-                var grid = _c[_b];
+            for (var _d = 0, _e = game.board.gridList; _d < _e.length; _d++) {
+                var grid = _e[_d];
                 if (grid.role || !RelatiRules.RelatiBySource.allow({
                     game: game, grid: grid, owner: game.players[nowPlayerIndex]
                 }))
                     continue;
                 grid.role = new RelatiRole(game.players[nowPlayerIndex], grid);
                 grid.role.status["relati-receiver"] = true;
-                this.leaderGrids.forEach(function (grid) {
-                    return grid.role.effects[0].do({ game: game, grid: grid });
-                });
+                for (var _f = 0, _g = this.leaderGrids; _f < _g.length; _f++) {
+                    var leaderGrid = _g[_f];
+                    leaderGrid.role.effects[0].do({ game: game, grid: grid });
+                }
                 if (level) {
                     var result = this.bestStep(playerIndex, (nowPlayerIndex + 1) % game.players.length, level - 1, alpha, beta);
                 }

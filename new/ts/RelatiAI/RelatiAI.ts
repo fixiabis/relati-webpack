@@ -57,20 +57,7 @@ class RelatiAI {
                     grid.role.status["relati-repeater"]
                 );
 
-                if (grid.role.owner == owner) {
-                    if (isValid) {
-                        gridVisited.push(grid);
-                        playersPoint[i] += 500;
-                    } else {
-                        playersPoint[i] -= 500;
-                    }
-                } else {
-                    if (isValid) {
-                        playersPoint[i] -= 500;
-                    } else {
-                        playersPoint[i] += 500;
-                    }
-                }
+                if (grid.role.owner == owner && isValid) gridVisited.push(grid);
             }
 
             var controllablGrids = [];
@@ -82,8 +69,7 @@ class RelatiAI {
                 controllableGridFinded = false;
 
                 for (var grid of game.board.gridList) {
-                    if (grid.role) continue;
-                    if (gridVisited.indexOf(grid) > -1) continue;
+                    if (grid.role || gridVisited.indexOf(grid) > -1) continue;
                     var nearByGrids = grid.queries("O");
 
                     for (var nearByGrid of nearByGrids) {
@@ -130,9 +116,9 @@ class RelatiAI {
                 grid.role = new RelatiRole(game.players[nowPlayerIndex], grid);
                 grid.role.status["relati-receiver"] = true;
 
-                this.leaderGrids.forEach(grid =>
-                    (<RelatiRole>grid.role).effects[0].do({ game, grid })
-                );
+                for (var leaderGrid of this.leaderGrids) {
+                    (<RelatiRole>leaderGrid.role).effects[0].do({ game, grid });
+                }
 
                 if (level) {
                     var result = this.bestStep(
@@ -169,9 +155,9 @@ class RelatiAI {
                 grid.role = new RelatiRole(game.players[nowPlayerIndex], grid);
                 grid.role.status["relati-receiver"] = true;
 
-                this.leaderGrids.forEach(grid =>
-                    (<RelatiRole>grid.role).effects[0].do({ game, grid })
-                );
+                for (var leaderGrid of this.leaderGrids) {
+                    (<RelatiRole>leaderGrid.role).effects[0].do({ game, grid });
+                }
 
                 if (level) {
                     var result = this.bestStep(
