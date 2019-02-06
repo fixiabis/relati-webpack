@@ -6,6 +6,7 @@ namespace Relati {
     export class RelatiGame {
         public turn = 0;
         public players: RelatiPlayer[] = [];
+        public status: string = "";
         public view: { [name: string]: SVGElement } = {};
 
         constructor(public board: RelatiBoard) { }
@@ -36,6 +37,26 @@ namespace Relati {
                 for (var effect of grid.role.effects) {
                     effect.do({ game, grid, owner });
                 }
+            }
+
+            var enemy = this.getNowPlayer();
+
+            if (this.turn >= this.players.length) {
+                for (var grid of this.board.gridList) {
+                    if (!grid.role && RelatiRules.RelatiBySource.allow({
+                        game, grid, owner: enemy
+                    })) return;
+                }
+
+                this.status = owner.badge + " Win";
+
+                for (var grid of this.board.gridList) {
+                    if (!grid.role && RelatiRules.RelatiBySource.allow({
+                        game, grid, owner
+                    })) return;
+                }
+
+                this.status = "Draw";
             }
         }
     }

@@ -9,6 +9,7 @@ var Relati;
             this.board = board;
             this.turn = 0;
             this.players = [];
+            this.status = "";
             this.view = {};
         }
         RelatiGame.prototype.getNowPlayer = function () {
@@ -39,6 +40,25 @@ var Relati;
                     var effect = _c[_b];
                     effect.do({ game: game, grid: grid_1, owner: owner });
                 }
+            }
+            var enemy = this.getNowPlayer();
+            if (this.turn >= this.players.length) {
+                for (var _d = 0, _e = this.board.gridList; _d < _e.length; _d++) {
+                    var grid = _e[_d];
+                    if (!grid.role && Relati.RelatiRules.RelatiBySource.allow({
+                        game: game, grid: grid, owner: enemy
+                    }))
+                        return;
+                }
+                this.status = owner.badge + " Win";
+                for (var _f = 0, _g = this.board.gridList; _f < _g.length; _f++) {
+                    var grid = _g[_f];
+                    if (!grid.role && Relati.RelatiRules.RelatiBySource.allow({
+                        game: game, grid: grid, owner: owner
+                    }))
+                        return;
+                }
+                this.status = "Draw";
             }
         };
         return RelatiGame;
