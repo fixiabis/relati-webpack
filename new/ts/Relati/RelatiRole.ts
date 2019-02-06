@@ -13,8 +13,8 @@ namespace Relati {
     export class RelatiRole {
         public type: RelatiRoleType = "normal";
         public status: { [status: string]: boolean } = {};
-        public effects: RelatiAction[] = [];
-        public actions: RelatiAction[] = [];
+        public effects: RelatiRoleEffect[] = [];
+        public actions: RelatiRoleAction[] = [];
 
         constructor(
             public owner: RelatiPlayer,

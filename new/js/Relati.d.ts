@@ -2,9 +2,7 @@
 /// <reference path="../ts/Relati/base/SVGOperation.d.ts" />
 /// <reference path="../ts/Relati/base/TicTac.d.ts" />
 declare namespace Relati {
-    interface RelatiAction {
-        name: string;
-        do(state: RelatiGameState): void;
+    interface RelatiAction extends RelatiEffect {
     }
 }
 declare namespace Relati {
@@ -35,7 +33,7 @@ declare namespace Relati {
         view: {
             [name: string]: SVGElement;
         };
-        constructor(board: RelatiBoard, container: HTMLElement);
+        constructor(board: RelatiBoard);
         getNowPlayer(): RelatiPlayer;
         selectGrid(grid: RelatiGrid): void;
     }
@@ -107,9 +105,15 @@ declare namespace Relati {
     }
 }
 declare namespace Relati {
-    namespace RelatiView {
-        function viewInitialize(board: RelatiBoard, gridSize: number, container: HTMLElement, view: RelatiGame["view"]): void;
-        function updateBoardView(board: RelatiBoard, view: RelatiGame["view"]): void;
+    class RelatiView {
+        game: RelatiGame;
+        container: HTMLElement;
+        gridSize: number;
+        view: {
+            [name: string]: SVGElement;
+        };
+        constructor(game: RelatiGame, container: HTMLElement, gridSize: number);
+        updateBoardView(): void;
     }
 }
 declare namespace Relati {

@@ -5,16 +5,11 @@
 var Relati;
 (function (Relati) {
     var RelatiGame = /** @class */ (function () {
-        function RelatiGame(board, container) {
+        function RelatiGame(board) {
             this.board = board;
             this.turn = 0;
             this.players = [];
             this.view = {};
-            Relati.RelatiView.viewInitialize(board, 5, container, this.view);
-            this.view.board.addEventListener("click", function (event) {
-                var x = Math.floor(event.offsetX / 5), y = Math.floor(event.offsetY / 5), grid = board.grids[x] && board.grids[x][y];
-                this.selectGrid(grid);
-            }.bind(this));
         }
         RelatiGame.prototype.getNowPlayer = function () {
             var totalPlayer = this.players.length;
@@ -45,7 +40,6 @@ var Relati;
                     effect.do({ game: game, grid: grid_1, owner: owner });
                 }
             }
-            Relati.RelatiView.updateBoardView(this.board, this.view);
         };
         return RelatiGame;
     }());
@@ -175,9 +169,13 @@ var Relati;
 })(Relati || (Relati = {}));
 var Relati;
 (function (Relati) {
-    var RelatiView;
-    (function (RelatiView) {
-        function viewInitialize(board, gridSize, container, view) {
+    var RelatiView = /** @class */ (function () {
+        function RelatiView(game, container, gridSize) {
+            this.game = game;
+            this.container = container;
+            this.gridSize = gridSize;
+            this.view = {};
+            var board = game.board;
             var width = board.width, height = board.height;
             var boardView = createSVG("svg");
             boardView.setAttribute("width", "" + width * gridSize);
@@ -207,63 +205,68 @@ var Relati;
             for (var _i = 0, _a = board.gridList; _i < _a.length; _i++) {
                 var grid = _a[_i];
                 var gridView = createSVG("g");
-                view[grid.coordinate] = gridView;
+                this.view[grid.coordinate] = gridView;
                 boardView.appendChild(gridView);
             }
-            view.board = boardView;
-            view.background = background;
+            this.view.board = boardView;
+            this.view.background = background;
+            this.view.board.addEventListener("click", function (event) {
+                var x = Math.floor(event.offsetX / 5), y = Math.floor(event.offsetY / 5), grid = board.grids[x] && board.grids[x][y];
+                this.game.selectGrid(grid);
+                this.updateBoardView();
+            }.bind(this));
         }
-        RelatiView.viewInitialize = viewInitialize;
-        function updateBoardView(board, view) {
-            for (var _i = 0, _a = board.gridList; _i < _a.length; _i++) {
+        RelatiView.prototype.updateBoardView = function () {
+            for (var _i = 0, _a = this.game.board.gridList; _i < _a.length; _i++) {
                 var grid = _a[_i];
-                var gridView = view[grid.coordinate];
+                var gridView = this.view[grid.coordinate];
                 while (gridView.childNodes.length > 0) {
                     gridView.removeChild(gridView.childNodes[0]);
                 }
                 updateGridBadge(grid, gridView);
             }
+        };
+        return RelatiView;
+    }());
+    Relati.RelatiView = RelatiView;
+    function updateGridBadge(grid, gridView) {
+        if (!grid.role)
+            return;
+        var srtX = grid.x * 5 + 1;
+        var srtY = grid.y * 5 + 1;
+        var endX = grid.x * 5 + 4;
+        var endY = grid.y * 5 + 4;
+        var badgeAttr = {
+            "d": "",
+            "stroke-width": "0.6",
+            "stroke": "",
+            "fill": "none"
+        };
+        switch (grid.role.owner.badge) {
+            case "O":
+                badgeAttr["d"] = "\n                    M " + (srtX + 1.5) + " " + (srtY + 1.5) + "\n                    m 0 -1.5\n                    a 1.5 1.5 0 0 1, 0 3\n                    a 1.5 1.5 0 0 1, 0 -3\n                ";
+                badgeAttr["stroke"] = "crimson";
+                break;
+            case "X":
+                badgeAttr["d"] = "\n                    M " + srtX + " " + srtY + " L " + endX + " " + endY + "\n                    M " + endX + " " + srtY + " L " + srtX + " " + endY + "\n                ";
+                badgeAttr["stroke"] = "royalblue";
+                break;
         }
-        RelatiView.updateBoardView = updateBoardView;
-        function updateGridBadge(grid, gridView) {
-            if (!grid.role)
-                return;
-            var srtX = grid.x * 5 + 1;
-            var srtY = grid.y * 5 + 1;
-            var endX = grid.x * 5 + 4;
-            var endY = grid.y * 5 + 4;
-            var badgeAttr = {
-                "d": "",
-                "stroke-width": "0.6",
-                "stroke": "",
-                "fill": "none"
-            };
-            switch (grid.role.owner.badge) {
-                case "O":
-                    badgeAttr["d"] = "\n                        M " + (srtX + 1.5) + " " + (srtY + 1.5) + "\n                        m 0 -1.5\n                        a 1.5 1.5 0 0 1, 0 3\n                        a 1.5 1.5 0 0 1, 0 -3\n                    ";
-                    badgeAttr["stroke"] = "crimson";
-                    break;
-                case "X":
-                    badgeAttr["d"] = "\n                        M " + srtX + " " + srtY + " L " + endX + " " + endY + "\n                        M " + endX + " " + srtY + " L " + srtX + " " + endY + "\n                    ";
-                    badgeAttr["stroke"] = "royalblue";
-                    break;
-            }
-            if (grid.role.is("relati-launcher")) {
-                badgeAttr["stroke-width"] = "1";
-                gridView.appendChild(createSVG("path", badgeAttr));
-                badgeAttr.stroke = "#f2f2f2";
-                badgeAttr["stroke-width"] = "0.5";
-                gridView.appendChild(createSVG("path", badgeAttr));
-            }
-            else if (grid.role.is("relati-repeater")) {
-                gridView.appendChild(createSVG("path", badgeAttr));
-            }
-            else {
-                badgeAttr.stroke = "#666";
-                gridView.appendChild(createSVG("path", badgeAttr));
-            }
+        if (grid.role.is("relati-launcher")) {
+            badgeAttr["stroke-width"] = "1";
+            gridView.appendChild(createSVG("path", badgeAttr));
+            badgeAttr.stroke = "#f2f2f2";
+            badgeAttr["stroke-width"] = "0.5";
+            gridView.appendChild(createSVG("path", badgeAttr));
         }
-    })(RelatiView = Relati.RelatiView || (Relati.RelatiView = {}));
+        else if (grid.role.is("relati-repeater")) {
+            gridView.appendChild(createSVG("path", badgeAttr));
+        }
+        else {
+            badgeAttr.stroke = "#666";
+            gridView.appendChild(createSVG("path", badgeAttr));
+        }
+    }
 })(Relati || (Relati = {}));
 var Relati;
 (function (Relati) {

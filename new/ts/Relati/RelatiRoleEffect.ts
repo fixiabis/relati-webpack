@@ -1,5 +1,5 @@
 namespace Relati {
-    export interface RelatiEffect {
+    export interface RelatiRoleEffect {
         name: string;
         do(state: RelatiGameState): void;
     }

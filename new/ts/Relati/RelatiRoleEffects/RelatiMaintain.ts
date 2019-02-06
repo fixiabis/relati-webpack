@@ -1,6 +1,6 @@
 namespace Relati {
     export namespace RelatiEffects {
-        export var RelatiMaintain: RelatiEffect = {
+        export var RelatiMaintain: RelatiRoleEffect = {
             name: "連結維持",
             do({ game, grid }) {
                 if (

@@ -8,16 +8,7 @@ namespace Relati {
         public players: RelatiPlayer[] = [];
         public view: { [name: string]: SVGElement } = {};
 
-        constructor(public board: RelatiBoard, container: HTMLElement) {
-            RelatiView.viewInitialize(board, 5, container, this.view);
-
-            this.view.board.addEventListener("click", function (this: RelatiGame, event: MouseEvent) {
-                var x: number = Math.floor(event.offsetX / 5),
-                    y: number = Math.floor(event.offsetY / 5),
-                    grid = board.grids[x] && board.grids[x][y];
-                this.selectGrid(grid);
-            }.bind(this));
-        }
+        constructor(public board: RelatiBoard) { }
 
         getNowPlayer() {
             var totalPlayer = this.players.length;
@@ -46,8 +37,6 @@ namespace Relati {
                     effect.do({ game, grid, owner });
                 }
             }
-
-            RelatiView.updateBoardView(this.board, this.view);
         }
     }
 
