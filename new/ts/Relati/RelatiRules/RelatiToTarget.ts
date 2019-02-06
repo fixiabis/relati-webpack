@@ -212,21 +212,41 @@ namespace Relati {
 
                     var middleGrids = targetGrids.slice(i + 1, i + 5);
 
-                    for (var j = 0; j < middleGrids.length - 1; j++) {
-                        var middleGrid1 = middleGrids[j];
-                        var middleGrid2 = middleGrids[j + 1];
+                    var middleGrid1 = middleGrids[1];
+                    var middleGrid2 = middleGrids[0];
+                    var notBlocked = !middleGrid1.role && !middleGrid2.role;
 
-                        var notBlocked = !middleGrid1.role && !middleGrid2.role;
-                        if (notBlocked) {
-                            ruleTraces.push({
-                                target: targetGrid,
-                                routes: [
-                                    middleGrid1,
-                                    middleGrid2
-                                ]
-                            });
-                        }
-                    }
+                    if (notBlocked) ruleTraces.push({
+                        target: targetGrid,
+                        routes: [
+                            middleGrid1,
+                            middleGrid2
+                        ]
+                    });
+
+                    var middleGrid1 = middleGrids[1];
+                    var middleGrid2 = middleGrids[2];
+                    var notBlocked = !middleGrid1.role && !middleGrid2.role;
+
+                    if (notBlocked) ruleTraces.push({
+                        target: targetGrid,
+                        routes: [
+                            middleGrid1,
+                            middleGrid2
+                        ]
+                    });
+
+                    var middleGrid1 = middleGrids[3];
+                    var middleGrid2 = middleGrids[2];
+                    var notBlocked = !middleGrid1.role && !middleGrid2.role;
+
+                    if (notBlocked) ruleTraces.push({
+                        target: targetGrid,
+                        routes: [
+                            middleGrid1,
+                            middleGrid2
+                        ]
+                    });
                 }
 
                 return ruleTraces;

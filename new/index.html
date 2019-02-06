@@ -12,7 +12,8 @@
     <script src="js/Relati.js"></script>
     <script src="js/RelatiAI.js"></script>
     <style>
-        html, body {
+        html,
+        body {
             display: flex;
             align-items: center;
             justify-content: center;
@@ -20,6 +21,18 @@
             height: 100%;
             margin: 0px;
             background-color: #f2f2f2;
+        }
+
+        .relati-path {
+            stroke-dashoffset: 0;
+            stroke-dasharray: 15;
+            animation: path 0.25s linear;
+        }
+
+        @keyframes path {
+            0% {
+                stroke-dashoffset: 15;
+            }
         }
     </style>
 </head>

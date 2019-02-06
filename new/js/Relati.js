@@ -215,6 +215,7 @@ var Relati;
                 this.game.selectGrid(grid);
                 this.updateBoardView();
                 this.relatiNextStepHint();
+                this.relatiMaintainEffect();
             }.bind(this));
         }
         RelatiView.prototype.updateBoardView = function () {
@@ -231,11 +232,28 @@ var Relati;
             var game = this.game;
             var owner = game.getNowPlayer();
             var color = owner.badge == "O" ? "crimson" : "royalblue";
-            for (var _i = 0, _a = this.game.board.gridList; _i < _a.length; _i++) {
+            for (var _i = 0, _a = game.board.gridList; _i < _a.length; _i++) {
                 var grid = _a[_i];
                 var gridView = this.view[grid.coordinate];
                 if (Relati.RelatiRules.RelatiBySource.allow({ game: game, grid: grid, owner: owner })) {
                     createGridHint(grid, gridView, color);
+                }
+            }
+        };
+        RelatiView.prototype.relatiMaintainEffect = function () {
+            var _a = this, game = _a.game, view = _a.view;
+            var owner = game.players[(game.turn - 1) % game.players.length];
+            var color = owner.badge == "O" ? "crimson" : "royalblue";
+            while (view.background.childNodes.length) {
+                view.background.removeChild(view.background.childNodes[0]);
+            }
+            gridVisited = [];
+            for (var _i = 0, _b = game.board.gridList; _i < _b.length; _i++) {
+                var grid = _b[_i];
+                if (!grid.role || grid.role.owner != owner)
+                    continue;
+                if (grid.role.status["relati-launcher"]) {
+                    createMaintainPath(grid, view, owner, game.turn, color);
                 }
             }
         };
@@ -294,6 +312,45 @@ var Relati;
         };
         gridView.appendChild(createSVG("path", hintAttr));
     }
+    var gridVisited = [];
+    var gameTurn = 0;
+    function createMaintainPath(grid, view, owner, turn, color, sourceGrid) {
+        if (gridVisited.indexOf(grid) > -1 || turn < gameTurn)
+            return;
+        gridVisited.push(grid);
+        gameTurn = turn;
+        var ruleTraces = Relati.RelatiRules.RelatiToTarget.trace({ owner: owner, grid: grid });
+        var _loop_1 = function (trace) {
+            if (trace.target == sourceGrid)
+                return "continue";
+            createRelatiPath(grid, trace, view, color);
+            setTimeout(function () {
+                createMaintainPath(trace.target, view, owner, turn, color, grid);
+            }, 250);
+        };
+        for (var _i = 0, ruleTraces_1 = ruleTraces; _i < ruleTraces_1.length; _i++) {
+            var trace = ruleTraces_1[_i];
+            _loop_1(trace);
+        }
+    }
+    function createRelatiPath(sourceGrid, trace, view, color) {
+        var targetGrid = trace.target;
+        var pathAttr = {
+            "d": "M " + (sourceGrid.x * 5 + 2.5) + " " + (sourceGrid.y * 5 + 2.5),
+            "stroke-width": "0.6",
+            "stroke": color,
+            "fill": "none",
+            "class": "relati-path"
+        };
+        for (var _i = 0, _a = trace.routes; _i < _a.length; _i++) {
+            var grid = _a[_i];
+            pathAttr["d"] += " L " + (grid.x * 5 + 2.5) + " " + (grid.y * 5 + 2.5);
+        }
+        pathAttr["d"] += " L " + (targetGrid.x * 5 + 2.5) + " " + (targetGrid.y * 5 + 2.5);
+        var path = createSVG("path", pathAttr);
+        path.style.opacity = "0.4";
+        view.background.appendChild(path);
+    }
 })(Relati || (Relati = {}));
 var Relati;
 (function (Relati) {
@@ -321,8 +378,8 @@ var Relati;
                 return;
             grid.role.status["relati-repeater"] = true;
             var ruleTraces = Relati.RelatiRules.RelatiToTarget.trace({ owner: owner, grid: grid });
-            for (var _i = 0, ruleTraces_1 = ruleTraces; _i < ruleTraces_1.length; _i++) {
-                var trace = ruleTraces_1[_i];
+            for (var _i = 0, ruleTraces_2 = ruleTraces; _i < ruleTraces_2.length; _i++) {
+                var trace = ruleTraces_2[_i];
                 var targetGrid = trace.target;
                 maintain(targetGrid, owner);
             }
@@ -527,20 +584,39 @@ var Relati;
                     if (!sourceReliable)
                         continue;
                     var middleGrids = sourceGrids.slice(i + 1, i + 5);
-                    for (var j = 0; j < middleGrids.length - 1; j++) {
-                        var middleGrid1 = middleGrids[j];
-                        var middleGrid2 = middleGrids[j + 1];
-                        var notBlocked = !middleGrid1.role && !middleGrid2.role;
-                        if (notBlocked) {
-                            ruleTraces.push({
-                                target: sourceGrid,
-                                routes: [
-                                    middleGrid1,
-                                    middleGrid2
-                                ]
-                            });
-                        }
-                    }
+                    var middleGrid1 = middleGrids[1];
+                    var middleGrid2 = middleGrids[0];
+                    var notBlocked = !middleGrid1.role && !middleGrid2.role;
+                    if (notBlocked)
+                        ruleTraces.push({
+                            target: sourceGrid,
+                            routes: [
+                                middleGrid1,
+                                middleGrid2
+                            ]
+                        });
+                    var middleGrid1 = middleGrids[1];
+                    var middleGrid2 = middleGrids[2];
+                    var notBlocked = !middleGrid1.role && !middleGrid2.role;
+                    if (notBlocked)
+                        ruleTraces.push({
+                            target: sourceGrid,
+                            routes: [
+                                middleGrid1,
+                                middleGrid2
+                            ]
+                        });
+                    var middleGrid1 = middleGrids[3];
+                    var middleGrid2 = middleGrids[2];
+                    var notBlocked = !middleGrid1.role && !middleGrid2.role;
+                    if (notBlocked)
+                        ruleTraces.push({
+                            target: sourceGrid,
+                            routes: [
+                                middleGrid1,
+                                middleGrid2
+                            ]
+                        });
                 }
                 return ruleTraces;
             }
@@ -710,20 +786,39 @@ var Relati;
                     if (!targetReliable)
                         continue;
                     var middleGrids = targetGrids.slice(i + 1, i + 5);
-                    for (var j = 0; j < middleGrids.length - 1; j++) {
-                        var middleGrid1 = middleGrids[j];
-                        var middleGrid2 = middleGrids[j + 1];
-                        var notBlocked = !middleGrid1.role && !middleGrid2.role;
-                        if (notBlocked) {
-                            ruleTraces.push({
-                                target: targetGrid,
-                                routes: [
-                                    middleGrid1,
-                                    middleGrid2
-                                ]
-                            });
-                        }
-                    }
+                    var middleGrid1 = middleGrids[1];
+                    var middleGrid2 = middleGrids[0];
+                    var notBlocked = !middleGrid1.role && !middleGrid2.role;
+                    if (notBlocked)
+                        ruleTraces.push({
+                            target: targetGrid,
+                            routes: [
+                                middleGrid1,
+                                middleGrid2
+                            ]
+                        });
+                    var middleGrid1 = middleGrids[1];
+                    var middleGrid2 = middleGrids[2];
+                    var notBlocked = !middleGrid1.role && !middleGrid2.role;
+                    if (notBlocked)
+                        ruleTraces.push({
+                            target: targetGrid,
+                            routes: [
+                                middleGrid1,
+                                middleGrid2
+                            ]
+                        });
+                    var middleGrid1 = middleGrids[3];
+                    var middleGrid2 = middleGrids[2];
+                    var notBlocked = !middleGrid1.role && !middleGrid2.role;
+                    if (notBlocked)
+                        ruleTraces.push({
+                            target: targetGrid,
+                            routes: [
+                                middleGrid1,
+                                middleGrid2
+                            ]
+                        });
                 }
                 return ruleTraces;
             }

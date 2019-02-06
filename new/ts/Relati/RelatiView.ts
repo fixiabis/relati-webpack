@@ -61,6 +61,7 @@ namespace Relati {
                 this.game.selectGrid(grid);
                 this.updateBoardView();
                 this.relatiNextStepHint();
+                this.relatiMaintainEffect();
             }.bind(this));
         }
 
@@ -81,11 +82,33 @@ namespace Relati {
             var owner = game.getNowPlayer();
             var color = owner.badge == "O" ? "crimson" : "royalblue";
 
-            for (var grid of this.game.board.gridList) {
+            for (var grid of game.board.gridList) {
                 var gridView = this.view[grid.coordinate];
 
                 if (RelatiRules.RelatiBySource.allow({ game, grid, owner })) {
                     createGridHint(grid, gridView, color);
+                }
+            }
+        }
+
+        relatiMaintainEffect() {
+            var { game, view } = this;
+            var owner = game.players[(game.turn - 1) % game.players.length];
+            var color = owner.badge == "O" ? "crimson" : "royalblue";
+
+            while (view.background.childNodes.length) {
+                view.background.removeChild(
+                    view.background.childNodes[0]
+                );
+            }
+
+            gridVisited = [];
+
+            for (var grid of game.board.gridList) {
+                if (!grid.role || grid.role.owner != owner) continue;
+
+                if (grid.role.status["relati-launcher"]) {
+                    createMaintainPath(grid, view, owner, game.turn, color);
                 }
             }
         }
@@ -160,5 +183,60 @@ namespace Relati {
         };
 
         gridView.appendChild(createSVG("path", hintAttr));
+    }
+
+    var gridVisited: RelatiGrid[] = [];
+    var gameTurn = 0;
+
+    function createMaintainPath(
+        grid: RelatiGrid,
+        view: RelatiView["view"],
+        owner: RelatiPlayer,
+        turn: number,
+        color: string,
+        sourceGrid?: RelatiGrid
+    ) {
+        if (gridVisited.indexOf(grid) > -1 || turn < gameTurn) return;
+        gridVisited.push(grid);
+        gameTurn = turn;
+
+        var ruleTraces = RelatiRules.RelatiToTarget.trace({ owner, grid });
+
+        for (let trace of ruleTraces) {
+            if (trace.target == sourceGrid) continue;
+            createRelatiPath(grid, trace, view, color);
+
+            setTimeout(() => {
+                createMaintainPath(trace.target, view, owner, turn, color, grid)
+            }, 250);
+        }
+    }
+
+    function createRelatiPath(
+        sourceGrid: RelatiGrid,
+        trace: RelatiRuleTrace,
+        view: RelatiView["view"],
+        color: string
+    ) {
+        var targetGrid = trace.target;
+
+        var pathAttr = {
+            "d": `M ${sourceGrid.x * 5 + 2.5} ${sourceGrid.y * 5 + 2.5}`,
+            "stroke-width": "0.6",
+            "stroke": color,
+            "fill": "none",
+            "class": "relati-path"
+        };
+
+        for (var grid of trace.routes) {
+            pathAttr["d"] += ` L ${grid.x * 5 + 2.5} ${grid.y * 5 + 2.5}`;
+        }
+
+        pathAttr["d"] += ` L ${targetGrid.x * 5 + 2.5} ${targetGrid.y * 5 + 2.5}`;
+
+        var path = createSVG("path", pathAttr);
+        path.style.opacity = "0.4";
+
+        view.background.appendChild(path);
     }
 }
