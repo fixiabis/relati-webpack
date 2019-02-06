@@ -1,12 +1,45 @@
 "use strict";
-var Grid = /** @class */ (function () {
-    function Grid(board, x, y) {
-        this.board = board;
-        this.x = x;
-        this.y = y;
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var GridQuery = /** @class */ (function () {
+    function GridQuery() {
         this._queryCache = {};
         this._queriesCache = {};
-        this.coordinate = "" + String.fromCharCode(x + 65) + (y + 1);
+    }
+    GridQuery.prototype._cacheQueryResult = function (command, result) {
+        return this._queryCache[command] = result;
+    };
+    GridQuery.prototype._cacheQueriesResult = function (commmands, results) {
+        return this._queriesCache[commmands] = results;
+    };
+    GridQuery.prototype.clearQueryResult = function (command) {
+        return delete this._queryCache[command];
+    };
+    GridQuery.prototype.clearQueriesResult = function (commands) {
+        return delete this._queriesCache[commands];
+    };
+    return GridQuery;
+}());
+var Grid = /** @class */ (function (_super) {
+    __extends(Grid, _super);
+    function Grid(board, x, y) {
+        var _this = _super.call(this) || this;
+        _this.board = board;
+        _this.x = x;
+        _this.y = y;
+        _this.coordinate = "" + String.fromCharCode(x + 65) + (y + 1);
+        return _this;
     }
     Grid.prototype.query = function (directionCommand) {
         if (this._queryCache[directionCommand]) {
@@ -83,18 +116,6 @@ var Grid = /** @class */ (function () {
         }
         return this._cacheQueriesResult(directionCommands, [this.query(directionCommands)]);
     };
-    Grid.prototype._cacheQueryResult = function (command, result) {
-        return this._queryCache[command] = result;
-    };
-    Grid.prototype._cacheQueriesResult = function (commmands, results) {
-        return this._queriesCache[commmands] = results;
-    };
-    Grid.prototype.clearQueryResult = function (command) {
-        return delete this._queryCache[command];
-    };
-    Grid.prototype.clearQueriesResult = function (commands) {
-        return delete this._queriesCache[commands];
-    };
     Grid.simplifyDirectionList = [/I/g, /H/g, /T/g, /X/g, /O/g];
     Grid.originalDirectionLists = [
         ["F", "B"], ["R", "L"],
@@ -103,25 +124,26 @@ var Grid = /** @class */ (function () {
         ["F", "B", "R", "L", "FR", "FL", "BR", "BL"]
     ];
     return Grid;
-}());
-var GridBoard = /** @class */ (function () {
+}(GridQuery));
+var GridBoard = /** @class */ (function (_super) {
+    __extends(GridBoard, _super);
     function GridBoard(width, height) {
-        this.width = width;
-        this.height = height;
-        this.grids = [];
-        this.gridList = [];
-        this._queryCache = {};
-        this._queriesCache = {};
+        var _this = _super.call(this) || this;
+        _this.width = width;
+        _this.height = height;
+        _this.grids = [];
+        _this.gridList = [];
         for (var x = 0; x < width; x++) {
             var gridRow = [];
             for (var y = 0; y < height; y++) {
-                var grid = new Grid(this, x, y);
+                var grid = new Grid(_this, x, y);
                 gridRow.push(grid);
-                this.gridList.push(grid);
-                this._queryCache[grid.coordinate] = grid;
+                _this.gridList.push(grid);
+                _this._queryCache[grid.coordinate] = grid;
             }
-            this.grids.push(gridRow);
+            _this.grids.push(gridRow);
         }
+        return _this;
     }
     GridBoard.prototype.query = function (coordinateCommand) {
         if (this._queryCache[coordinateCommand]) {
@@ -181,18 +203,6 @@ var GridBoard = /** @class */ (function () {
         }
         return this._cacheQueriesResult(coordinateCommands, [this.query(coordinateCommands)]);
     };
-    GridBoard.prototype._cacheQueryResult = function (command, result) {
-        return this._queryCache[command] = result;
-    };
-    GridBoard.prototype._cacheQueriesResult = function (commmands, results) {
-        return this._queriesCache[commmands] = results;
-    };
-    GridBoard.prototype.clearQueryResult = function (command) {
-        return delete this._queryCache[command];
-    };
-    GridBoard.prototype.clearQueriesResult = function (commands) {
-        return delete this._queriesCache[commands];
-    };
     return GridBoard;
-}());
+}(GridQuery));
 //# sourceMappingURL=GridBoard.js.map
