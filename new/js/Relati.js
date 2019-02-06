@@ -213,6 +213,7 @@ var Relati;
             this.view.board.addEventListener("click", function (event) {
                 var x = Math.floor(event.offsetX / 5), y = Math.floor(event.offsetY / 5), grid = board.grids[x] && board.grids[x][y];
                 this.game.selectGrid(grid);
+                this.createRelatiEffect();
                 this.updateBoardView();
             }.bind(this));
         }
@@ -225,6 +226,10 @@ var Relati;
                 }
                 updateGridBadge(grid, gridView);
             }
+        };
+        RelatiView.prototype.createRelatiEffect = function () {
+            if (this.game.turn < 2)
+                return;
         };
         return RelatiView;
     }());
