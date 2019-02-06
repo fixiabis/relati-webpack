@@ -1,10 +1,9 @@
-class GridBoard {
+class GridBoard extends GridQuery {
     public grids: Grid[][] = [];
     public gridList: Grid[] = [];
-    private _queryCache: { [command: string]: Grid } = {};
-    private _queriesCache: { [command: string]: Grid[] } = {};
 
     constructor(public width: number, public height: number) {
+        super();
         for (var x = 0; x < width; x++) {
             var gridRow = [];
 
@@ -108,21 +107,5 @@ class GridBoard {
             coordinateCommands,
             [this.query(coordinateCommands)]
         );
-    }
-
-    private _cacheQueryResult(command: string, result: Grid) {
-        return this._queryCache[command] = result;
-    }
-
-    private _cacheQueriesResult(commmands: string, results: Grid[]) {
-        return this._queriesCache[commmands] = results;
-    }
-    
-    public clearQueryResult(command: string) {
-        return delete this._queryCache[command];
-    }
-    
-    public clearQueriesResult(commands: string) {
-        return delete this._queriesCache[commands];
     }
 }

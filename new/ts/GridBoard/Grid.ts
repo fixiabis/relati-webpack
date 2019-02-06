@@ -1,7 +1,26 @@
-class Grid {
+class GridQuery {
+    protected _queryCache: { [command: string]: Grid } = {};
+    protected _queriesCache: { [command: string]: Grid[] } = {};
+
+    protected _cacheQueryResult(command: string, result: Grid) {
+        return this._queryCache[command] = result;
+    }
+
+    protected _cacheQueriesResult(commmands: string, results: Grid[]) {
+        return this._queriesCache[commmands] = results;
+    }
+
+    public clearQueryResult(command: string) {
+        return delete this._queryCache[command];
+    }
+
+    public clearQueriesResult(commands: string) {
+        return delete this._queriesCache[commands];
+    }
+}
+
+class Grid extends GridQuery {
     public coordinate: string;
-    private _queryCache: { [command: string]: Grid } = {};
-    private _queriesCache: { [command: string]: Grid[] } = {};
 
     static simplifyDirectionList = [/I/g, /H/g, /T/g, /X/g, /O/g];
     static originalDirectionLists = [
@@ -14,6 +33,7 @@ class Grid {
     constructor(
         public board: GridBoard, public x: number, public y: number
     ) {
+        super();
         this.coordinate = `${String.fromCharCode(x + 65)}${y + 1}`;
     }
 
@@ -103,21 +123,5 @@ class Grid {
             directionCommands,
             [this.query(directionCommands)]
         );
-    }
-
-    private _cacheQueryResult(command: string, result: Grid) {
-        return this._queryCache[command] = result;
-    }
-
-    private _cacheQueriesResult(commmands: string, results: Grid[]) {
-        return this._queriesCache[commmands] = results;
-    }
-
-    public clearQueryResult(command: string) {
-        return delete this._queryCache[command];
-    }
-
-    public clearQueriesResult(commands: string) {
-        return delete this._queriesCache[commands];
     }
 }
