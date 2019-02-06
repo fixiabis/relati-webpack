@@ -41,7 +41,7 @@ class GridBoard extends GridQuery {
         var gridList: Grid[] = [];
         var { width, height } = this;
 
-        if (coordinateCommands == "*") return this.gridList;
+        if (coordinateCommands === "*") return this.gridList;
 
         if (coordinateCommands.indexOf(",") > -1) {
             for (var coordinate of coordinateCommands.split(",")) {
@@ -89,7 +89,7 @@ class GridBoard extends GridQuery {
                 coordinateCommands,
                 gridList
             );
-        } else if (coordinateCommands.length == 1) {
+        } else if (coordinateCommands.length === 1) {
             var x = coordinateCommands.charCodeAt(0) - 65;
 
             for (var y = 0; y < height; y++) {

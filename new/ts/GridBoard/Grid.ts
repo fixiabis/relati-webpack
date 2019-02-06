@@ -59,7 +59,7 @@ class Grid extends GridQuery {
                     var unitValue = parseInt(direction);
                     if (isNaN(unitValue)) break;
 
-                    if (unitCarried == 1) unit = unitValue;
+                    if (unitCarried === 1) unit = unitValue;
                     else unit = unit * 10 + unitValue;
 
                     unitCarried++;

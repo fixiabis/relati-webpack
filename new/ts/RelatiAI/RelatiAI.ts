@@ -57,7 +57,7 @@ class RelatiAI {
                     grid.role.status["relati-repeater"]
                 );
 
-                if (grid.role.owner == owner && isValid) gridVisited.push(grid);
+                if (grid.role.owner === owner && isValid) gridVisited.push(grid);
             }
 
             var controllablGrids = [];
@@ -107,7 +107,7 @@ class RelatiAI {
         console.groupCollapsed(game.players[nowPlayerIndex].badge, level);
         var cache = this.roleStatusStore();
 
-        if (nowPlayerIndex == playerIndex) {
+        if (nowPlayerIndex === playerIndex) {
             for (var grid of game.board.gridList) {
                 if (grid.role || !RelatiRules.RelatiBySource.allow({
                     game, grid, owner: game.players[nowPlayerIndex]

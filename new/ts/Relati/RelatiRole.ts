@@ -24,7 +24,7 @@ namespace Relati {
         is(status: RelatiRoleStatus | RelatiRoleStatus[], type?: "all" | "any") {
             if (typeof status === "string") return this.status[status];
 
-            if (type == "any") {
+            if (type === "any") {
                 for (var statusName of status) {
                     if (this.status[statusName]) return true;
                 }

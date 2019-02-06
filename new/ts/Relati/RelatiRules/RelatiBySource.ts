@@ -37,7 +37,7 @@ namespace Relati {
                     var sourceReliable = (
                         sourceGrid &&
                         sourceGrid.role &&
-                        sourceGrid.role.owner == owner &&
+                        sourceGrid.role.owner === owner &&
                         sourceGrid.role.is(
                             RelatiNormalSourceGridStatus, "any"
                         )
@@ -58,7 +58,7 @@ namespace Relati {
                     var sourceReliable = (
                         sourceGrid &&
                         sourceGrid.role &&
-                        sourceGrid.role.owner == owner &&
+                        sourceGrid.role.owner === owner &&
                         sourceGrid.role.is(
                             RelatiNormalSourceGridStatus, "any"
                         )
@@ -114,7 +114,7 @@ namespace Relati {
                     var sourceReliable = (
                         sourceGrid &&
                         sourceGrid.role &&
-                        sourceGrid.role.owner == owner &&
+                        sourceGrid.role.owner === owner &&
                         sourceGrid.role.is(
                             RelatiRemoteNormalSourceGridStatus, "any"
                         )
@@ -139,7 +139,7 @@ namespace Relati {
                     var sourceReliable = (
                         sourceGrid &&
                         sourceGrid.role &&
-                        sourceGrid.role.owner == owner &&
+                        sourceGrid.role.owner === owner &&
                         sourceGrid.role.is(
                             RelatiRemoteNormalSourceGridStatus, "any"
                         )
@@ -177,7 +177,7 @@ namespace Relati {
                     var sourceReliable = (
                         sourceGrid &&
                         sourceGrid.role &&
-                        sourceGrid.role.owner == owner &&
+                        sourceGrid.role.owner === owner &&
                         sourceGrid.role.is(
                             RelatiRemoteStableSourceGridStatus, "any"
                         )
@@ -208,7 +208,7 @@ namespace Relati {
                     var sourceReliable = (
                         sourceGrid &&
                         sourceGrid.role &&
-                        sourceGrid.role.owner == owner &&
+                        sourceGrid.role.owner === owner &&
                         sourceGrid.role.is(
                             RelatiRemoteStableSourceGridStatus, "any"
                         )

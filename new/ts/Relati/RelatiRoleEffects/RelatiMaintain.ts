@@ -11,7 +11,7 @@ namespace Relati {
                 var owner = grid.role.owner;
 
                 for (let grid of game.board.gridList) {
-                    if (grid.role && grid.role.owner == owner) {
+                    if (grid.role && grid.role.owner === owner) {
                         grid.role.status["relati-repeater"] = false;
                     }
                 }

@@ -35,7 +35,7 @@ namespace Relati {
                     var targetReliable = (
                         targetGrid &&
                         targetGrid.role &&
-                        targetGrid.role.owner == owner &&
+                        targetGrid.role.owner === owner &&
                         targetGrid.role.is(
                             RelatiNormalTargetGridStatus, "any"
                         )
@@ -56,7 +56,7 @@ namespace Relati {
                     var targetReliable = (
                         targetGrid &&
                         targetGrid.role &&
-                        targetGrid.role.owner == owner &&
+                        targetGrid.role.owner === owner &&
                         targetGrid.role.is(
                             RelatiNormalTargetGridStatus, "any"
                         )
@@ -110,7 +110,7 @@ namespace Relati {
                     var targetReliable = (
                         targetGrid &&
                         targetGrid.role &&
-                        targetGrid.role.owner == owner &&
+                        targetGrid.role.owner === owner &&
                         targetGrid.role.is(
                             RelatiRemoteNormalTargetGridStatus, "any"
                         )
@@ -135,7 +135,7 @@ namespace Relati {
                     var targetReliable = (
                         targetGrid &&
                         targetGrid.role &&
-                        targetGrid.role.owner == owner &&
+                        targetGrid.role.owner === owner &&
                         targetGrid.role.is(
                             RelatiRemoteNormalTargetGridStatus, "any"
                         )
@@ -172,7 +172,7 @@ namespace Relati {
                     var targetReliable = (
                         targetGrid &&
                         targetGrid.role &&
-                        targetGrid.role.owner == owner &&
+                        targetGrid.role.owner === owner &&
                         targetGrid.role.is(
                             RelatiRemoteStableTargetGridStatus, "any"
                         )
@@ -203,7 +203,7 @@ namespace Relati {
                     var targetReliable = (
                         targetGrid &&
                         targetGrid.role &&
-                        targetGrid.role.owner == owner &&
+                        targetGrid.role.owner === owner &&
                         targetGrid.role.is(
                             RelatiRemoteStableTargetGridStatus, "any"
                         )
