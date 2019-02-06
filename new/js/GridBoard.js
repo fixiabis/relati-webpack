@@ -74,7 +74,7 @@ var Grid = /** @class */ (function (_super) {
                     var unitValue = parseInt(direction);
                     if (isNaN(unitValue))
                         break;
-                    if (unitCarried == 1)
+                    if (unitCarried === 1)
                         unit = unitValue;
                     else
                         unit = unit * 10 + unitValue;
@@ -160,7 +160,7 @@ var GridBoard = /** @class */ (function (_super) {
         }
         var gridList = [];
         var _a = this, width = _a.width, height = _a.height;
-        if (coordinateCommands == "*")
+        if (coordinateCommands === "*")
             return this.gridList;
         if (coordinateCommands.indexOf(",") > -1) {
             for (var _i = 0, _b = coordinateCommands.split(","); _i < _b.length; _i++) {
@@ -194,7 +194,7 @@ var GridBoard = /** @class */ (function (_super) {
             }
             return this._cacheQueriesResult(coordinateCommands, gridList);
         }
-        else if (coordinateCommands.length == 1) {
+        else if (coordinateCommands.length === 1) {
             var x = coordinateCommands.charCodeAt(0) - 65;
             for (var y = 0; y < height; y++) {
                 gridList.push(this.grids[x][y]);

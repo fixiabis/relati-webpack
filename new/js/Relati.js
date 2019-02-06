@@ -76,7 +76,7 @@ var Relati;
         RelatiRole.prototype.is = function (status, type) {
             if (typeof status === "string")
                 return this.status[status];
-            if (type == "any") {
+            if (type === "any") {
                 for (var _i = 0, status_1 = status; _i < status_1.length; _i++) {
                     var statusName = status_1[_i];
                     if (this.status[statusName])
@@ -213,8 +213,8 @@ var Relati;
             this.view.board.addEventListener("click", function (event) {
                 var x = Math.floor(event.offsetX / 5), y = Math.floor(event.offsetY / 5), grid = board.grids[x] && board.grids[x][y];
                 this.game.selectGrid(grid);
-                this.createRelatiEffect();
                 this.updateBoardView();
+                this.relatiNextStepHint();
             }.bind(this));
         }
         RelatiView.prototype.updateBoardView = function () {
@@ -227,9 +227,17 @@ var Relati;
                 updateGridBadge(grid, gridView);
             }
         };
-        RelatiView.prototype.createRelatiEffect = function () {
-            if (this.game.turn < 2)
-                return;
+        RelatiView.prototype.relatiNextStepHint = function () {
+            var game = this.game;
+            var owner = game.getNowPlayer();
+            var color = owner.badge == "O" ? "crimson" : "royalblue";
+            for (var _i = 0, _a = this.game.board.gridList; _i < _a.length; _i++) {
+                var grid = _a[_i];
+                var gridView = this.view[grid.coordinate];
+                if (Relati.RelatiRules.RelatiBySource.allow({ game: game, grid: grid, owner: owner })) {
+                    createGridHint(grid, gridView, color);
+                }
+            }
         };
         return RelatiView;
     }());
@@ -272,6 +280,20 @@ var Relati;
             gridView.appendChild(createSVG("path", badgeAttr));
         }
     }
+    function createGridHint(grid, gridView, color) {
+        if (grid.role)
+            return;
+        var srtX = grid.x * 5 + 1;
+        var srtY = grid.y * 5 + 1;
+        var endX = grid.x * 5 + 4;
+        var endY = grid.y * 5 + 4;
+        var hintAttr = {
+            "d": "\n                M " + (srtX + 1.5) + " " + (srtY + 1.5) + "\n                m 0 -0.4\n                a 0.4 0.4 0 0 1, 0 0.8\n                a 0.4 0.4 0 0 1, 0 -0.8\n            ",
+            "stroke": "none",
+            "fill": color
+        };
+        gridView.appendChild(createSVG("path", hintAttr));
+    }
 })(Relati || (Relati = {}));
 var Relati;
 (function (Relati) {
@@ -287,7 +309,7 @@ var Relati;
                 var owner = grid.role.owner;
                 for (var _i = 0, _b = game.board.gridList; _i < _b.length; _i++) {
                     var grid_2 = _b[_i];
-                    if (grid_2.role && grid_2.role.owner == owner) {
+                    if (grid_2.role && grid_2.role.owner === owner) {
                         grid_2.role.status["relati-repeater"] = false;
                     }
                 }
@@ -368,7 +390,7 @@ var Relati;
                     var sourceGrid = sourceGrids[i];
                     var sourceReliable = (sourceGrid &&
                         sourceGrid.role &&
-                        sourceGrid.role.owner == owner &&
+                        sourceGrid.role.owner === owner &&
                         sourceGrid.role.is(RelatiRules.RelatiNormalSourceGridStatus, "any"));
                     if (sourceReliable)
                         return true;
@@ -385,7 +407,7 @@ var Relati;
                     var sourceGrid = sourceGrids[i];
                     var sourceReliable = (sourceGrid &&
                         sourceGrid.role &&
-                        sourceGrid.role.owner == owner &&
+                        sourceGrid.role.owner === owner &&
                         sourceGrid.role.is(RelatiRules.RelatiNormalSourceGridStatus, "any"));
                     if (sourceReliable) {
                         ruleTraces.push({
@@ -424,7 +446,7 @@ var Relati;
                     var sourceGrid = sourceGrids[i];
                     var sourceReliable = (sourceGrid &&
                         sourceGrid.role &&
-                        sourceGrid.role.owner == owner &&
+                        sourceGrid.role.owner === owner &&
                         sourceGrid.role.is(RelatiRules.RelatiRemoteNormalSourceGridStatus, "any"));
                     if (!sourceReliable)
                         continue;
@@ -445,7 +467,7 @@ var Relati;
                     var sourceGrid = sourceGrids[i];
                     var sourceReliable = (sourceGrid &&
                         sourceGrid.role &&
-                        sourceGrid.role.owner == owner &&
+                        sourceGrid.role.owner === owner &&
                         sourceGrid.role.is(RelatiRules.RelatiRemoteNormalSourceGridStatus, "any"));
                     if (!sourceReliable)
                         continue;
@@ -475,7 +497,7 @@ var Relati;
                     var sourceGrid = sourceGrids[i];
                     var sourceReliable = (sourceGrid &&
                         sourceGrid.role &&
-                        sourceGrid.role.owner == owner &&
+                        sourceGrid.role.owner === owner &&
                         sourceGrid.role.is(RelatiRules.RelatiRemoteStableSourceGridStatus, "any"));
                     if (!sourceReliable)
                         continue;
@@ -500,7 +522,7 @@ var Relati;
                     var sourceGrid = sourceGrids[i];
                     var sourceReliable = (sourceGrid &&
                         sourceGrid.role &&
-                        sourceGrid.role.owner == owner &&
+                        sourceGrid.role.owner === owner &&
                         sourceGrid.role.is(RelatiRules.RelatiRemoteStableSourceGridStatus, "any"));
                     if (!sourceReliable)
                         continue;
@@ -554,7 +576,7 @@ var Relati;
                     var targetGrid = targetGrids[i];
                     var targetReliable = (targetGrid &&
                         targetGrid.role &&
-                        targetGrid.role.owner == owner &&
+                        targetGrid.role.owner === owner &&
                         targetGrid.role.is(RelatiRules.RelatiNormalTargetGridStatus, "any"));
                     if (targetReliable)
                         return true;
@@ -571,7 +593,7 @@ var Relati;
                     var targetGrid = targetGrids[i];
                     var targetReliable = (targetGrid &&
                         targetGrid.role &&
-                        targetGrid.role.owner == owner &&
+                        targetGrid.role.owner === owner &&
                         targetGrid.role.is(RelatiRules.RelatiNormalTargetGridStatus, "any"));
                     if (targetReliable) {
                         ruleTraces.push({
@@ -608,7 +630,7 @@ var Relati;
                     var targetGrid = targetGrids[i];
                     var targetReliable = (targetGrid &&
                         targetGrid.role &&
-                        targetGrid.role.owner == owner &&
+                        targetGrid.role.owner === owner &&
                         targetGrid.role.is(RelatiRules.RelatiRemoteNormalTargetGridStatus, "any"));
                     if (!targetReliable)
                         continue;
@@ -629,7 +651,7 @@ var Relati;
                     var targetGrid = targetGrids[i];
                     var targetReliable = (targetGrid &&
                         targetGrid.role &&
-                        targetGrid.role.owner == owner &&
+                        targetGrid.role.owner === owner &&
                         targetGrid.role.is(RelatiRules.RelatiRemoteNormalTargetGridStatus, "any"));
                     if (!targetReliable)
                         continue;
@@ -658,7 +680,7 @@ var Relati;
                     var targetGrid = targetGrids[i];
                     var targetReliable = (targetGrid &&
                         targetGrid.role &&
-                        targetGrid.role.owner == owner &&
+                        targetGrid.role.owner === owner &&
                         targetGrid.role.is(RelatiRules.RelatiRemoteStableTargetGridStatus, "any"));
                     if (!targetReliable)
                         continue;
@@ -683,7 +705,7 @@ var Relati;
                     var targetGrid = targetGrids[i];
                     var targetReliable = (targetGrid &&
                         targetGrid.role &&
-                        targetGrid.role.owner == owner &&
+                        targetGrid.role.owner === owner &&
                         targetGrid.role.is(RelatiRules.RelatiRemoteStableTargetGridStatus, "any"));
                     if (!targetReliable)
                         continue;
