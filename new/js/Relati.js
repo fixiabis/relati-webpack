@@ -337,7 +337,7 @@ var Relati;
         var targetGrid = trace.target;
         var pathAttr = {
             "d": "M " + (sourceGrid.x * 5 + 2.5) + " " + (sourceGrid.y * 5 + 2.5),
-            "stroke-width": "0.6",
+            "stroke-width": "0.5",
             "stroke": color,
             "fill": "none",
             "class": "relati-path"
@@ -348,7 +348,7 @@ var Relati;
         }
         pathAttr["d"] += " L " + (targetGrid.x * 5 + 2.5) + " " + (targetGrid.y * 5 + 2.5);
         var path = createSVG("path", pathAttr);
-        path.style.opacity = "0.4";
+        path.style.opacity = "0.3";
         view.background.appendChild(path);
     }
 })(Relati || (Relati = {}));
