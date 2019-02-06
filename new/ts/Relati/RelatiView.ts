@@ -59,8 +59,8 @@ namespace Relati {
                     y: number = Math.floor(event.offsetY / 5),
                     grid = board.grids[x] && board.grids[x][y];
                 this.game.selectGrid(grid);
-                this.createRelatiEffect();
                 this.updateBoardView();
+                this.relatiNextStepHint();
             }.bind(this));
         }
 
@@ -76,9 +76,18 @@ namespace Relati {
             }
         }
 
-        createRelatiEffect() {
-            if (this.game.turn < 2) return;
-            
+        relatiNextStepHint() {
+            var { game } = this;
+            var owner = game.getNowPlayer();
+            var color = owner.badge == "O" ? "crimson" : "royalblue";
+
+            for (var grid of this.game.board.gridList) {
+                var gridView = this.view[grid.coordinate];
+
+                if (RelatiRules.RelatiBySource.allow({ game, grid, owner })) {
+                    createGridHint(grid, gridView, color);
+                }
+            }
         }
     }
 
@@ -129,5 +138,27 @@ namespace Relati {
             badgeAttr.stroke = "#666";
             gridView.appendChild(createSVG("path", badgeAttr));
         }
+    }
+
+    function createGridHint(grid: RelatiGrid, gridView: SVGElement, color: string) {
+        if (grid.role) return;
+
+        var srtX = grid.x * 5 + 1;
+        var srtY = grid.y * 5 + 1;
+        var endX = grid.x * 5 + 4;
+        var endY = grid.y * 5 + 4;
+
+        var hintAttr = {
+            "d": `
+                M ${srtX + 1.5} ${srtY + 1.5}
+                m 0 -0.4
+                a 0.4 0.4 0 0 1, 0 0.8
+                a 0.4 0.4 0 0 1, 0 -0.8
+            `,
+            "stroke": "none",
+            "fill": color
+        };
+
+        gridView.appendChild(createSVG("path", hintAttr));
     }
 }
