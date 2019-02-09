@@ -104,7 +104,7 @@ class RelatiAI {
     ) {
         var { game } = this;
 
-        console.groupCollapsed(game.players[nowPlayerIndex].badge, level);
+        // console.groupCollapsed(game.players[nowPlayerIndex].badge, level);
         var cache = this.roleStatusStore();
 
         if (nowPlayerIndex === playerIndex) {
@@ -131,7 +131,7 @@ class RelatiAI {
                     var result = { point: playerPoint, grid };
                 }
 
-                console.log(grid.coordinate, result.point);
+                // console.log(grid.coordinate, result.point);
                 // Relati.RelatiView.updateBoardView(game.board, game.view);
                 // debugger;
                 delete grid.role;
@@ -143,7 +143,7 @@ class RelatiAI {
                 if (beta.point <= alpha.point) break;
             }
 
-            console.groupEnd();
+            // console.groupEnd();
 
             return alpha;
         } else {
@@ -170,7 +170,7 @@ class RelatiAI {
                     var result = { point: playerPoint, grid };
                 }
 
-                console.log(grid.coordinate, result.point);
+                // console.log(grid.coordinate, result.point);
                 // Relati.RelatiView.updateBoardView(game.board, game.view);
                 // debugger;
                 delete grid.role;
@@ -182,7 +182,7 @@ class RelatiAI {
                 if (beta.point <= alpha.point) break;
             }
 
-            console.groupEnd();
+            // console.groupEnd();
 
             return beta;
         }
