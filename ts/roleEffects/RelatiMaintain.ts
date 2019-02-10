@@ -1,38 +1,68 @@
-import { RelatiRoleEffect } from "../RelatiRole";
-import { RelatiGrid } from "../RelatiBoard";
 import { RelatiGame } from "../RelatiGame";
-import { RelatiPlayer } from "../RelatiPlayer";
-import { RelatiCommonToTarget } from "../rules/RelatiToTarget";
+import { RelatiGrid } from "../RelatiBoard";
+import { RelatiRoleEffect } from "../RelatiRole";
+
+import {
+    RelatiMaintainRoute,
+    RelatiMaintainRouteState
+} from "./RelatiMaintainRoute";
+
+import {
+    RelatiCommonToTarget,
+    RelatiNormalToTarget,
+    RelatiRemoteToTarget,
+    RelatiRemoteNormalToTarget,
+    RelatiRemoteStableToTarget
+} from "../rules/RelatiToTarget";
 
 export type RelatiMaintainState = {
     game: RelatiGame;
     grid: RelatiGrid;
 };
 
-export var RelatiCommonMaintain: RelatiRoleEffect<RelatiMaintainState> = {
-    name: "連結維持",
-    do({ game, grid: launcher }) {
-        if (!launcher.role || game.turn < game.playerCount) return;
-        var owner = launcher.role.owner;
+export type RelatiMaintainEffect = RelatiRoleEffect<RelatiMaintainState>;
 
-        for (var grid of game.board.gridList) {
-            if (grid.role && grid.role.owner === owner) {
-                grid.role.lost("relati-repeater");
-            }
-        }
-
-        maintain(launcher, owner);
+export var RelatiCommonMaintain: RelatiMaintainEffect = {
+    name: "通用連結維持",
+    do(state: RelatiMaintainRouteState) {
+        state.status = "relati-repeater";
+        state.toTarget = RelatiCommonToTarget;
+        return RelatiMaintainRoute.do(state);
     }
 };
 
-function maintain(grid: RelatiGrid, owner: RelatiPlayer) {
-    if (!grid.role || grid.role.is("relati-repeater")) return;
-    grid.role.gain("relati-repeater");
-
-    var traces = RelatiCommonToTarget.trace({ grid, owner });
-
-    for (var trace of traces) {
-        var targetGrid = trace.target;
-        maintain(targetGrid, owner);
+export var RelatiNormalMaintain: RelatiMaintainEffect = {
+    name: "一般連結維持",
+    do(state: RelatiMaintainRouteState) {
+        state.status = "relati-normal-repeater";
+        state.toTarget = RelatiNormalToTarget;
+        return RelatiMaintainRoute.do(state);
     }
-}
+};
+
+export var RelatiRemoteMaintain: RelatiMaintainEffect = {
+    name: "遠程連結維持",
+    do(state: RelatiMaintainRouteState) {
+        state.status = "relati-remote-repeater";
+        state.toTarget = RelatiRemoteToTarget;
+        return RelatiMaintainRoute.do(state);
+    }
+};
+
+export var RelatiRemoteNormalMaintain: RelatiMaintainEffect = {
+    name: "遠程一般連結維持",
+    do(state: RelatiMaintainRouteState) {
+        state.status = "relati-remote-normal-repeater";
+        state.toTarget = RelatiRemoteNormalToTarget;
+        return RelatiMaintainRoute.do(state);
+    }
+};
+
+export var RelatiRemoteStableMaintain: RelatiMaintainEffect = {
+    name: "遠程穩定連結維持",
+    do(state: RelatiMaintainRouteState) {
+        state.status = "relati-remote-stable-repeater";
+        state.toTarget = RelatiRemoteStableToTarget;
+        return RelatiMaintainRoute.do(state);
+    }
+};
