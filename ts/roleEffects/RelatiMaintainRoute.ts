@@ -8,7 +8,7 @@ import { RelatiRoleStatus } from "../RelatiRoleStatus";
 export type RelatiMaintainRouteState = {
     game: RelatiGame;
     grid: RelatiGrid;
-    status: RelatiRoleStatus;
+    status: RelatiRoleStatus.RelatiRepeater;
     toTarget: RelatiTargetPathRule;
 };
 
