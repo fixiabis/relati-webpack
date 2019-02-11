@@ -23,10 +23,8 @@
             this.type = type;
             /** 狀態 */
             this.status = {};
-            /** 擁有效果 */
-            this.effects = [];
-            /** 擁有能力 */
-            this.actions = [];
+            /** 擁有技能 */
+            this.skills = [];
         }
         RelatiRole.prototype.is = function (status, type) {
             if (typeof status === "string")

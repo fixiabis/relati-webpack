@@ -1,7 +1,7 @@
 import { RelatiGrid } from "./RelatiBoard";
 import { RelatiPlayer } from "./RelatiPlayer";
 import { RelatiRoleStatus } from "./RelatiRoleStatus";
-import { RelatiGameState } from "./RelatiGame";
+import { RelatiSkill } from "./RelatiSkill";
 
 /** 角色類型 */
 export type RelatiRoleType = "normal" | "knight" | "wizard" | "leader";
@@ -17,10 +17,8 @@ export interface RelatiRole {
 export class RelatiRole {
     /** 狀態 */
     public status: { [status: string]: boolean } = {};
-    /** 擁有效果 */
-    public effects: RelatiRoleEffect[] = [];
-    /** 擁有能力 */
-    public actions: RelatiRoleAction[] = [];
+    /** 擁有技能 */
+    public skills: RelatiSkill[] = [];
 
     /**
      * 建立角色
@@ -66,14 +64,3 @@ export class RelatiRole {
         }
     }
 }
-
-/** 角色效果 */
-export interface RelatiRoleEffect<State = {}> {
-    /** 名稱 */
-    name: string;
-    /** 執行 */
-    do(state: RelatiGameState & State): void;
-}
-
-/** 角色行動 */
-export interface RelatiRoleAction<State = {}> extends RelatiRoleEffect<State> { }
