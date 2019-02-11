@@ -1,4 +1,4 @@
-import { RelatiRoleEffect } from "../RelatiRole";
+import { RelatiSkill } from "../RelatiSkill";
 import { RelatiGrid } from "../RelatiBoard";
 import { RelatiGame } from "../RelatiGame";
 import { RelatiPlayer } from "../RelatiPlayer";
@@ -12,9 +12,9 @@ export type RelatiMaintainRouteState = {
     toTarget: RelatiTargetPathRule;
 };
 
-export type RelatiMaintainRouteEffect = RelatiRoleEffect<RelatiMaintainRouteState>;
+export type RelatiMaintainRouteSkill = RelatiSkill<RelatiMaintainRouteState>;
 
-export var RelatiMaintainRoute: RelatiMaintainRouteEffect = {
+export var RelatiMaintainRoute: RelatiMaintainRouteSkill = {
     name: "連結維持",
     do({ game, grid: launcher, status, toTarget }) {
         if (!launcher.role || game.turn < game.playerCount) return;

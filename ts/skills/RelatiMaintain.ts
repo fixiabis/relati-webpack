@@ -1,6 +1,6 @@
 import { RelatiGame } from "../RelatiGame";
 import { RelatiGrid } from "../RelatiBoard";
-import { RelatiRoleEffect } from "../RelatiRole";
+import { RelatiSkill } from "../RelatiSkill";
 
 import {
     RelatiMaintainRoute,
@@ -20,9 +20,9 @@ export type RelatiMaintainState = {
     grid: RelatiGrid;
 };
 
-export type RelatiMaintainEffect = RelatiRoleEffect<RelatiMaintainState>;
+export type RelatiMaintainSkill = RelatiSkill<RelatiMaintainState>;
 
-export var RelatiCommonMaintain: RelatiMaintainEffect = {
+export var RelatiCommonMaintain: RelatiMaintainSkill = {
     name: "通用連結維持",
     do(state: RelatiMaintainRouteState) {
         state.status = "relati-repeater";
@@ -31,7 +31,7 @@ export var RelatiCommonMaintain: RelatiMaintainEffect = {
     }
 };
 
-export var RelatiNormalMaintain: RelatiMaintainEffect = {
+export var RelatiNormalMaintain: RelatiMaintainSkill = {
     name: "一般連結維持",
     do(state: RelatiMaintainRouteState) {
         state.status = "relati-normal-repeater";
@@ -40,7 +40,7 @@ export var RelatiNormalMaintain: RelatiMaintainEffect = {
     }
 };
 
-export var RelatiRemoteMaintain: RelatiMaintainEffect = {
+export var RelatiRemoteMaintain: RelatiMaintainSkill = {
     name: "遠程連結維持",
     do(state: RelatiMaintainRouteState) {
         state.status = "relati-remote-repeater";
@@ -49,7 +49,7 @@ export var RelatiRemoteMaintain: RelatiMaintainEffect = {
     }
 };
 
-export var RelatiRemoteNormalMaintain: RelatiMaintainEffect = {
+export var RelatiRemoteNormalMaintain: RelatiMaintainSkill = {
     name: "遠程一般連結維持",
     do(state: RelatiMaintainRouteState) {
         state.status = "relati-remote-normal-repeater";
@@ -58,7 +58,7 @@ export var RelatiRemoteNormalMaintain: RelatiMaintainEffect = {
     }
 };
 
-export var RelatiRemoteStableMaintain: RelatiMaintainEffect = {
+export var RelatiRemoteStableMaintain: RelatiMaintainSkill = {
     name: "遠程穩定連結維持",
     do(state: RelatiMaintainRouteState) {
         state.status = "relati-remote-stable-repeater";

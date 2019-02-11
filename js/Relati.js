@@ -1,7 +1,7 @@
 /**
  * @overview 棋盤遊戲
  * @author fixiabis <fixiabis@github.com>
- * @version 1.0
+ * @version 1.1
  */
 var __importStar = (this && this.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
@@ -16,7 +16,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
         if (v !== undefined) module.exports = v;
     }
     else if (typeof define === "function" && define.amd) {
-        define(["require", "exports", "./RelatiGame", "./RelatiPlayer", "./RelatiRole", "./RelatiRoleStatus", "./RelatiRules", "./RelatiRoleEffects"], factory);
+        define(["require", "exports", "./RelatiGame", "./RelatiPlayer", "./RelatiRole", "./RelatiRoleStatus", "./RelatiRules", "./RelatiSkills"], factory);
     }
 })(function (require, exports) {
     "use strict";
@@ -30,7 +30,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __export(require("./RelatiRoleStatus"));
     var RelatiRules = __importStar(require("./RelatiRules"));
     exports.RelatiRules = RelatiRules;
-    var RelatiRoleEffects = __importStar(require("./RelatiRoleEffects"));
-    exports.RelatiRoleEffects = RelatiRoleEffects;
+    var RelatiSkills = __importStar(require("./RelatiSkills"));
+    exports.RelatiSkills = RelatiSkills;
 });
 //# sourceMappingURL=Relati.js.map
