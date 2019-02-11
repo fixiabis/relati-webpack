@@ -2,6 +2,7 @@ import { RelatiRuleTraceable } from "../RelatiRule";
 import { RelatiRoleStatus } from "../RelatiRoleStatus";
 import { RelatiGrid } from "../RelatiBoard";
 import { RelatiPlayer } from "../RelatiPlayer";
+
 import {
     RelatiPathState,
     RelatiCommonPath,
