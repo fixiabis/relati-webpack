@@ -16,7 +16,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
         if (v !== undefined) module.exports = v;
     }
     else if (typeof define === "function" && define.amd) {
-        define(["require", "exports", "./RelatiGame", "./RelatiPlayer", "./RelatiRole", "./RelatiRoleStatus", "./RelatiRules", "./RelatiSkills"], factory);
+        define(["require", "exports", "./RelatiGame", "./RelatiPlayer", "./RelatiRole", "./RelatiRoleStatus", "./RelatiRules", "./RelatiSkills", "./RelatiSVG", "./RelatiViews"], factory);
     }
 })(function (require, exports) {
     "use strict";
@@ -32,5 +32,8 @@ var __importStar = (this && this.__importStar) || function (mod) {
     exports.RelatiRules = RelatiRules;
     var RelatiSkills = __importStar(require("./RelatiSkills"));
     exports.RelatiSkills = RelatiSkills;
+    __export(require("./RelatiSVG"));
+    var RelatiViews = __importStar(require("./RelatiViews"));
+    exports.RelatiViews = RelatiViews;
 });
 //# sourceMappingURL=Relati.js.map

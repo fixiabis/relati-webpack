@@ -3,15 +3,20 @@ import { RelatiSVG } from "../RelatiSVG";
 
 export class RelatiBoardView {
     public view: SVGElement;
+    public width: number;
+    public height: number;
     public background = RelatiSVG("g");
     public gridViews: RelatiGridView[] = [];
 
     constructor(public board: RelatiBoard, public gridSize: number) {
         var { width, height } = board;
 
+        this.width = width * gridSize;
+        this.height = height * gridSize;
+
         this.view = RelatiSVG("svg", {
-            "width": `${width * gridSize}`,
-            "height": `${height * gridSize}`
+            "width": `${this.width}`,
+            "height": `${this.height}`
         });
 
         this.view.appendChild(this.background);
