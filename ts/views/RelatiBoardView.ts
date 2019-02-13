@@ -1,4 +1,4 @@
-import { RelatiBoard, RelatiGrid } from "../RelatiBoard";
+import { RelatiBoard } from "../RelatiBoard";
 import { RelatiSVG } from "../RelatiSVG";
 
 export class RelatiBoardView {
@@ -6,7 +6,6 @@ export class RelatiBoardView {
     public width: number;
     public height: number;
     public background = RelatiSVG("g");
-    public gridViews: RelatiGridView[] = [];
 
     constructor(public board: RelatiBoard, public gridSize: number) {
         var { width, height } = board;
@@ -39,33 +38,9 @@ export class RelatiBoardView {
             var gridLine = RelatiSVG("path", gridLineProp);
             this.view.appendChild(gridLine);
         }
-
-        for (var grid of board.gridList) {
-            this.gridViews.push(new RelatiGridView(grid, gridSize));
-        }
     }
 
     update() {
-        for (var gridView of this.gridViews) {
-            gridView.update();
-        }
-    }
-}
-
-export class RelatiGridView {
-    public view = RelatiSVG("g");
-    public x: number;
-    public y: number;
-
-    constructor(
-        public grid: RelatiGrid,
-        public gridSize: number
-    ) {
-        this.x = grid.x * gridSize;
-        this.y = grid.y * gridSize;
-    }
-
-    update() {
-
+        
     }
 }
