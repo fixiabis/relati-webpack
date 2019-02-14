@@ -1,17 +1,14 @@
-type SVGElementProp = { [name: string]: string };
+type StringProp = { [name: string]: string };
+type SVGTypeMap = SVGElementTagNameMap;
 
-export function RelatiSVG(type: string, prop: SVGElementProp = {}) {
-    var element = document.createElementNS("http://www.w3.org/2000/svg", type);
+const SVGNS = "http://www.w3.org/2000/svg";
 
-    for (var name in prop) {
-        element.setAttribute(name, prop[name]);
-    }
-
+export function RelatiSVG<T extends keyof SVGTypeMap>(type: T, prop: StringProp = {}): SVGTypeMap[T] {
+    var element: SVGElement = document.createElementNS(SVGNS, type);
+    RelatiSVG.update(element, prop);
     return element;
 }
 
-RelatiSVG.update = function (element: SVGElement, prop: SVGElementProp) {
-    for (var name in prop) {
-        element.setAttribute(name, prop[name]);
-    }
+RelatiSVG.update = function (element: SVGElement, prop: StringProp) {
+    for (var name in prop) element.setAttribute(name, prop[name]);
 };
