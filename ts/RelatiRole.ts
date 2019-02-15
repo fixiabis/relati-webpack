@@ -10,13 +10,15 @@ export type RelatiRoleType = "normal" | "knight" | "wizard" | "leader";
 export interface RelatiRole {
     /** 狀態判斷 */
     is(status: RelatiRoleStatus): boolean;
-    /** 狀態判斷，all: 完全符合， any: 任何符合 */
+    /** 複合狀態判斷，all: 完全符合， any: 任何符合 */
     is(status: RelatiRoleStatus[], type: "all" | "any"): boolean;
 }
 
 export class RelatiRole {
     /** 狀態 */
     public status: { [status: string]: boolean } = {};
+    /** 累積 */
+    public points: { [points: string]: number } = {};
     /** 擁有技能 */
     public skills: RelatiSkill[] = [];
 
@@ -36,14 +38,14 @@ export class RelatiRole {
         if (typeof status === "string") return this.status[status];
 
         if (type === "any") {
-            for (var statusName of status) {
-                if (this.status[statusName]) return true;
+            for (var name of status) {
+                if (this.status[name]) return true;
             }
 
             return false;
         } else {
-            for (var statusName of status) {
-                if (!this.status[statusName]) return false;
+            for (var name of status) {
+                if (!this.status[name]) return false;
             }
 
             return true;
@@ -52,15 +54,15 @@ export class RelatiRole {
 
     /** 獲得狀態 */
     gain(...statusList: RelatiRoleStatus[]) {
-        for (var status of statusList) {
-            this.status[status] = true;
+        for (var name of statusList) {
+            this.status[name] = true;
         }
     }
 
     /** 失去狀態 */
     lost(...statusList: RelatiRoleStatus[]) {
-        for (var status of statusList) {
-            this.status[status] = false;
+        for (var name of statusList) {
+            this.status[name] = false;
         }
     }
 }

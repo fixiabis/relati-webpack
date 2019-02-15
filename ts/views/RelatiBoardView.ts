@@ -8,7 +8,7 @@ export class RelatiBoardView {
     public background = RelatiSVG("g");
     public gridViews = RelatiSVG("g");
     public foreground = RelatiSVG("g");
-    public gridRenderers: RelatiGridRenderer[] = [];
+    public renderers: RelatiRenderer[] = [];
 
     constructor(public board: RelatiBoard, public gridSize: number) {
         var { width, height } = board;
@@ -43,20 +43,16 @@ export class RelatiBoardView {
         }
     }
 
-    render() {
+    update() {
         this.view.removeChild(this.gridViews);
         this.gridViews = RelatiSVG("g");
 
-        for (var roleRenderer of this.gridRenderers) {
-            for (var grid of this.board.gridList) {
-                var gridView = RelatiSVG("g")
-                roleRenderer.render(grid, this.gridSize, gridView);
-                this.gridViews.appendChild(gridView);
-            }
+        for (var roleRenderer of this.renderers) {
+            roleRenderer.render(this);
         }
     }
 }
 
-export interface RelatiGridRenderer {
-    render(grid: RelatiGrid, gridSize: number, gridView: SVGElement): void;
+export interface RelatiRenderer {
+    render(boardView: RelatiBoardView): void;
 }
