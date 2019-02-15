@@ -15,8 +15,7 @@
             this.board = board;
             this.gridSize = gridSize;
             this.background = RelatiSVG_1.RelatiSVG("g");
-            this.gridViews = RelatiSVG_1.RelatiSVG("g");
-            this.foreground = RelatiSVG_1.RelatiSVG("g");
+            this.viewGroups = [];
             this.renderers = [];
             var width = board.width, height = board.height;
             this.width = width * gridSize;
@@ -42,15 +41,8 @@
                 var gridLine = RelatiSVG_1.RelatiSVG("path", gridLineProp);
                 this.view.appendChild(gridLine);
             }
+            this.viewGroups.push(this.background);
         }
-        RelatiBoardView.prototype.update = function () {
-            this.view.removeChild(this.gridViews);
-            this.gridViews = RelatiSVG_1.RelatiSVG("g");
-            for (var _i = 0, _a = this.renderers; _i < _a.length; _i++) {
-                var roleRenderer = _a[_i];
-                roleRenderer.render(this);
-            }
-        };
         return RelatiBoardView;
     }());
     exports.RelatiBoardView = RelatiBoardView;

@@ -6,9 +6,8 @@ export class RelatiBoardView {
     public width: number;
     public height: number;
     public background = RelatiSVG("g");
-    public gridViews = RelatiSVG("g");
-    public foreground = RelatiSVG("g");
-    public renderers: RelatiRenderer[] = [];
+    public viewGroups: SVGGElement[] = [];
+    public renderers: RelatiBoardRenderer[] = [];
 
     constructor(public board: RelatiBoard, public gridSize: number) {
         var { width, height } = board;
@@ -41,18 +40,11 @@ export class RelatiBoardView {
             var gridLine = RelatiSVG("path", gridLineProp);
             this.view.appendChild(gridLine);
         }
-    }
 
-    update() {
-        this.view.removeChild(this.gridViews);
-        this.gridViews = RelatiSVG("g");
-
-        for (var roleRenderer of this.renderers) {
-            roleRenderer.render(this);
-        }
+        this.viewGroups.push(this.background);
     }
 }
 
-export interface RelatiRenderer {
+export interface RelatiBoardRenderer {
     render(boardView: RelatiBoardView): void;
 }

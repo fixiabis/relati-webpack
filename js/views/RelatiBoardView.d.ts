@@ -6,12 +6,10 @@ export declare class RelatiBoardView {
     width: number;
     height: number;
     background: SVGGElement;
-    gridViews: SVGGElement;
-    foreground: SVGGElement;
-    renderers: RelatiRenderer[];
+    viewGroups: SVGGElement[];
+    renderers: RelatiBoardRenderer[];
     constructor(board: RelatiBoard, gridSize: number);
-    update(): void;
 }
-export interface RelatiRenderer {
+export interface RelatiBoardRenderer {
     render(boardView: RelatiBoardView): void;
 }
