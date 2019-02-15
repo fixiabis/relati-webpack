@@ -9,19 +9,17 @@
 })(function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    var SVGNS = "http://www.w3.org/2000/svg";
     function RelatiSVG(type, prop) {
         if (prop === void 0) { prop = {}; }
-        var element = document.createElementNS("http://www.w3.org/2000/svg", type);
-        for (var name in prop) {
-            element.setAttribute(name, prop[name]);
-        }
+        var element = document.createElementNS(SVGNS, type);
+        RelatiSVG.update(element, prop);
         return element;
     }
     exports.RelatiSVG = RelatiSVG;
     RelatiSVG.update = function (element, prop) {
-        for (var name in prop) {
+        for (var name in prop)
             element.setAttribute(name, prop[name]);
-        }
     };
 });
 //# sourceMappingURL=RelatiSVG.js.map

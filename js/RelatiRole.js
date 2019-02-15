@@ -23,6 +23,8 @@
             this.type = type;
             /** 狀態 */
             this.status = {};
+            /** 累積 */
+            this.points = {};
             /** 擁有技能 */
             this.skills = [];
         }
@@ -31,16 +33,16 @@
                 return this.status[status];
             if (type === "any") {
                 for (var _i = 0, status_1 = status; _i < status_1.length; _i++) {
-                    var statusName = status_1[_i];
-                    if (this.status[statusName])
+                    var name = status_1[_i];
+                    if (this.status[name])
                         return true;
                 }
                 return false;
             }
             else {
                 for (var _a = 0, status_2 = status; _a < status_2.length; _a++) {
-                    var statusName = status_2[_a];
-                    if (!this.status[statusName])
+                    var name = status_2[_a];
+                    if (!this.status[name])
                         return false;
                 }
                 return true;
@@ -53,8 +55,8 @@
                 statusList[_i] = arguments[_i];
             }
             for (var _a = 0, statusList_1 = statusList; _a < statusList_1.length; _a++) {
-                var status = statusList_1[_a];
-                this.status[status] = true;
+                var name = statusList_1[_a];
+                this.status[name] = true;
             }
         };
         /** 失去狀態 */
@@ -64,8 +66,8 @@
                 statusList[_i] = arguments[_i];
             }
             for (var _a = 0, statusList_2 = statusList; _a < statusList_2.length; _a++) {
-                var status = statusList_2[_a];
-                this.status[status] = false;
+                var name = statusList_2[_a];
+                this.status[name] = false;
             }
         };
         return RelatiRole;

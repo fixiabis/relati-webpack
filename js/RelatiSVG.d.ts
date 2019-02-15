@@ -1,8 +1,9 @@
-declare type SVGElementProp = {
+declare type StringProp = {
     [name: string]: string;
 };
-export declare function RelatiSVG(type: string, prop?: SVGElementProp): SVGElement;
+declare type SVGTypeMap = SVGElementTagNameMap;
+export declare function RelatiSVG<T extends keyof SVGTypeMap>(type: T, prop?: StringProp): SVGTypeMap[T];
 export declare namespace RelatiSVG {
-    var update: (element: SVGElement, prop: SVGElementProp) => void;
+    var update: (element: SVGElement, prop: StringProp) => void;
 }
 export {};

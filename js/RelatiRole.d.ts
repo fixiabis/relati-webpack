@@ -8,7 +8,7 @@ export declare type RelatiRoleType = "normal" | "knight" | "wizard" | "leader";
 export interface RelatiRole {
     /** 狀態判斷 */
     is(status: RelatiRoleStatus): boolean;
-    /** 狀態判斷，all: 完全符合， any: 任何符合 */
+    /** 複合狀態判斷，all: 完全符合， any: 任何符合 */
     is(status: RelatiRoleStatus[], type: "all" | "any"): boolean;
 }
 export declare class RelatiRole {
@@ -18,6 +18,10 @@ export declare class RelatiRole {
     /** 狀態 */
     status: {
         [status: string]: boolean;
+    };
+    /** 累積 */
+    points: {
+        [points: string]: number;
     };
     /** 擁有技能 */
     skills: RelatiSkill[];
