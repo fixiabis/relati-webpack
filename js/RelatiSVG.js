@@ -21,5 +21,10 @@
         for (var name in prop)
             element.setAttribute(name, prop[name]);
     };
+    RelatiSVG.empty = function (element) {
+        var count = element.childNodes.length;
+        while (count--)
+            element.removeChild(element.childNodes[0]);
+    };
 });
 //# sourceMappingURL=RelatiSVG.js.map

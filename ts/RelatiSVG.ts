@@ -12,3 +12,8 @@ export function RelatiSVG<T extends keyof SVGTypeMap>(type: T, prop: StringProp 
 RelatiSVG.update = function (element: SVGElement, prop: StringProp) {
     for (var name in prop) element.setAttribute(name, prop[name]);
 };
+
+RelatiSVG.empty = function (element: SVGElement) {
+    var count = element.childNodes.length;
+    while (count--) element.removeChild(element.childNodes[0]);
+};

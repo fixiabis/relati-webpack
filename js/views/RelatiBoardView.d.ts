@@ -1,15 +1,22 @@
-import { RelatiBoard } from "../RelatiBoard";
+import { RelatiGame } from "../RelatiGame";
+import { RelatiGrid } from "../RelatiBoard";
 export declare class RelatiBoardView {
-    board: RelatiBoard;
+    game: RelatiGame;
     gridSize: number;
-    view: SVGElement;
     width: number;
     height: number;
+    layers: SVGGElement[];
+    container: SVGSVGElement;
     background: SVGGElement;
-    viewGroups: SVGGElement[];
-    renderers: RelatiBoardRenderer[];
-    constructor(board: RelatiBoard, gridSize: number);
+    gridRenderers: GridRenderer[];
+    boardRenderers: BoardRenderer[];
+    constructor(game: RelatiGame, gridSize: number);
+    render(): void;
 }
-export interface RelatiBoardRenderer {
-    render(boardView: RelatiBoardView): void;
+export interface GridRenderer {
+    render(grid: RelatiGrid, gridSize: number): SVGElement | undefined;
+}
+export interface BoardRenderer {
+    boardView: RelatiBoardView;
+    render(): void;
 }
