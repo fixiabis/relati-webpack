@@ -24,6 +24,7 @@ export type RelatiMaintainSkill = RelatiSkill<RelatiMaintainState>;
 
 export var RelatiCommonMaintain: RelatiMaintainSkill = {
     name: "通用連結維持",
+    type: "effect",
     do(state: RelatiMaintainRouteState) {
         state.status = "relati-repeater";
         state.toTarget = RelatiCommonToTarget;
@@ -33,6 +34,7 @@ export var RelatiCommonMaintain: RelatiMaintainSkill = {
 
 export var RelatiNormalMaintain: RelatiMaintainSkill = {
     name: "一般連結維持",
+    type: "effect",
     do(state: RelatiMaintainRouteState) {
         state.status = "relati-normal-repeater";
         state.toTarget = RelatiNormalToTarget;
@@ -42,6 +44,7 @@ export var RelatiNormalMaintain: RelatiMaintainSkill = {
 
 export var RelatiRemoteMaintain: RelatiMaintainSkill = {
     name: "遠程連結維持",
+    type: "effect",
     do(state: RelatiMaintainRouteState) {
         state.status = "relati-remote-repeater";
         state.toTarget = RelatiRemoteToTarget;
@@ -51,6 +54,7 @@ export var RelatiRemoteMaintain: RelatiMaintainSkill = {
 
 export var RelatiRemoteNormalMaintain: RelatiMaintainSkill = {
     name: "遠程一般連結維持",
+    type: "effect",
     do(state: RelatiMaintainRouteState) {
         state.status = "relati-remote-normal-repeater";
         state.toTarget = RelatiRemoteNormalToTarget;
@@ -60,6 +64,7 @@ export var RelatiRemoteNormalMaintain: RelatiMaintainSkill = {
 
 export var RelatiRemoteStableMaintain: RelatiMaintainSkill = {
     name: "遠程穩定連結維持",
+    type: "effect",
     do(state: RelatiMaintainRouteState) {
         state.status = "relati-remote-stable-repeater";
         state.toTarget = RelatiRemoteStableToTarget;

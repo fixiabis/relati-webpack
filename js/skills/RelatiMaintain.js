@@ -13,6 +13,7 @@
     var RelatiToTarget_1 = require("../rules/RelatiToTarget");
     exports.RelatiCommonMaintain = {
         name: "通用連結維持",
+        type: "effect",
         do: function (state) {
             state.status = "relati-repeater";
             state.toTarget = RelatiToTarget_1.RelatiCommonToTarget;
@@ -21,6 +22,7 @@
     };
     exports.RelatiNormalMaintain = {
         name: "一般連結維持",
+        type: "effect",
         do: function (state) {
             state.status = "relati-normal-repeater";
             state.toTarget = RelatiToTarget_1.RelatiNormalToTarget;
@@ -29,6 +31,7 @@
     };
     exports.RelatiRemoteMaintain = {
         name: "遠程連結維持",
+        type: "effect",
         do: function (state) {
             state.status = "relati-remote-repeater";
             state.toTarget = RelatiToTarget_1.RelatiRemoteToTarget;
@@ -37,6 +40,7 @@
     };
     exports.RelatiRemoteNormalMaintain = {
         name: "遠程一般連結維持",
+        type: "effect",
         do: function (state) {
             state.status = "relati-remote-normal-repeater";
             state.toTarget = RelatiToTarget_1.RelatiRemoteNormalToTarget;
@@ -45,6 +49,7 @@
     };
     exports.RelatiRemoteStableMaintain = {
         name: "遠程穩定連結維持",
+        type: "effect",
         do: function (state) {
             state.status = "relati-remote-stable-repeater";
             state.toTarget = RelatiToTarget_1.RelatiRemoteStableToTarget;

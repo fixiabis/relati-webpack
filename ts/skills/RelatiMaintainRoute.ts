@@ -16,6 +16,7 @@ export type RelatiMaintainRouteSkill = RelatiSkill<RelatiMaintainRouteState>;
 
 export var RelatiMaintainRoute: RelatiMaintainRouteSkill = {
     name: "連結維持",
+    type: "effect",
     do({ game, grid: launcher, status, toTarget }) {
         if (!launcher.role || game.turn < game.playerCount) return;
         var owner = launcher.role.owner;

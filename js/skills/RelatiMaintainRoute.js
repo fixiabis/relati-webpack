@@ -11,6 +11,7 @@
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.RelatiMaintainRoute = {
         name: "連結維持",
+        type: "effect",
         do: function (_a) {
             var game = _a.game, launcher = _a.grid, status = _a.status, toTarget = _a.toTarget;
             if (!launcher.role || game.turn < game.playerCount)
