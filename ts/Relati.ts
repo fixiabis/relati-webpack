@@ -17,8 +17,3 @@ export { RelatiRules };
 export * from "./RelatiSkill";
 import * as RelatiSkills from "./RelatiSkills";
 export { RelatiSkills };
-
-export * from "./RelatiSVG";
-
-import * as RelatiViews from "./RelatiViews";
-export { RelatiViews };
