@@ -1,4 +1,4 @@
-import { RelatiBoard, RelatiGrid } from "../RelatiBoard";
+import { RelatiBoard } from "../RelatiBoard";
 import { RelatiSVG } from "../RelatiSVG";
 
 export class RelatiBoardView {
