@@ -1,2 +1,2 @@
-import { GridRenderer } from "../RelatiBoardView";
-export declare var Xa: GridRenderer;
+import { RelatiGridRenderer } from "../RelatiBoardView";
+export declare var Xa: RelatiGridRenderer;

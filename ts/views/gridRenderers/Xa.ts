@@ -1,8 +1,8 @@
-import { GridRenderer } from "../RelatiBoardView";
+import { RelatiGridRenderer } from "../RelatiBoardView";
 import { RelatiSVG } from "../../RelatiSVG";
 import { RelatiGrid } from "../../RelatiBoard";
 
-export var Xa: GridRenderer = {
+export var Xa: RelatiGridRenderer = {
     render(grid: RelatiGrid, gridSize: number) {
         if (!grid.role || grid.role.owner.badge != "X") return;
         var gridViews = RelatiSVG("g");

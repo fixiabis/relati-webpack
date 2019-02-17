@@ -8,15 +8,15 @@ export declare class RelatiBoardView {
     layers: SVGGElement[];
     container: SVGSVGElement;
     background: SVGGElement;
-    gridRenderers: GridRenderer[];
-    boardRenderers: BoardRenderer[];
+    gridRenderers: RelatiGridRenderer[];
+    boardRenderers: RelatiBoardRenderer[];
     constructor(game: RelatiGame, gridSize: number);
     render(): void;
 }
-export interface GridRenderer {
+export interface RelatiGridRenderer {
     render(grid: RelatiGrid, gridSize: number): SVGElement | undefined;
 }
-export interface BoardRenderer {
+export interface RelatiBoardRenderer {
     boardView: RelatiBoardView;
     render(): void;
 }

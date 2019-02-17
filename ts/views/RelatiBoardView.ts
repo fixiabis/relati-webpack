@@ -2,7 +2,7 @@ import { RelatiSVG } from "../RelatiSVG";
 import { RelatiGame } from "../RelatiGame";
 import { RelatiGrid } from "../RelatiBoard";
 
-class GridsRender implements BoardRenderer {
+class GridsRender implements RelatiBoardRenderer {
     public layer = RelatiSVG("g");
 
     constructor(public boardView: RelatiBoardView) { }
@@ -28,8 +28,8 @@ export class RelatiBoardView {
     public layers: SVGGElement[] = [];
     public container = RelatiSVG("svg");
     public background = RelatiSVG("g");
-    public gridRenderers: GridRenderer[] = [];
-    public boardRenderers: BoardRenderer[] = [];
+    public gridRenderers: RelatiGridRenderer[] = [];
+    public boardRenderers: RelatiBoardRenderer[] = [];
 
     constructor(public game: RelatiGame, public gridSize: number) {
         var { width, height } = game.board;
@@ -86,14 +86,14 @@ export class RelatiBoardView {
     }
 }
 
-export interface GridRenderer {
+export interface RelatiGridRenderer {
     render(
         grid: RelatiGrid,
         gridSize: number
     ): SVGElement | undefined;
 }
 
-export interface BoardRenderer {
+export interface RelatiBoardRenderer {
     boardView: RelatiBoardView;
     render(): void;
 }

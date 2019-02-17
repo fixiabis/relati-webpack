@@ -26,4 +26,6 @@ var __importStar = (this && this.__importStar) || function (mod) {
     var RelatiGridRenderers = __importStar(require("./RelatiGridRenderers"));
     exports.RelatiGridRenderers = RelatiGridRenderers;
 });
+// import * as RelatiBoardRenderers from "./RelatiBoardRenderers";
+// export { RelatiBoardRenderers };
 //# sourceMappingURL=RelatiClient.js.map

@@ -14,19 +14,17 @@
         render: function (grid, gridSize) {
             if (!grid.role || grid.role.owner.badge != "O")
                 return;
-            var gridViews = RelatiSVG_1.RelatiSVG("g");
-            var gridViewProp = {
-                "d": "",
-                "stroke": "crimson",
-                "stroke-width": "" + gridSize * 0.12,
-                "fill": "none"
-            };
             var srtX = (grid.x + 0.2) * gridSize;
             var srtY = (grid.y + 0.2) * gridSize;
             var endX = (grid.x + 0.8) * gridSize;
             var endY = (grid.y + 0.8) * gridSize;
-            gridViewProp["stroke"] = "crimson";
-            gridViewProp["d"] = "\n            M " + (srtX + 1.5) + " " + (srtY + 1.5) + "\n            m 0 -1.5\n            a 1.5 1.5 0 0 1, 0 3\n            a 1.5 1.5 0 0 1, 0 -3\n        ";
+            var gridViews = RelatiSVG_1.RelatiSVG("g");
+            var gridViewProp = {
+                "d": "\n                M " + (srtX + 1.5) + " " + (srtY + 1.5) + "\n                m 0 -1.5\n                a 1.5 1.5 0 0 1, 0 3\n                a 1.5 1.5 0 0 1, 0 -3\n            ",
+                "stroke": "crimson",
+                "stroke-width": "" + gridSize * 0.12,
+                "fill": "none"
+            };
             if (grid.role.is("relati-launcher")) {
                 gridViewProp["stroke-width"] = "" + gridSize * 0.2;
                 gridViews.appendChild(RelatiSVG_1.RelatiSVG("path", gridViewProp));
