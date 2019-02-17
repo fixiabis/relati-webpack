@@ -18,19 +18,18 @@
     /** 通用連結來源規則 */
     exports.RelatiCommonBySource = {
         allow: function (state) {
-            state.status = exports.RelatiCommonSourceStatus;
-            return RelatiPath_1.RelatiCommonPath.allow(state);
+            return (exports.RelatiNormalBySource.allow(state),
+                exports.RelatiRemoteBySource.allow(state));
         },
         trace: function (state) {
-            state.status = exports.RelatiCommonSourceStatus;
-            return RelatiPath_1.RelatiCommonPath.trace(state);
+            return exports.RelatiNormalBySource.trace(state).concat(exports.RelatiRemoteBySource.trace(state));
         }
     };
     /** 一般連結來源狀態 */
-    exports.RelatiNormalSourceStatus = [
+    exports.RelatiNormalSourceStatus = exports.RelatiCommonSourceStatus.concat([
         "relati-normal-launcher",
         "relati-normal-repeater"
-    ];
+    ]);
     /** 一般連結來源規則 */
     exports.RelatiNormalBySource = {
         allow: function (state) {
@@ -43,26 +42,25 @@
         }
     };
     /** 遠程連結來源狀態 */
-    exports.RelatiRemoteSourceStatus = [
+    exports.RelatiRemoteSourceStatus = exports.RelatiCommonSourceStatus.concat([
         "relati-remote-launcher",
         "relati-remote-repeater"
-    ];
+    ]);
     /** 遠程連結來源規則 */
     exports.RelatiRemoteBySource = {
         allow: function (state) {
-            state.status = exports.RelatiRemoteSourceStatus;
-            return RelatiPath_1.RelatiRemotePath.allow(state);
+            return (exports.RelatiRemoteNormalBySource.allow(state),
+                exports.RelatiRemoteStableBySource.allow(state));
         },
         trace: function (state) {
-            state.status = exports.RelatiRemoteSourceStatus;
-            return RelatiPath_1.RelatiRemotePath.trace(state);
+            return exports.RelatiRemoteNormalBySource.trace(state).concat(exports.RelatiRemoteStableBySource.trace(state));
         }
     };
     /** 遠程一般連結來源狀態 */
-    exports.RelatiRemoteNormalSourceStatus = [
+    exports.RelatiRemoteNormalSourceStatus = exports.RelatiRemoteSourceStatus.concat([
         "relati-remote-normal-launcher",
         "relati-remote-normal-repeater"
-    ];
+    ]);
     /** 遠程一般連結來源規則 */
     exports.RelatiRemoteNormalBySource = {
         allow: function (state) {
@@ -75,10 +73,10 @@
         }
     };
     /** 遠程穩定連結來源狀態 */
-    exports.RelatiRemoteStableSourceStatus = [
+    exports.RelatiRemoteStableSourceStatus = exports.RelatiRemoteSourceStatus.concat([
         "relati-remote-stable-launcher",
         "relati-remote-stable-repeater"
-    ];
+    ]);
     /** 遠程穩定連結來源規則 */
     exports.RelatiRemoteStableBySource = {
         allow: function (state) {

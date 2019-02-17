@@ -5,45 +5,48 @@ import { RelatiPlayer } from "../RelatiPlayer";
 
 import {
     RelatiPathState,
-    RelatiCommonPath,
     RelatiNormalPath,
-    RelatiRemotePath,
     RelatiRemoteNormalPath,
     RelatiRemoteStablePath
 } from "././RelatiPath";
 
-/** 來源連結規則所需狀態 */
+/** 目標連結規則所需狀態 */
 export type RelatiTargetPathState = {
     grid: RelatiGrid,
     owner: RelatiPlayer
 };
 
-/** 來源連結規則 */
+/** 目標連結規則 */
 export type RelatiTargetPathRule = RelatiRuleTraceable<RelatiTargetPathState>;
 
-/** 通用連結來源狀態 */
-export var RelatiCommonTargetStatus: RelatiRoleStatus.RelatiCommon[] = [
+/** 通用連結目標狀態 */
+export var RelatiCommonTargetStatus: RelatiRoleStatus[] = [
     "relati-receiver"
 ];
 
-/** 通用連結來源規則 */
+/** 通用連結目標規則 */
 export var RelatiCommonToTarget: RelatiTargetPathRule = {
     allow(state: RelatiPathState) {
-        state.status = RelatiCommonTargetStatus;
-        return RelatiCommonPath.allow(state);
+        return (
+            RelatiNormalToTarget.allow(state),
+            RelatiRemoteToTarget.allow(state)
+        );
     },
     trace(state: RelatiPathState) {
-        state.status = RelatiCommonTargetStatus;
-        return RelatiCommonPath.trace(state);
+        return [
+            ...RelatiNormalToTarget.trace(state),
+            ...RelatiRemoteToTarget.trace(state)
+        ];
     }
 };
 
-/** 一般連結來源狀態 */
-export var RelatiNormalTargetStatus: RelatiRoleStatus.RelatiNormal[] = [
+/** 一般連結目標狀態 */
+export var RelatiNormalTargetStatus: RelatiRoleStatus[] = [
+    ...RelatiCommonTargetStatus,
     "relati-normal-receiver"
 ];
 
-/** 一般連結來源規則 */
+/** 一般連結目標規則 */
 export var RelatiNormalToTarget: RelatiTargetPathRule = {
     allow(state: RelatiPathState) {
         state.status = RelatiNormalTargetStatus;
@@ -55,29 +58,35 @@ export var RelatiNormalToTarget: RelatiTargetPathRule = {
     }
 };
 
-/** 遠程連結來源狀態 */
-export var RelatiRemoteTargetStatus: RelatiRoleStatus.RelatiRemote[] = [
+/** 遠程連結目標狀態 */
+export var RelatiRemoteTargetStatus: RelatiRoleStatus[] = [
+    ...RelatiCommonTargetStatus,
     "relati-remote-receiver"
 ];
 
-/** 遠程連結來源規則 */
+/** 遠程連結目標規則 */
 export var RelatiRemoteToTarget: RelatiTargetPathRule = {
     allow(state: RelatiPathState) {
-        state.status = RelatiRemoteTargetStatus;
-        return RelatiRemotePath.allow(state);
+        return (
+            RelatiRemoteNormalToTarget.allow(state),
+            RelatiRemoteStableToTarget.allow(state)
+        );
     },
     trace(state: RelatiPathState) {
-        state.status = RelatiRemoteTargetStatus;
-        return RelatiRemotePath.trace(state);
+        return [
+            ...RelatiRemoteNormalToTarget.trace(state),
+            ...RelatiRemoteStableToTarget.trace(state)
+        ];
     }
 };
 
-/** 遠程一般連結來源狀態 */
-export var RelatiRemoteNormalTargetStatus: RelatiRoleStatus.RelatiRemoteNormal[] = [
+/** 遠程一般連結目標狀態 */
+export var RelatiRemoteNormalTargetStatus: RelatiRoleStatus[] = [
+    ...RelatiRemoteTargetStatus,
     "relati-remote-normal-receiver"
 ];
 
-/** 遠程一般連結來源規則 */
+/** 遠程一般連結目標規則 */
 export var RelatiRemoteNormalToTarget: RelatiTargetPathRule = {
     allow(state: RelatiPathState) {
         state.status = RelatiRemoteNormalTargetStatus;
@@ -89,12 +98,13 @@ export var RelatiRemoteNormalToTarget: RelatiTargetPathRule = {
     }
 };
 
-/** 遠程穩定連結來源狀態 */
-export var RelatiRemoteStableTargetStatus: RelatiRoleStatus.RelatiRemoteStable[] = [
+/** 遠程穩定連結目標狀態 */
+export var RelatiRemoteStableTargetStatus: RelatiRoleStatus[] = [
+    ...RelatiRemoteTargetStatus,
     "relati-remote-stable-receiver"
 ];
 
-/** 遠程穩定連結來源規則 */
+/** 遠程穩定連結目標規則 */
 export var RelatiRemoteStableToTarget: RelatiTargetPathRule = {
     allow(state: RelatiPathState) {
         state.status = RelatiRemoteStableTargetStatus;

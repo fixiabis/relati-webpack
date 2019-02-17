@@ -5,9 +5,7 @@ import { RelatiPlayer } from "../RelatiPlayer";
 
 import {
     RelatiPathState,
-    RelatiCommonPath,
     RelatiNormalPath,
-    RelatiRemotePath,
     RelatiRemoteNormalPath,
     RelatiRemoteStablePath
 } from "././RelatiPath";
@@ -22,7 +20,7 @@ export type RelatiSourcePathState = {
 export type RelatiSourcePathRule = RelatiRuleTraceable<RelatiSourcePathState>;
 
 /** 通用連結來源狀態 */
-export var RelatiCommonSourceStatus: RelatiRoleStatus.RelatiCommon[] = [
+export var RelatiCommonSourceStatus: RelatiRoleStatus[] = [
     "relati-launcher",
     "relati-repeater"
 ];
@@ -30,17 +28,22 @@ export var RelatiCommonSourceStatus: RelatiRoleStatus.RelatiCommon[] = [
 /** 通用連結來源規則 */
 export var RelatiCommonBySource: RelatiSourcePathRule = {
     allow(state: RelatiPathState) {
-        state.status = RelatiCommonSourceStatus;
-        return RelatiCommonPath.allow(state);
+        return (
+            RelatiNormalBySource.allow(state),
+            RelatiRemoteBySource.allow(state)
+        );
     },
     trace(state: RelatiPathState) {
-        state.status = RelatiCommonSourceStatus;
-        return RelatiCommonPath.trace(state);
+        return [
+            ...RelatiNormalBySource.trace(state),
+            ...RelatiRemoteBySource.trace(state)
+        ];
     }
 };
 
 /** 一般連結來源狀態 */
-export var RelatiNormalSourceStatus: RelatiRoleStatus.RelatiNormal[] = [
+export var RelatiNormalSourceStatus: RelatiRoleStatus[] = [
+    ...RelatiCommonSourceStatus,
     "relati-normal-launcher",
     "relati-normal-repeater"
 ];
@@ -58,7 +61,8 @@ export var RelatiNormalBySource: RelatiSourcePathRule = {
 };
 
 /** 遠程連結來源狀態 */
-export var RelatiRemoteSourceStatus: RelatiRoleStatus.RelatiRemote[] = [
+export var RelatiRemoteSourceStatus: RelatiRoleStatus[] = [
+    ...RelatiCommonSourceStatus,
     "relati-remote-launcher",
     "relati-remote-repeater"
 ];
@@ -66,17 +70,22 @@ export var RelatiRemoteSourceStatus: RelatiRoleStatus.RelatiRemote[] = [
 /** 遠程連結來源規則 */
 export var RelatiRemoteBySource: RelatiSourcePathRule = {
     allow(state: RelatiPathState) {
-        state.status = RelatiRemoteSourceStatus;
-        return RelatiRemotePath.allow(state);
+        return (
+            RelatiRemoteNormalBySource.allow(state),
+            RelatiRemoteStableBySource.allow(state)
+        );
     },
     trace(state: RelatiPathState) {
-        state.status = RelatiRemoteSourceStatus;
-        return RelatiRemotePath.trace(state);
+        return [
+            ...RelatiRemoteNormalBySource.trace(state),
+            ...RelatiRemoteStableBySource.trace(state)
+        ];
     }
 };
 
 /** 遠程一般連結來源狀態 */
-export var RelatiRemoteNormalSourceStatus: RelatiRoleStatus.RelatiRemoteNormal[] = [
+export var RelatiRemoteNormalSourceStatus: RelatiRoleStatus[] = [
+    ...RelatiRemoteSourceStatus,
     "relati-remote-normal-launcher",
     "relati-remote-normal-repeater"
 ];
@@ -94,7 +103,8 @@ export var RelatiRemoteNormalBySource: RelatiSourcePathRule = {
 };
 
 /** 遠程穩定連結來源狀態 */
-export var RelatiRemoteStableSourceStatus: RelatiRoleStatus.RelatiRemoteStable[] = [
+export var RelatiRemoteStableSourceStatus: RelatiRoleStatus[] = [
+    ...RelatiRemoteSourceStatus,
     "relati-remote-stable-launcher",
     "relati-remote-stable-repeater"
 ];
