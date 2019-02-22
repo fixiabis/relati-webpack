@@ -14,37 +14,6 @@ interface RelatiPathState {
 
 type RelatiPathRule = RelatiRuleTraceable<RelatiPathState>;
 
-function reliable(
-    grid: RelatiGrid,
-    owner: RelatiPlayer,
-    status: RelatiRoleStatus[]
-) {
-    return (
-        grid &&
-        grid.role &&
-        grid.role.owner == owner &&
-        grid.role.is(status, "any")
-    );
-}
-
-function relatiable(fromGrid: RelatiGrid, toGrid: RelatiGrid, type: string) {
-    var paths = RelatiGridPathRouter(
-        (fromGrid.role as RelatiRole).params[type],
-        fromGrid
-    );
-
-    for (var path of paths) if (path.target == toGrid) return true;
-    return false;
-}
-
-function unobstructed(middleGrids: RelatiGrid[]) {
-    for (var middleGrid of middleGrids) {
-        if (middleGrid.role) return false;
-    }
-
-    return true;
-}
-
 export var RelatiPath: RelatiPathRule = {
     name: "連結規則",
     detail: "判斷是否能夠連結",
@@ -89,6 +58,37 @@ export var RelatiPath: RelatiPathRule = {
         return traces;
     }
 };
+
+function reliable(
+    grid: RelatiGrid,
+    owner: RelatiPlayer,
+    status: RelatiRoleStatus[]
+) {
+    return (
+        grid &&
+        grid.role &&
+        grid.role.owner == owner &&
+        grid.role.is(status, "any")
+    );
+}
+
+function relatiable(fromGrid: RelatiGrid, toGrid: RelatiGrid, type: string) {
+    var paths = RelatiGridPathRouter(
+        (fromGrid.role as RelatiRole).params[type],
+        fromGrid
+    );
+
+    for (var path of paths) if (path.target == toGrid) return true;
+    return false;
+}
+
+function unobstructed(middleGrids: RelatiGrid[]) {
+    for (var middleGrid of middleGrids) {
+        if (middleGrid.role) return false;
+    }
+
+    return true;
+}
 
 export interface RelatiPath {
     target: string;

@@ -1,9 +1,11 @@
 import { RelatiPlayer } from "./RelatiPlayer";
 import { RelatiBoard, RelatiGrid } from "./RelatiBoard";
+import { RelatiRole } from "./RelatiRole";
 
 export class RelatiGame {
     public turn = 0;
     public playerCount: number;
+    public steps: RelatiGameStep[] = [];
 
     constructor(
         public players: RelatiPlayer[],
@@ -27,3 +29,9 @@ export interface RelatiGameState {
     grid?: RelatiGrid;
     player?: RelatiPlayer;
 };
+
+export interface RelatiGameStep {
+    turn: RelatiGame["turn"];
+    grid: RelatiGrid;
+    role: RelatiRole;
+}

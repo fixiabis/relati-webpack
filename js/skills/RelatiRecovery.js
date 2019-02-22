@@ -11,8 +11,8 @@
     Object.defineProperty(exports, "__esModule", { value: true });
     var RelatiPath_1 = require("../rules/RelatiPath");
     exports.RelatiRecovery = {
+        type: "static",
         name: "連結恢復",
-        type: "effect",
         detail: "將所有連結狀態恢復",
         do: function (_a) {
             var game = _a.game, role = _a.role;

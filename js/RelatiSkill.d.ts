@@ -3,9 +3,10 @@ import { RelatiRole } from "./RelatiRole";
 export declare type RelatiSkillState = {
     role?: RelatiRole;
 } & RelatiGameState;
+export declare type RelatiSkillType = "action" | "effect" | "static" | "forced";
 export interface RelatiSkill<State = {}> {
     name: string;
-    type: "action" | "effect";
+    type: RelatiSkillType;
     detail: string;
     do(state: RelatiSkillState & State): void;
 }

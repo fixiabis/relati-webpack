@@ -14,6 +14,7 @@
             this.players = players;
             this.board = board;
             this.turn = 0;
+            this.steps = [];
             this.playerCount = players.length;
             for (var _i = 0, players_1 = players; _i < players_1.length; _i++) {
                 var player = players_1[_i];
