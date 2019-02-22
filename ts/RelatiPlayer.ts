@@ -1,4 +1,4 @@
-import { RelatiRole, RelatiRoleConstructor } from "./RelatiRole";
+import { RelatiRoleConstructor } from "./RelatiRole";
 
 export class RelatiPlayer {
     public deck: RelatiRoleConstructor[] = [];
@@ -22,14 +22,14 @@ export class RelatiPlayer {
     }
 
     selectRole(role: RelatiRoleConstructor) {
-        var newOnHand = [];
+        var onHand = [];
         var selected = false;
 
         for (var card of this.hand) {
             if (card == role && !selected) selected = true;
-            else newOnHand.push(card);
+            else onHand.push(card);
         }
 
-        this.hand = newOnHand;
+        this.hand = onHand;
     }
 }

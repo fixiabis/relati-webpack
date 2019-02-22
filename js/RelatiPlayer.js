@@ -29,16 +29,16 @@
             }
         };
         RelatiPlayer.prototype.selectRole = function (role) {
-            var newOnHand = [];
+            var onHand = [];
             var selected = false;
             for (var _i = 0, _a = this.hand; _i < _a.length; _i++) {
                 var card = _a[_i];
                 if (card == role && !selected)
                     selected = true;
                 else
-                    newOnHand.push(card);
+                    onHand.push(card);
             }
-            this.hand = newOnHand;
+            this.hand = onHand;
         };
         return RelatiPlayer;
     }());
