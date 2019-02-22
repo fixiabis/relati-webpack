@@ -1,9 +1,13 @@
 import { RelatiGrid } from "./RelatiBoard";
 import { RelatiPlayer } from "./RelatiPlayer";
-import { RelatiRoleStatus } from "./RelatiRoleStatus";
 import { RelatiSkill } from "./RelatiSkill";
 
 export type RelatiRoleType = "normal" | "knight" | "wizard" | "leader";
+export type RelatiRoleConstructor = new (
+    grid: RelatiGrid,
+    owner: RelatiPlayer,
+    type?: RelatiRoleType
+) => RelatiRole;
 
 export interface RelatiRole {
     is(status: RelatiRoleStatus): boolean;
@@ -40,15 +44,29 @@ export class RelatiRole {
         }
     }
 
-    gain(...statusList: RelatiRoleStatus[]) {
-        for (var name of statusList) {
-            this.status[name] = true;
-        }
+    gain(...status: RelatiRoleStatus[]) {
+        for (var name of status) this.status[name] = true;
     }
 
-    lost(...statusList: RelatiRoleStatus[]) {
-        for (var name of statusList) {
-            this.status[name] = false;
-        }
+    lost(...status: RelatiRoleStatus[]) {
+        for (var name of status) this.status[name] = false;
     }
 }
+
+export namespace RelatiRoleStatus {
+    export type Relati = (
+        "relati-launcher" |
+        "relati-repeater" |
+        "relati-receiver"
+    );
+
+    export var Relati = [
+        "relati-launcher",
+        "relati-repeater",
+        "relati-receiver"
+    ];
+}
+
+export type RelatiRoleStatus = (
+    RelatiRoleStatus.Relati
+);

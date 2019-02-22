@@ -1,10 +1,8 @@
 import { RelatiGameState } from "./RelatiGame";
 import { RelatiRole } from "./RelatiRole";
-
-export type RelatiSkillState = {
+export declare type RelatiSkillState = {
     role?: RelatiRole;
 } & RelatiGameState;
-
 export interface RelatiSkill<State = {}> {
     name: string;
     type: "action" | "effect";
