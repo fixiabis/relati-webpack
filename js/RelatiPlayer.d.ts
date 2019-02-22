@@ -6,4 +6,5 @@ export declare class RelatiPlayer {
     constructor(badge: string);
     draw(times?: number): void;
     shuffle(): void;
+    selectRole(role: RelatiRoleConstructor): void;
 }

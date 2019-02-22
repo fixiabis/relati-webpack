@@ -20,4 +20,16 @@ export class RelatiPlayer {
             [this.deck[i], this.deck[j]] = [this.deck[j], this.deck[i]];
         }
     }
+
+    selectRole(role: RelatiRoleConstructor) {
+        var newOnHand = [];
+        var selected = false;
+
+        for (var card of this.hand) {
+            if (card == role && !selected) selected = true;
+            else newOnHand.push(card);
+        }
+
+        this.hand = newOnHand;
+    }
 }
