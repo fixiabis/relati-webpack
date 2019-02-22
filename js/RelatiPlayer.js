@@ -28,17 +28,8 @@
                 _a = [this.deck[j], this.deck[i]], this.deck[i] = _a[0], this.deck[j] = _a[1];
             }
         };
-        RelatiPlayer.prototype.selectRole = function (role) {
-            var onHand = [];
-            var selected = false;
-            for (var _i = 0, _a = this.hand; _i < _a.length; _i++) {
-                var card = _a[_i];
-                if (card == role && !selected)
-                    selected = true;
-                else
-                    onHand.push(card);
-            }
-            this.hand = onHand;
+        RelatiPlayer.prototype.selectRole = function (roleIndex) {
+            return this.hand.splice(roleIndex, 1)[0];
         };
         return RelatiPlayer;
     }());

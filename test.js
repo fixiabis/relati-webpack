@@ -24,11 +24,11 @@
         player2.deck.push(Xa_1.Xa);
     }
     var game = new RelatiGame_1.RelatiGame([player1, player2], board);
-    function selectGrid(coordinate, owner) {
+    function selectGrid(coordinate, owner, type) {
         owner.draw();
         var grid = board.query(coordinate);
-        var roleConstructor = owner.hand.pop();
-        var role = new roleConstructor(grid, owner, "leader");
+        var roleConstructor = owner.selectRole(0);
+        var role = new roleConstructor(grid, owner, type);
         RolePlacement_1.RolePlacement["do"]({ game: game, role: role });
     }
     selectGrid("E5", player1);

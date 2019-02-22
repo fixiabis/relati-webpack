@@ -21,15 +21,7 @@ export class RelatiPlayer {
         }
     }
 
-    selectRole(role: RelatiRoleConstructor) {
-        var onHand = [];
-        var selected = false;
-
-        for (var card of this.hand) {
-            if (card == role && !selected) selected = true;
-            else onHand.push(card);
-        }
-
-        this.hand = onHand;
+    selectRole(roleIndex: number) {
+        return this.hand.splice(roleIndex, 1)[0];
     }
 }
