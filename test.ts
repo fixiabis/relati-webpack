@@ -28,8 +28,8 @@ function selectGrid(coordinate: string, owner: RelatiPlayer, type?: RelatiRoleTy
     RolePlacement.do({ game, role });
 }
 
-selectGrid("E5", player1);
-selectGrid("D4", player2);
+selectGrid("E5", player1, "leader");
+selectGrid("D4", player2, "leader");
 selectGrid("E3", player1);
 selectGrid("E4", player2);
 

@@ -2,8 +2,7 @@
     if (typeof module === "object" && typeof module.exports === "object") {
         var v = factory(require, exports);
         if (v !== undefined) module.exports = v;
-    }
-    else if (typeof define === "function" && define.amd) {
+    } else if (typeof define === "function" && define.amd) {
         define(["require", "exports", "./js/base/GridBoard", "./js/RelatiPlayer", "./js/RelatiGame", "./js/roles/Od", "./js/roles/Xa", "./js/skills/RolePlacement"], factory);
     }
 })(function (require, exports) {
@@ -24,12 +23,16 @@
         player2.deck.push(Xa_1.Xa);
     }
     var game = new RelatiGame_1.RelatiGame([player1, player2], board);
+
     function selectGrid(coordinate, owner, type) {
         owner.draw();
         var grid = board.query(coordinate);
         var roleConstructor = owner.selectRole(0);
         var role = new roleConstructor(grid, owner, type);
-        RolePlacement_1.RolePlacement["do"]({ game: game, role: role });
+        RolePlacement_1.RolePlacement["do"]({
+            game: game,
+            role: role
+        });
     }
     selectGrid("E5", player1);
     selectGrid("D4", player2);

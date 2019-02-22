@@ -157,4 +157,11 @@ export namespace RelatiPathParam {
 
     export var Common = [Normal, Remote].join("|");
     RelatiPathRouter(Common);
+
+    export function parse(directionCommands: string | string[]) {
+        if (directionCommands instanceof Array) directionCommands = directionCommands.join("|");
+        var directions = Grid.getOriginalDirection(directionCommands).join("|");
+        RelatiPathRouter(directions);
+        return directions;
+    };
 }
