@@ -52,9 +52,9 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         do: function (_a) {
             var game = _a.game, role = _a.role;
             return __awaiter(this, void 0, void 0, function () {
-                var owner, grid;
+                var grid;
                 return __generator(this, function (_b) {
-                    owner = role.owner, grid = role.grid;
+                    grid = role.grid;
                     if (Placement_1.Placement.allow({ role: role, game: game })) {
                         grid.role = role;
                         game.turn++;

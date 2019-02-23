@@ -30,3 +30,11 @@ export declare namespace RelatiRoleStatus {
     var Relati: string[];
 }
 export declare type RelatiRoleStatus = (RelatiRoleStatus.Relati);
+export interface RelatiRoleInfo {
+    name: string;
+    detail: string;
+    status?: RelatiRole["status"];
+    points?: RelatiRole["points"];
+    params?: RelatiRole["params"];
+    skills?: RelatiRole["status"];
+}

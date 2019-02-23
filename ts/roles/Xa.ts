@@ -1,13 +1,17 @@
-import { RelatiRole, RelatiRoleType } from "../RelatiRole";
+import { RelatiRole, RelatiRoleType, RelatiRoleInfo } from "../RelatiRole";
 import { RelatiGrid } from "../RelatiBoard";
 import { RelatiPlayer } from "../RelatiPlayer";
 import { RelatiPathParam } from "../rules/RelatiPath";
 import { RelatiRecovery } from "../skills/RelatiRecovery";
 
 export class Xa extends RelatiRole {
-    static common = {
+    static info: RelatiRoleInfo = {
         name: "科薩",
-        detail: "連結能力極廣的角色"
+        detail: "連結能力極廣的角色",
+        params: {
+            "relati-source": RelatiPathParam.Common,
+            "relati-target": RelatiPathParam.Common
+        }
     };
 
     constructor(

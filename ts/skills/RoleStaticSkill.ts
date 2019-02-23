@@ -10,7 +10,7 @@ export var RoleStaticSkill: RelatiSkill = {
         for (var { role } of board.gridList) {
             if (role) for (var skill of role.skills) {
                 if (skill.type == "static") {
-                    await skill.do({ role: role, game });
+                    await skill.do({ role, game });
                 }
             }
         }

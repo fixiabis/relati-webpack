@@ -1,6 +1,7 @@
 import { RelatiGrid } from "./RelatiBoard";
 import { RelatiPlayer } from "./RelatiPlayer";
 import { RelatiSkill } from "./RelatiSkill";
+import { RolePlacement } from "./skills/RolePlacement";
 
 export type RelatiRoleType = "normal" | "knight" | "wizard" | "leader";
 export type RelatiRoleConstructor = new (
@@ -18,7 +19,7 @@ export class RelatiRole {
     public status: { [status: string]: boolean } = {};
     public points: { [points: string]: number } = {};
     public params: { [params: string]: string } = {};
-    public skills: RelatiSkill[] = [];
+    public skills: RelatiSkill[] = [RolePlacement];
 
     constructor(
         public grid: RelatiGrid,
@@ -70,3 +71,12 @@ export namespace RelatiRoleStatus {
 export type RelatiRoleStatus = (
     RelatiRoleStatus.Relati
 );
+
+export interface RelatiRoleInfo {
+    name: string;
+    detail: string;
+    status?: RelatiRole["status"];
+    points?: RelatiRole["points"];
+    params?: RelatiRole["params"];
+    skills?: RelatiRole["status"];
+}

@@ -20,16 +20,19 @@ for (var i = 0; i < gridCount; i++) {
 
 game.start();
 
-function placement(owner: RelatiPlayer, coordinate: string, type?: RelatiRoleType) {
+async function placement(owner: RelatiPlayer, coordinate: string, type?: RelatiRoleType) {
     owner.draw();
     var grid = board.query(coordinate);
     owner.selectRole(0);
-    owner.selectGrid(grid, type);
+    var roleConstructor = owner.roleSelected;
+    var role = new roleConstructor(grid, owner, type);
+    await game.execute(role.skills[0], role);
 }
 
-placement(player1, "E5", "leader");
-placement(player2, "D4", "leader");
-placement(player1, "E3");
-placement(player2, "E4");
-
-debugger;
+(async function () {
+    await placement(player1, "E5", "leader");
+    await placement(player2, "D4", "leader");
+    await placement(player1, "E3");
+    await placement(player2, "E4");
+    debugger;
+})();

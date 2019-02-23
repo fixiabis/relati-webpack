@@ -46,7 +46,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.RoleForcedSkill = {
         type: "forced",
-        name: "角色強制觸發技能啟動",
+        name: "角色強制技能啟動",
         detail: "任何效果發動時將會啟動",
         do: function (_a) {
             var game = _a.game;
