@@ -29,7 +29,7 @@ export class RelatiGame {
 
     async execute(skill: RelatiSkill, role: RelatiRole) {
         var game = this;
-        if (this.nowPlayer != role.owner) return console.warn("尚未輪到該玩家");
+        if (game.nowPlayer != role.owner) return console.warn("尚未輪到該玩家");
         var { turn } = game;
         await skill.do({ game, role });
         await RoleForcedSkill.do({ game, role });
