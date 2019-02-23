@@ -5,17 +5,20 @@ import { RelatiRole } from "./RelatiRole";
 export class RelatiGame {
     public turn = 0;
     public playerCount: number;
+    public players: RelatiPlayer[] = [];
     public steps: RelatiGameStep[] = [];
 
     constructor(
-        public players: RelatiPlayer[],
+        public playerBadges: string[],
         public board: RelatiBoard
     ) {
-        this.playerCount = players.length;
+        this.playerCount = playerBadges.length;
 
-        for (var player of players) {
+        for (var playerBadge of playerBadges) {
+            var player = new RelatiPlayer(playerBadge, this);
             player.shuffle();
             player.draw(5);
+            this.players.push(player);
         }
     }
 

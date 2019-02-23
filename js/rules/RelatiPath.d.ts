@@ -24,5 +24,6 @@ export declare namespace RelatiPathParam {
     var Remote: string;
     var Normal: string;
     var Common: string;
+    function parse(directionCommands: string | string[]): string;
 }
 export {};

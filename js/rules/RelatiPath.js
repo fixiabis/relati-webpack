@@ -115,6 +115,15 @@
         RelatiPathRouter(RelatiPathParam.Normal);
         RelatiPathParam.Common = [RelatiPathParam.Normal, RelatiPathParam.Remote].join("|");
         RelatiPathRouter(RelatiPathParam.Common);
+        function parse(directionCommands) {
+            if (directionCommands instanceof Array)
+                directionCommands = directionCommands.join("|");
+            var directions = GridBoard_1.Grid.getOriginalDirection(directionCommands).join("|");
+            RelatiPathRouter(directions);
+            return directions;
+        }
+        RelatiPathParam.parse = parse;
+        ;
     })(RelatiPathParam = exports.RelatiPathParam || (exports.RelatiPathParam = {}));
 });
 //# sourceMappingURL=RelatiPath.js.map

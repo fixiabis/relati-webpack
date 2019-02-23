@@ -2,12 +2,13 @@ import { RelatiPlayer } from "./RelatiPlayer";
 import { RelatiBoard, RelatiGrid } from "./RelatiBoard";
 import { RelatiRole } from "./RelatiRole";
 export declare class RelatiGame {
-    players: RelatiPlayer[];
+    playerBadges: string[];
     board: RelatiBoard;
     turn: number;
     playerCount: number;
+    players: RelatiPlayer[];
     steps: RelatiGameStep[];
-    constructor(players: RelatiPlayer[], board: RelatiBoard);
+    constructor(playerBadges: string[], board: RelatiBoard);
     readonly nowPlayer: RelatiPlayer;
 }
 export interface RelatiGameState {
