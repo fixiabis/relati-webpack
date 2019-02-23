@@ -39,13 +39,14 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (v !== undefined) module.exports = v;
     }
     else if (typeof define === "function" && define.amd) {
-        define(["require", "exports", "./skills/RoleForcedSkill", "./skills/RoleStaticSkill"], factory);
+        define(["require", "exports", "./skills/RoleForcedSkill", "./skills/RoleStaticSkill", "./skills/RolePlacement"], factory);
     }
 })(function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var RoleForcedSkill_1 = require("./skills/RoleForcedSkill");
     var RoleStaticSkill_1 = require("./skills/RoleStaticSkill");
+    var RolePlacement_1 = require("./skills/RolePlacement");
     var RelatiGame = /** @class */ (function () {
         function RelatiGame(board, players) {
             if (players === void 0) { players = []; }
@@ -57,12 +58,56 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
             this.playerCount = players.length;
         }
         RelatiGame.prototype.start = function () {
-            for (var _i = 0, _a = this.players; _i < _a.length; _i++) {
-                var player = _a[_i];
-                player.joinedGame = this;
-                player.shuffle();
-                player.draw(5);
-            }
+            return __awaiter(this, void 0, void 0, function () {
+                var _i, _a, player, player, grid, skill, card, type, role;
+                return __generator(this, function (_b) {
+                    switch (_b.label) {
+                        case 0:
+                            for (_i = 0, _a = this.players; _i < _a.length; _i++) {
+                                player = _a[_i];
+                                player.game = this;
+                                player.shuffle();
+                                player.draw(5);
+                            }
+                            console.log("遊戲開始");
+                            debugger;
+                            _b.label = 1;
+                        case 1:
+                            if (!!this.result) return [3 /*break*/, 6];
+                            player = this.nowPlayer;
+                            console.log("等待選取格子");
+                            return [4 /*yield*/, new Promise(function (resolve) { return player.gridSelect = resolve; })];
+                        case 2:
+                            grid = _b.sent();
+                            console.log("\u9078\u53D6\u683C\u5B50:" + grid.coordinate);
+                            if (!(grid.role && grid.role.owner == player)) return [3 /*break*/, 4];
+                            console.log("等待選取技能");
+                            return [4 /*yield*/, new Promise(function (resolve) { return player.skillSelect = resolve; })];
+                        case 3:
+                            skill = _b.sent();
+                            if (!skill)
+                                return [3 /*break*/, 1];
+                            console.log("\u9078\u53D6\u6280\u80FD:" + skill.name);
+                            this.execute(skill, grid.role);
+                            return [3 /*break*/, 1];
+                        case 4:
+                            console.log("等待選取卡牌");
+                            return [4 /*yield*/, new Promise(function (resolve) { return player.cardSelect = resolve; })];
+                        case 5:
+                            card = _b.sent();
+                            if (!card)
+                                return [3 /*break*/, 1];
+                            console.log("\u9078\u53D6\u5361\u724C:" + card.info.name);
+                            if (this.turn < this.playerCount)
+                                type = "leader";
+                            role = new card(grid, player, type);
+                            console.log("放置角色");
+                            this.execute(RolePlacement_1.RolePlacement, role);
+                            return [3 /*break*/, 1];
+                        case 6: return [2 /*return*/];
+                    }
+                });
+            });
         };
         Object.defineProperty(RelatiGame.prototype, "nowPlayer", {
             get: function () {

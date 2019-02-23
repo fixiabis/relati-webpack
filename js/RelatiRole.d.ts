@@ -2,7 +2,10 @@ import { RelatiGrid } from "./RelatiBoard";
 import { RelatiPlayer } from "./RelatiPlayer";
 import { RelatiSkill } from "./RelatiSkill";
 export declare type RelatiRoleType = "normal" | "knight" | "wizard" | "leader";
-export declare type RelatiRoleConstructor = new (grid: RelatiGrid, owner: RelatiPlayer, type?: RelatiRoleType) => RelatiRole;
+export interface RelatiRoleConstructor {
+    info: RelatiRoleInfo;
+    new (grid: RelatiGrid, owner: RelatiPlayer, type?: RelatiRoleType): RelatiRole;
+}
 export interface RelatiRole {
     is(status: RelatiRoleStatus): boolean;
     is(status: RelatiRoleStatus[], type: "all" | "any"): boolean;

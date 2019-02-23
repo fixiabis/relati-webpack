@@ -1,14 +1,16 @@
 import { RelatiGrid } from "./RelatiBoard";
 import { RelatiPlayer } from "./RelatiPlayer";
 import { RelatiSkill } from "./RelatiSkill";
-import { RolePlacement } from "./skills/RolePlacement";
 
 export type RelatiRoleType = "normal" | "knight" | "wizard" | "leader";
-export type RelatiRoleConstructor = new (
-    grid: RelatiGrid,
-    owner: RelatiPlayer,
-    type?: RelatiRoleType
-) => RelatiRole;
+export interface RelatiRoleConstructor {
+    info: RelatiRoleInfo;
+    new(
+        grid: RelatiGrid,
+        owner: RelatiPlayer,
+        type?: RelatiRoleType
+    ): RelatiRole;
+}
 
 export interface RelatiRole {
     is(status: RelatiRoleStatus): boolean;
@@ -19,7 +21,7 @@ export class RelatiRole {
     public status: { [status: string]: boolean } = {};
     public points: { [points: string]: number } = {};
     public params: { [params: string]: string } = {};
-    public skills: RelatiSkill[] = [RolePlacement];
+    public skills: RelatiSkill[] = [];
 
     constructor(
         public grid: RelatiGrid,

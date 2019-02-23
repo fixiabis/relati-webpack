@@ -4,12 +4,11 @@
         if (v !== undefined) module.exports = v;
     }
     else if (typeof define === "function" && define.amd) {
-        define(["require", "exports", "./skills/RolePlacement"], factory);
+        define(["require", "exports"], factory);
     }
 })(function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    var RolePlacement_1 = require("./skills/RolePlacement");
     var RelatiRole = /** @class */ (function () {
         function RelatiRole(grid, owner, type) {
             if (type === void 0) { type = "normal"; }
@@ -19,7 +18,7 @@
             this.status = {};
             this.points = {};
             this.params = {};
-            this.skills = [RolePlacement_1.RolePlacement];
+            this.skills = [];
         }
         RelatiRole.prototype.is = function (status, type) {
             if (typeof status === "string")

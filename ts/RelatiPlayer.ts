@@ -1,17 +1,24 @@
 import { RelatiRoleConstructor, RelatiRoleType } from "./RelatiRole";
 import { RelatiGame } from "./RelatiGame";
+import { RelatiGrid } from "./RelatiBoard";
+import { RelatiSkill } from "./RelatiSkill";
+
+export type RelatiCard = RelatiRoleConstructor;
+export type RelatiPlayerBadge = "O" | "X";
 
 export class RelatiPlayer {
-    public deck: RelatiRoleConstructor[] = [];
-    public hand: RelatiRoleConstructor[] = [];
-    public roleSelected?: RelatiRoleConstructor;
-    public joinedGame?: RelatiGame;
+    public deck: RelatiCard[] = [];
+    public hand: RelatiCard[] = [];
+    public game?: RelatiGame;
+    public gridSelect?: (value: RelatiGrid) => void;
+    public cardSelect?: (value?: RelatiCard) => void;
+    public skillSelect?: (value?: RelatiSkill) => void;
 
     constructor(public badge: string) { }
 
     draw(times = 1) {
         for (var i = 0; i < times; i++) this.hand.push(
-            this.deck.pop() as RelatiRoleConstructor
+            this.deck.pop() as RelatiCard
         );
     }
 
@@ -29,7 +36,17 @@ export class RelatiPlayer {
         game.playerCount = game.players.length;
     }
 
-    selectRole(roleIndex: number) {
-        return this.roleSelected = this.hand.splice(roleIndex, 1)[0];
+    selectCard(cardIndex: number) {
+        if (this.cardSelect) {
+            this.cardSelect(this.hand.splice(cardIndex, 1)[0]);
+        }
+    }
+
+    selectGrid(grid: RelatiGrid) {
+        if (this.gridSelect) this.gridSelect(grid);
+    }
+
+    selectSkill(skill: RelatiSkill) {
+        if (this.skillSelect) this.skillSelect(skill);
     }
 }

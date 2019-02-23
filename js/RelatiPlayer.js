@@ -32,8 +32,18 @@
             game.players.push(this);
             game.playerCount = game.players.length;
         };
-        RelatiPlayer.prototype.selectRole = function (roleIndex) {
-            return this.roleSelected = this.hand.splice(roleIndex, 1)[0];
+        RelatiPlayer.prototype.selectCard = function (cardIndex) {
+            if (this.cardSelect) {
+                this.cardSelect(this.hand.splice(cardIndex, 1)[0]);
+            }
+        };
+        RelatiPlayer.prototype.selectGrid = function (grid) {
+            if (this.gridSelect)
+                this.gridSelect(grid);
+        };
+        RelatiPlayer.prototype.selectSkill = function (skill) {
+            if (this.skillSelect)
+                this.skillSelect(skill);
         };
         return RelatiPlayer;
     }());
