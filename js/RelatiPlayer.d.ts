@@ -2,12 +2,13 @@ import { RelatiRoleConstructor } from "./RelatiRole";
 import { RelatiGame } from "./RelatiGame";
 export declare class RelatiPlayer {
     badge: string;
-    game: RelatiGame;
     deck: RelatiRoleConstructor[];
     hand: RelatiRoleConstructor[];
     roleSelected?: RelatiRoleConstructor;
-    constructor(badge: string, game: RelatiGame);
+    joinedGame?: RelatiGame;
+    constructor(badge: string);
     draw(times?: number): void;
     shuffle(): void;
+    join(game: RelatiGame): void;
     selectRole(roleIndex: number): RelatiRoleConstructor;
 }

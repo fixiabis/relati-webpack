@@ -9,9 +9,9 @@ import { RelatiRoleType } from "./js/RelatiRole";
 var board: RelatiBoard = new GridBoard(9, 9);
 var gridCount = board.gridList.length;
 
-var game = new RelatiGame(["O", "X"], board);
-var player1 = game.players[0];
-var player2 = game.players[1];
+var player1 = new RelatiPlayer("O");
+var player2 = new RelatiPlayer("X");
+var game = new RelatiGame(board, [player1, player2]);
 
 for (var i = 0; i < gridCount; i++) {
     player1.deck.push(Od);

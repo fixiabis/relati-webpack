@@ -7,31 +7,24 @@ import { RoleStaticSkill } from "./skills/RoleStaticSkill";
 
 export class RelatiGame {
     public turn = 0;
-    public playerCount: number;
-    public players: RelatiPlayer[] = [];
+    public playerCount: number = 0;
     public steps: RelatiGameStep[] = [];
 
     constructor(
-        public playerBadges: string[],
-        public board: RelatiBoard
-    ) {
-        this.playerCount = playerBadges.length;
+        public board: RelatiBoard,
+        public players: RelatiPlayer[] = []
+    ) { this.playerCount = players.length; }
 
-        for (var playerBadge of playerBadges) {
-            var player = new RelatiPlayer(playerBadge, this);
-            this.players.push(player);
+    start() {
+        for (var player of this.players) {
+            player.joinedGame = this;
+            player.shuffle();
+            player.draw(5);
         }
     }
 
     get nowPlayer() {
         return this.players[this.turn % this.playerCount];
-    }
-
-    start() {
-        for (var player of this.players) {
-            player.shuffle();
-            player.draw(5);
-        }
     }
 
     async execute(skill: RelatiSkill, role: RelatiRole) {

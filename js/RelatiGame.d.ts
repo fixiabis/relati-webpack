@@ -3,15 +3,14 @@ import { RelatiBoard } from "./RelatiBoard";
 import { RelatiRole } from "./RelatiRole";
 import { RelatiSkill } from "./RelatiSkill";
 export declare class RelatiGame {
-    playerBadges: string[];
     board: RelatiBoard;
+    players: RelatiPlayer[];
     turn: number;
     playerCount: number;
-    players: RelatiPlayer[];
     steps: RelatiGameStep[];
-    constructor(playerBadges: string[], board: RelatiBoard);
-    readonly nowPlayer: RelatiPlayer;
+    constructor(board: RelatiBoard, players?: RelatiPlayer[]);
     start(): void;
+    readonly nowPlayer: RelatiPlayer;
     execute(skill: RelatiSkill, role: RelatiRole): Promise<void>;
 }
 export interface RelatiGameState {

@@ -39,28 +39,31 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (v !== undefined) module.exports = v;
     }
     else if (typeof define === "function" && define.amd) {
-        define(["require", "exports", "./RelatiPlayer", "./skills/RoleForcedSkill", "./skills/RoleStaticSkill"], factory);
+        define(["require", "exports", "./skills/RoleForcedSkill", "./skills/RoleStaticSkill"], factory);
     }
 })(function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    var RelatiPlayer_1 = require("./RelatiPlayer");
     var RoleForcedSkill_1 = require("./skills/RoleForcedSkill");
     var RoleStaticSkill_1 = require("./skills/RoleStaticSkill");
     var RelatiGame = /** @class */ (function () {
-        function RelatiGame(playerBadges, board) {
-            this.playerBadges = playerBadges;
+        function RelatiGame(board, players) {
+            if (players === void 0) { players = []; }
             this.board = board;
+            this.players = players;
             this.turn = 0;
-            this.players = [];
+            this.playerCount = 0;
             this.steps = [];
-            this.playerCount = playerBadges.length;
-            for (var _i = 0, playerBadges_1 = playerBadges; _i < playerBadges_1.length; _i++) {
-                var playerBadge = playerBadges_1[_i];
-                var player = new RelatiPlayer_1.RelatiPlayer(playerBadge, this);
-                this.players.push(player);
-            }
+            this.playerCount = players.length;
         }
+        RelatiGame.prototype.start = function () {
+            for (var _i = 0, _a = this.players; _i < _a.length; _i++) {
+                var player = _a[_i];
+                player.joinedGame = this;
+                player.shuffle();
+                player.draw(5);
+            }
+        };
         Object.defineProperty(RelatiGame.prototype, "nowPlayer", {
             get: function () {
                 return this.players[this.turn % this.playerCount];
@@ -68,13 +71,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
             enumerable: true,
             configurable: true
         });
-        RelatiGame.prototype.start = function () {
-            for (var _i = 0, _a = this.players; _i < _a.length; _i++) {
-                var player = _a[_i];
-                player.shuffle();
-                player.draw(5);
-            }
-        };
         RelatiGame.prototype.execute = function (skill, role) {
             return __awaiter(this, void 0, void 0, function () {
                 var game, turn;

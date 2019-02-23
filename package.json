@@ -1,0 +1,29 @@
+{
+  "name": "relati",
+  "version": "1.0.0",
+  "description": "",
+  "main": "test.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fixiabis/Relati.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/fixiabis/Relati/issues"
+  },
+  "homepage": "https://github.com/fixiabis/Relati#readme",
+  "dependencies": {
+    "express": "^4.16.4",
+    "json-server": "^0.14.2",
+    "socket.io": "^2.2.0"
+  },
+  "devDependencies": {
+    "@types/json-server": "^0.14.0",
+    "@types/node": "^11.9.5",
+    "@types/socket.io": "^2.1.2"
+  }
+}

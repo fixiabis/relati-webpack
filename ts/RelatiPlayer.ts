@@ -5,8 +5,9 @@ export class RelatiPlayer {
     public deck: RelatiRoleConstructor[] = [];
     public hand: RelatiRoleConstructor[] = [];
     public roleSelected?: RelatiRoleConstructor;
+    public joinedGame?: RelatiGame;
 
-    constructor(public badge: string, public game: RelatiGame) { }
+    constructor(public badge: string) { }
 
     draw(times = 1) {
         for (var i = 0; i < times; i++) this.hand.push(
@@ -21,6 +22,11 @@ export class RelatiPlayer {
             var j = (Math.random() * cardCount) | 0;
             [this.deck[i], this.deck[j]] = [this.deck[j], this.deck[i]];
         }
+    }
+
+    join(game: RelatiGame) {
+        game.players.push(this);
+        game.playerCount = game.players.length;
     }
 
     selectRole(roleIndex: number) {
