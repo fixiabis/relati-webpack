@@ -4,8 +4,7 @@
 		"prefix": "RelatiSkill",
 		"body": [
 			"import { RelatiSkill } from \"../RelatiSkill\";\n",
-			"export type ${1:SkillName} = RelatiSkill;\n",
-			"export var ${1:SkillName}: ${1:SkillName} = {",
+			"export var ${1:SkillName}: RelatiSkill = {",
 			"    type: \"${2:SkillType}\",",
 			"    name: \"${3:技能名稱}\",",
 			"    detail: \"${4:技能說明}\",",
@@ -43,8 +42,7 @@
 		"prefix": "RelatiRule",
 		"body": [
 			"import { RelatiRule } from \"../RelatiRule\";\n",
-			"export type ${1:RuleName} = RelatiRule;\n",
-			"export var ${1:RuleName}: ${1:RuleName} = {",
+			"export var ${1:RuleName}: RelatiRule = {",
 			"    name: \"${2:規則名稱}\",",
 			"    detail: \"${3:規則說明}\",",
 			"    allow({ game, role }) {",
@@ -59,8 +57,7 @@
 		"prefix": "RelatiRuleTraceable",
 		"body": [
 			"import { RelatiRuleTrace, RelatiRuleTraceable } from \"../RelatiRule\";\n",
-			"export type ${1:RuleName} = RelatiRuleTraceable;\n",
-			"export var ${1:RuleName}: ${1:RuleName} = {",
+			"export var ${1:RuleName}: RelatiRuleTraceable = {",
 			"    name: \"${2:規則名稱}\",",
 			"    detail: \"${3:規則說明}\",",
 			"    allow({ game, role }) {",

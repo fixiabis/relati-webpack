@@ -1,11 +1,6 @@
 import { RelatiSkill } from "../RelatiSkill";
-import { RelatiGame } from "../RelatiGame";
 
-export type RoleForcedSkill = RelatiSkill<{
-    game: RelatiGame
-}>
-
-export var RoleForcedSkill: RoleForcedSkill = {
+export var RoleForcedSkill: RelatiSkill = {
     type: "forced",
     name: "角色強制觸發技能啟動",
     detail: "任何效果發動時將會啟動",

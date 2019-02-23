@@ -7,7 +7,6 @@ export class RelatiGame {
     public playerCount: number;
     public players: RelatiPlayer[] = [];
     public steps: RelatiGameStep[] = [];
-    public selectedGrid?: RelatiGrid;
 
     constructor(
         public playerBadges: string[],

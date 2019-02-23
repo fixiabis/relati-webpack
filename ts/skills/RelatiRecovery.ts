@@ -1,14 +1,8 @@
 import { RelatiSkill } from "../RelatiSkill";
-import { RelatiGame } from "../RelatiGame";
 import { RelatiRole } from "../RelatiRole";
 import { RelatiPath } from "../rules/RelatiPath";
 
-export type RelatiRecovery = RelatiSkill<{
-    game: RelatiGame,
-    role: RelatiRole
-}>;
-
-export var RelatiRecovery: RelatiRecovery = {
+export var RelatiRecovery: RelatiSkill = {
     type: "static",
     name: "連結恢復",
     detail: "將所有連結狀態恢復",

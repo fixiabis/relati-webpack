@@ -1,11 +1,6 @@
 import { RelatiSkill } from "../RelatiSkill";
-import { RelatiGame } from "../RelatiGame";
 
-export type RoleStaticSkill = RelatiSkill<{
-    game: RelatiGame
-}>
-
-export var RoleStaticSkill: RoleStaticSkill = {
+export var RoleStaticSkill: RelatiSkill = {
     type: "forced",
     name: "角色靜態技能啟動",
     detail: "任何效果發動時將會啟動",
