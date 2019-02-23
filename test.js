@@ -23,15 +23,15 @@
         player2.deck.push(Xa_1.Xa);
     }
     game.start();
-    function selectGrid(coordinate, owner, type) {
+    function placement(owner, coordinate, type) {
         owner.draw();
         var grid = board.query(coordinate);
         owner.selectRole(0);
         owner.selectGrid(grid, type);
     }
-    selectGrid("E5", player1, "leader");
-    selectGrid("D4", player2, "leader");
-    selectGrid("E3", player1);
-    selectGrid("E4", player2);
+    placement(player1, "E5", "leader");
+    placement(player2, "D4", "leader");
+    placement(player1, "E3");
+    placement(player2, "E4");
     debugger;
 });

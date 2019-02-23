@@ -4,8 +4,7 @@ import { RelatiPlayer } from "./js/RelatiPlayer";
 import { RelatiGame } from "./js/RelatiGame";
 import { Od } from "./js/roles/Od";
 import { Xa } from "./js/roles/Xa";
-import { RelatiRoleConstructor, RelatiRoleType } from "./js/RelatiRole";
-import { RolePlacement } from "./js/skills/RolePlacement";
+import { RelatiRoleType } from "./js/RelatiRole";
 
 var board: RelatiBoard = new GridBoard(9, 9);
 var gridCount = board.gridList.length;
@@ -21,16 +20,16 @@ for (var i = 0; i < gridCount; i++) {
 
 game.start();
 
-function selectGrid(coordinate: string, owner: RelatiPlayer, type?: RelatiRoleType) {
+function placement(owner: RelatiPlayer, coordinate: string, type?: RelatiRoleType) {
     owner.draw();
     var grid = board.query(coordinate);
     owner.selectRole(0);
     owner.selectGrid(grid, type);
 }
 
-selectGrid("E5", player1, "leader");
-selectGrid("D4", player2, "leader");
-selectGrid("E3", player1);
-selectGrid("E4", player2);
+placement(player1, "E5", "leader");
+placement(player2, "D4", "leader");
+placement(player1, "E3");
+placement(player2, "E4");
 
 debugger;
