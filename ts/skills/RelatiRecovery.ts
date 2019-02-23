@@ -7,8 +7,8 @@ export var RelatiRecovery: RelatiSkill = {
     name: "連結恢復",
     detail: "將所有連結狀態恢復",
     async do({ game, role }) {
-        if (game.turn < game.playerCount) return;
-        if (!role.is("relati-launcher")) return;
+        if (game.turn < game.playerCount) return console.warn("有玩家尚未下子");
+        if (!role.is("relati-launcher")) return console.warn("該角色不該擁有此技能");
 
         var { owner, grid } = role;
         var { board } = grid;

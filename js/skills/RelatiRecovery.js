@@ -55,9 +55,9 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
                 var owner, grid, board, _i, _b, grid;
                 return __generator(this, function (_c) {
                     if (game.turn < game.playerCount)
-                        return [2 /*return*/];
+                        return [2 /*return*/, console.warn("有玩家尚未下子")];
                     if (!role.is("relati-launcher"))
-                        return [2 /*return*/];
+                        return [2 /*return*/, console.warn("該角色不該擁有此技能")];
                     owner = role.owner, grid = role.grid;
                     board = grid.board;
                     for (_i = 0, _b = board.gridList; _i < _b.length; _i++) {

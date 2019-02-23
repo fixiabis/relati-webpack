@@ -78,6 +78,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
                     switch (_a.label) {
                         case 0:
                             game = this;
+                            if (this.nowPlayer != role.owner)
+                                return [2 /*return*/, console.warn("尚未輪到該玩家")];
                             turn = game.turn;
                             return [4 /*yield*/, skill.do({ game: game, role: role })];
                         case 1:
