@@ -8,12 +8,12 @@
     }
 })(function (require, exports) {
     "use strict";
-    exports.__esModule = true;
-    var GridBoard_1 = require("./js/base/GridBoard");
-    var RelatiPlayer_1 = require("./js/RelatiPlayer");
-    var RelatiGame_1 = require("./js/RelatiGame");
-    var Od_1 = require("./js/roles/Od");
-    var Xa_1 = require("./js/roles/Xa");
+    Object.defineProperty(exports, "__esModule", { value: true });
+    const GridBoard_1 = require("./js/base/GridBoard");
+    const RelatiPlayer_1 = require("./js/RelatiPlayer");
+    const RelatiGame_1 = require("./js/RelatiGame");
+    const Od_1 = require("./js/roles/Od");
+    const Xa_1 = require("./js/roles/Xa");
     var board = new GridBoard_1.GridBoard(9, 9);
     var gridCount = board.gridList.length;
     var player1 = new RelatiPlayer_1.RelatiPlayer("O");

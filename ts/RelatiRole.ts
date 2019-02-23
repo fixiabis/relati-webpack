@@ -5,6 +5,7 @@ import { RelatiSkill } from "./RelatiSkill";
 export type RelatiRoleType = "normal" | "knight" | "wizard" | "leader";
 export interface RelatiRoleConstructor {
     info: RelatiRoleInfo;
+
     new(
         grid: RelatiGrid,
         owner: RelatiPlayer,

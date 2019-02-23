@@ -1,6 +1,6 @@
 import { RelatiPlayer, RelatiCard } from "./RelatiPlayer";
 import { RelatiBoard, RelatiGrid } from "./RelatiBoard";
-import { RelatiRole, RelatiRoleConstructor, RelatiRoleType, RelatiRoleInfo } from "./RelatiRole";
+import { RelatiRole, RelatiRoleType, RelatiRoleInfo } from "./RelatiRole";
 import { RelatiSkill } from "./RelatiSkill";
 import { RoleForcedSkill } from "./skills/RoleForcedSkill";
 import { RoleStaticSkill } from "./skills/RoleStaticSkill";
@@ -30,6 +30,7 @@ export class RelatiGame {
 
         while (!this.result) {
             var player = this.nowPlayer;
+            player.draw();
 
             console.log("等待選取格子");
 
@@ -42,25 +43,25 @@ export class RelatiGame {
             if (grid.role && grid.role.owner == player) {
                 console.log("等待選取技能");
 
-                var skill = await new Promise<RelatiSkill | undefined>(
+                var skill = await new Promise<maybeExists<RelatiSkill>>(
                     resolve => player.skillSelect = resolve
                 );
 
-                if (!skill) continue;
+                if (!skill || skill.type != "action") continue;
                 console.log(`選取技能:${skill.name}`);
                 this.execute(skill, grid.role);
                 continue;
             }
 
             console.log("等待選取卡牌");
-            var card = await new Promise<RelatiCard | undefined>(
+            var card = await new Promise<maybeExists<RelatiCard>>(
                 resolve => player.cardSelect = resolve
             );
 
             if (!card) continue;
             console.log(`選取卡牌:${(card.info as RelatiRoleInfo).name}`)
 
-            var type: RelatiRoleType | undefined;
+            var type: maybeExists<RelatiRoleType>;
             if (this.turn < this.playerCount) type = "leader";
             var role = new card(grid, player, type);
 

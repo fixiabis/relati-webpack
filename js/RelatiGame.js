@@ -70,11 +70,11 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
                                 player.draw(5);
                             }
                             console.log("遊戲開始");
-                            debugger;
                             _b.label = 1;
                         case 1:
                             if (!!this.result) return [3 /*break*/, 6];
                             player = this.nowPlayer;
+                            player.draw();
                             console.log("等待選取格子");
                             return [4 /*yield*/, new Promise(function (resolve) { return player.gridSelect = resolve; })];
                         case 2:
