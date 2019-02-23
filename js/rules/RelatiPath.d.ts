@@ -1,11 +1,9 @@
-import { RelatiRuleTraceable, RelatiRuleTrace } from "../RelatiRule";
+import { RelatiRuleTrace, RelatiRuleTraceable } from "../RelatiRule";
 import { RelatiGrid } from "../RelatiBoard";
 import { RelatiRoleStatus, RelatiRole } from "../RelatiRole";
-import { RelatiPlayer } from "../RelatiPlayer";
 interface RelatiPathState {
-    owner: RelatiPlayer;
-    status: RelatiRoleStatus[];
     role: RelatiRole;
+    status: RelatiRoleStatus[];
     fromType: string;
     toType: string;
 }

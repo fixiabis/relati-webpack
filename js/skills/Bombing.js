@@ -39,54 +39,23 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (v !== undefined) module.exports = v;
     }
     else if (typeof define === "function" && define.amd) {
-        define(["require", "exports", "../rules/RelatiPath"], factory);
+        define(["require", "exports"], factory);
     }
 })(function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    var RelatiPath_1 = require("../rules/RelatiPath");
-    exports.RelatiRecovery = {
-        type: "static",
-        name: "連結恢復",
-        detail: "將所有連結狀態恢復",
+    exports.Bombing = {
+        type: "action",
+        name: "轟炸",
+        detail: "將指定方向的角色打倒",
         do: function (_a) {
             var game = _a.game, role = _a.role;
             return __awaiter(this, void 0, void 0, function () {
-                var owner, grid, board, _i, _b, grid;
-                return __generator(this, function (_c) {
-                    if (game.turn < game.playerCount)
-                        return [2 /*return*/];
-                    if (!role.is("relati-launcher"))
-                        return [2 /*return*/];
-                    owner = role.owner, grid = role.grid;
-                    board = grid.board;
-                    for (_i = 0, _b = board.gridList; _i < _b.length; _i++) {
-                        grid = _b[_i];
-                        if (grid.role && grid.role.owner == owner) {
-                            grid.role.lost("relati-repeater");
-                        }
-                    }
-                    recovery(role);
+                return __generator(this, function (_b) {
                     return [2 /*return*/];
                 });
             });
         }
     };
-    function recovery(role) {
-        if (role.is("relati-repeater"))
-            return;
-        role.gain("relati-repeater");
-        var receiversTrace = RelatiPath_1.RelatiPath.trace({
-            role: role,
-            status: ["relati-receiver"],
-            fromType: "relati-target",
-            toType: "relati-source"
-        });
-        for (var _i = 0, receiversTrace_1 = receiversTrace; _i < receiversTrace_1.length; _i++) {
-            var target = receiversTrace_1[_i].target;
-            if (target.role)
-                recovery(target.role);
-        }
-    }
 });
-//# sourceMappingURL=RelatiRecovery.js.map
+//# sourceMappingURL=Bombing.js.map

@@ -12,10 +12,10 @@ export var RolePlacement: RolePlacement = {
     type: "action",
     name: "角色放置",
     detail: "放置角色至棋盤格",
-    do({ game, role }) {
+    async do({ game, role }) {
         var { owner, grid } = role;
 
-        if (Placement.allow({ role, owner, game })) {
+        if (Placement.allow({ role, game })) {
             grid.role = role;
             game.turn++;
         }

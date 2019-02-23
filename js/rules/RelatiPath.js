@@ -15,7 +15,8 @@
         name: "連結規則",
         detail: "判斷是否能夠連結",
         allow: function (_a) {
-            var owner = _a.owner, status = _a.status, role = _a.role, fromType = _a.fromType, toType = _a.toType;
+            var role = _a.role, status = _a.status, fromType = _a.fromType, toType = _a.toType;
+            var owner = role.owner;
             var paths = RelatiGridPathRouter(role.params[fromType], role.grid);
             for (var _i = 0, paths_1 = paths; _i < paths_1.length; _i++) {
                 var path = paths_1[_i];
@@ -29,7 +30,8 @@
             return false;
         },
         trace: function (_a) {
-            var owner = _a.owner, status = _a.status, role = _a.role, fromType = _a.fromType, toType = _a.toType;
+            var role = _a.role, status = _a.status, fromType = _a.fromType, toType = _a.toType;
+            var owner = role.owner;
             var paths = RelatiGridPathRouter(role.params[fromType], role.grid);
             var traces = [];
             for (var _i = 0, paths_2 = paths; _i < paths_2.length; _i++) {
@@ -88,8 +90,9 @@
     function RelatiGridPathRouter(path, grid) {
         if (!cachedGridPath[grid.coordinate])
             cachedGridPath[grid.coordinate] = {};
-        if (cachedGridPath[grid.coordinate][path])
+        if (cachedGridPath[grid.coordinate][path]) {
             return cachedGridPath[grid.coordinate][path];
+        }
         var directionPaths = RelatiPathRouter(path);
         var gridPaths = directionPaths.map(function (path) {
             return {
@@ -116,8 +119,9 @@
         RelatiPathParam.Common = [RelatiPathParam.Normal, RelatiPathParam.Remote].join("|");
         RelatiPathRouter(RelatiPathParam.Common);
         function parse(directionCommands) {
-            if (directionCommands instanceof Array)
+            if (directionCommands instanceof Array) {
                 directionCommands = directionCommands.join("|");
+            }
             var directions = GridBoard_1.Grid.getOriginalDirection(directionCommands).join("|");
             RelatiPathRouter(directions);
             return directions;

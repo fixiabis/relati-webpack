@@ -10,11 +10,16 @@
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var RelatiPath_1 = require("./RelatiPath");
+    var status = [
+        "relati-launcher", "relati-repeater"
+    ];
+    var fromType = "relati-source";
+    var toType = "relati-target";
     exports.Placement = {
         name: "設置規則",
         detail: "確認該格子是否可以放置角色",
         allow: function (_a) {
-            var role = _a.role, owner = _a.owner, game = _a.game;
+            var game = _a.game, role = _a.role;
             var grid = role.grid;
             var placeable = !grid.role;
             if (!placeable)
@@ -22,10 +27,7 @@
             if (game.turn < game.playerCount)
                 return placeable;
             var relatiable = RelatiPath_1.RelatiPath.allow({
-                role: role, owner: owner,
-                status: ["relati-launcher", "relati-repeater"],
-                fromType: "relati-source",
-                toType: "relati-target"
+                role: role, status: status, fromType: fromType, toType: toType
             });
             return relatiable;
         }

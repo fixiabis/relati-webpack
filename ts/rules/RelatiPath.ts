@@ -1,13 +1,12 @@
-import { RelatiRuleTraceable, RelatiRuleTrace } from "../RelatiRule";
+import { RelatiRuleTrace, RelatiRuleTraceable } from "../RelatiRule";
 import { RelatiGrid } from "../RelatiBoard";
 import { RelatiRoleStatus, RelatiRole } from "../RelatiRole";
 import { RelatiPlayer } from "../RelatiPlayer";
 import { Grid } from "../base/GridBoard";
 
 interface RelatiPathState {
-    owner: RelatiPlayer,
-    status: RelatiRoleStatus[],
     role: RelatiRole,
+    status: RelatiRoleStatus[],
     fromType: string,
     toType: string
 };
@@ -17,7 +16,8 @@ type RelatiPathRule = RelatiRuleTraceable<RelatiPathState>;
 export var RelatiPath: RelatiPathRule = {
     name: "連結規則",
     detail: "判斷是否能夠連結",
-    allow({ owner, status, role, fromType, toType }) {
+    allow({ role, status, fromType, toType }) {
+        var { owner } = role;
         var paths = RelatiGridPathRouter(
             role.params[fromType],
             role.grid
@@ -36,7 +36,8 @@ export var RelatiPath: RelatiPathRule = {
 
         return false;
     },
-    trace({ owner, status, role, fromType, toType }) {
+    trace({ role, status, fromType, toType }) {
+        var { owner } = role;
         var paths = RelatiGridPathRouter(
             role.params[fromType],
             role.grid
@@ -123,9 +124,15 @@ var cachedGridPath: {
     }
 } = {};
 
-export function RelatiGridPathRouter(path: string, grid: RelatiGrid): RelatiGridPath[] {
+export function RelatiGridPathRouter(
+    path: string,
+    grid: RelatiGrid
+): RelatiGridPath[] {
     if (!cachedGridPath[grid.coordinate]) cachedGridPath[grid.coordinate] = {};
-    if (cachedGridPath[grid.coordinate][path]) return cachedGridPath[grid.coordinate][path];
+
+    if (cachedGridPath[grid.coordinate][path]) {
+        return cachedGridPath[grid.coordinate][path];
+    }
 
     var directionPaths = RelatiPathRouter(path);
 
@@ -159,7 +166,10 @@ export namespace RelatiPathParam {
     RelatiPathRouter(Common);
 
     export function parse(directionCommands: string | string[]) {
-        if (directionCommands instanceof Array) directionCommands = directionCommands.join("|");
+        if (directionCommands instanceof Array) {
+            directionCommands = directionCommands.join("|");
+        }
+
         var directions = Grid.getOriginalDirection(directionCommands).join("|");
         RelatiPathRouter(directions);
         return directions;

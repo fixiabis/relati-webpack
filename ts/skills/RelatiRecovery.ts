@@ -12,7 +12,7 @@ export var RelatiRecovery: RelatiRecovery = {
     type: "static",
     name: "連結恢復",
     detail: "將所有連結狀態恢復",
-    do({ game, role }) {
+    async do({ game, role }) {
         if (game.turn < game.playerCount) return;
         if (!role.is("relati-launcher")) return;
 
@@ -35,7 +35,6 @@ function recovery(role: RelatiRole) {
 
     var receiversTrace = RelatiPath.trace({
         role,
-        owner: role.owner,
         status: ["relati-receiver"],
         fromType: "relati-target",
         toType: "relati-source"

@@ -1,0 +1,77 @@
+{
+	"Generate Skill": {
+		"scope": "javascript,typescript",
+		"prefix": "RelatiSkill",
+		"body": [
+			"import { RelatiSkill } from \"../RelatiSkill\";\n",
+			"export type ${1:SkillName} = RelatiSkill;\n",
+			"export var ${1:SkillName}: ${1:SkillName} = {",
+			"    type: \"${2:SkillType}\",",
+			"    name: \"${3:技能名稱}\",",
+			"    detail: \"${4:技能說明}\",",
+			"    async do({ game, role }) {",
+			"    }",
+			"};"
+		],
+		"description": "生成Relati技能"
+	},
+	"Generate Role": {
+		"scope": "javascript,typescript",
+		"prefix": "RelatiRole",
+		"body": [
+			"import { RelatiRole, RelatiRoleType } from \"../RelatiRole\";",
+			"import { RelatiGrid } from \"../RelatiBoard\";",
+			"import { RelatiPlayer } from \"../RelatiPlayer\";\n",
+			"export class ${1:RoleName} extends RelatiRole {",
+			"    static common = {",
+			"        name: \"${2:角色名稱}\",",
+			"        detail: \"${3:角色說明}\"",
+			"    };\n",
+			"    constructor(",
+			"        grid: RelatiGrid,",
+			"        owner: RelatiPlayer,",
+			"        type: RelatiRoleType = \"normal\"",
+			"    ) {",
+			"        super(grid, owner, type);",
+			"    }",
+			"}"
+		],
+		"description": "生成Relati角色"
+	},
+	"Generate Rule": {
+		"scope": "javascript,typescript",
+		"prefix": "RelatiRule",
+		"body": [
+			"import { RelatiRule } from \"../RelatiRule\";\n",
+			"export type ${1:RuleName} = RelatiRule;\n",
+			"export var ${1:RuleName}: ${1:RuleName} = {",
+			"    name: \"${2:規則名稱}\",",
+			"    detail: \"${3:規則說明}\",",
+			"    allow({ game, role }) {",
+			"        return false;",
+			"    }",
+			"};"
+		],
+		"description": "生成Relati規則"
+	},
+	"Generate Traceable Rule": {
+		"scope": "javascript,typescript",
+		"prefix": "RelatiRuleTraceable",
+		"body": [
+			"import { RelatiRuleTrace, RelatiRuleTraceable } from \"../RelatiRule\";\n",
+			"export type ${1:RuleName} = RelatiRuleTraceable;\n",
+			"export var ${1:RuleName}: ${1:RuleName} = {",
+			"    name: \"${2:規則名稱}\",",
+			"    detail: \"${3:規則說明}\",",
+			"    allow({ game, role }) {",
+			"        return false;",
+			"    },",
+			"    trace({ game, role }) {",
+			"        var traces: RelatiRuleTrace[] = [];",
+			"        return traces;",
+			"    }",
+			"};"
+		],
+		"description": "生成Relati規則(可追溯)"
+	}
+}

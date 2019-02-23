@@ -41,7 +41,10 @@ var __extends = (this && this.__extends) || (function () {
             _this.params["relati-target"] = RelatiPath_1.RelatiPathParam.Common;
             return _this;
         }
-        Od.detail = "連結能力極廣的角色";
+        Od.common = {
+            name: "奧德",
+            detail: "連結能力極廣的角色"
+        };
         return Od;
     }(RelatiRole_1.RelatiRole));
     exports.Od = Od;

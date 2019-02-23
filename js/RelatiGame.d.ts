@@ -8,18 +8,16 @@ export declare class RelatiGame {
     playerCount: number;
     players: RelatiPlayer[];
     steps: RelatiGameStep[];
+    selectedGrid?: RelatiGrid;
     constructor(playerBadges: string[], board: RelatiBoard);
     readonly nowPlayer: RelatiPlayer;
     start(): void;
-    selectGrid(grid: RelatiGrid, roleType: "normal" | "knight" | "wizard" | "leader" | undefined, owner: RelatiPlayer): void;
 }
 export interface RelatiGameState {
-    game?: RelatiGame;
-    grid?: RelatiGrid;
-    player?: RelatiPlayer;
+    game: RelatiGame;
+    role: RelatiRole;
 }
 export interface RelatiGameStep {
     turn: RelatiGame["turn"];
-    grid: RelatiGrid;
     role: RelatiRole;
 }

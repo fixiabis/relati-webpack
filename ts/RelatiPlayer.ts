@@ -1,6 +1,4 @@
 import { RelatiRoleConstructor, RelatiRoleType } from "./RelatiRole";
-import { RelatiGrid } from "./RelatiBoard";
-import { RolePlacement } from "./skills/RolePlacement";
 import { RelatiGame } from "./RelatiGame";
 
 export class RelatiPlayer {
@@ -27,9 +25,5 @@ export class RelatiPlayer {
 
     selectRole(roleIndex: number) {
         return this.roleSelected = this.hand.splice(roleIndex, 1)[0];
-    }
-
-    selectGrid(grid: RelatiGrid, roleType: RelatiRoleType = "normal") {
-        this.game.selectGrid(grid, roleType, this);
     }
 }

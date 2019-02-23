@@ -32,10 +32,6 @@
         RelatiPlayer.prototype.selectRole = function (roleIndex) {
             return this.roleSelected = this.hand.splice(roleIndex, 1)[0];
         };
-        RelatiPlayer.prototype.selectGrid = function (grid, roleType) {
-            if (roleType === void 0) { roleType = "normal"; }
-            this.game.selectGrid(grid, roleType, this);
-        };
         return RelatiPlayer;
     }());
     exports.RelatiPlayer = RelatiPlayer;

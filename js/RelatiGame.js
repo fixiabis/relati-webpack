@@ -4,15 +4,12 @@
         if (v !== undefined) module.exports = v;
     }
     else if (typeof define === "function" && define.amd) {
-        define(["require", "exports", "./RelatiPlayer", "./skills/RolePlacement", "./skills/RoleForcedSkill", "./skills/RoleStaticSkill"], factory);
+        define(["require", "exports", "./RelatiPlayer"], factory);
     }
 })(function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var RelatiPlayer_1 = require("./RelatiPlayer");
-    var RolePlacement_1 = require("./skills/RolePlacement");
-    var RoleForcedSkill_1 = require("./skills/RoleForcedSkill");
-    var RoleStaticSkill_1 = require("./skills/RoleStaticSkill");
     var RelatiGame = /** @class */ (function () {
         function RelatiGame(playerBadges, board) {
             this.playerBadges = playerBadges;
@@ -41,30 +38,10 @@
                 player.draw(5);
             }
         };
-        RelatiGame.prototype.selectGrid = function (grid, roleType, owner) {
-            if (roleType === void 0) { roleType = "normal"; }
-            var game = this;
-            if (owner != game.nowPlayer)
-                return;
-            if (!owner.roleSelected)
-                return;
-            var roleConstructor = owner.roleSelected;
-            if (game.turn < game.playerCount)
-                roleType = "leader";
-            var role = new roleConstructor(grid, owner, roleType);
-            RolePlacement_1.RolePlacement.do({ game: game, role: role });
-            if (!grid.role) {
-                delete owner.roleSelected;
-                owner.hand.push(roleConstructor);
-            }
-            else {
-                RoleForcedSkill_1.RoleForcedSkill.do({ game: game });
-                RoleStaticSkill_1.RoleStaticSkill.do({ game: game });
-            }
-        };
         return RelatiGame;
     }());
     exports.RelatiGame = RelatiGame;
+    ;
     ;
     ;
 });

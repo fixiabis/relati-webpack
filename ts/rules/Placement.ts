@@ -1,31 +1,25 @@
 import { RelatiRule } from "../RelatiRule";
-import { RelatiRole } from "../RelatiRole";
-import { RelatiPlayer } from "../RelatiPlayer";
 import { RelatiPath } from "./RelatiPath";
-import { RelatiGame } from "../RelatiGame";
+import { RelatiRoleStatus } from "../RelatiRole";
 
-export type PlacementState = {
-    role: RelatiRole,
-    owner: RelatiPlayer,
-    game: RelatiGame
-};
+const status: RelatiRoleStatus[] = [
+    "relati-launcher", "relati-repeater"
+];
+const fromType = "relati-source";
+const toType = "relati-target";
 
-export type PlacementRule = RelatiRule<PlacementState>;
-
-export var Placement: PlacementRule = {
+export var Placement: RelatiRule = {
     name: "設置規則",
     detail: "確認該格子是否可以放置角色",
-    allow({ role, owner, game }) {
+    allow({ game, role }) {
         var { grid } = role;
         var placeable = !grid.role;
+
         if (!placeable) return false;
         if (game.turn < game.playerCount) return placeable;
 
         var relatiable = RelatiPath.allow({
-            role, owner,
-            status: ["relati-launcher", "relati-repeater"],
-            fromType: "relati-source",
-            toType: "relati-target"
+            role, status, fromType, toType
         });
 
         return relatiable;

@@ -1,15 +1,13 @@
 import { RelatiPlayer } from "./RelatiPlayer";
 import { RelatiBoard, RelatiGrid } from "./RelatiBoard";
-import { RelatiRole, RelatiRoleType } from "./RelatiRole";
-import { RolePlacement } from "./skills/RolePlacement";
-import { RoleForcedSkill } from "./skills/RoleForcedSkill";
-import { RoleStaticSkill } from "./skills/RoleStaticSkill";
+import { RelatiRole } from "./RelatiRole";
 
 export class RelatiGame {
     public turn = 0;
     public playerCount: number;
     public players: RelatiPlayer[] = [];
     public steps: RelatiGameStep[] = [];
+    public selectedGrid?: RelatiGrid;
 
     constructor(
         public playerBadges: string[],
@@ -33,40 +31,14 @@ export class RelatiGame {
             player.draw(5);
         }
     }
-
-    selectGrid(
-        grid: RelatiGrid,
-        roleType: RelatiRoleType = "normal",
-        owner: RelatiPlayer
-    ) {
-        var game = this;
-
-        if (owner != game.nowPlayer) return;
-        if (!owner.roleSelected) return;
-
-        var roleConstructor = owner.roleSelected;
-        if (game.turn < game.playerCount) roleType = "leader";
-        var role = new roleConstructor(grid, owner, roleType);
-        RolePlacement.do({ game, role });
-
-        if (!grid.role) {
-            delete owner.roleSelected;
-            owner.hand.push(roleConstructor);
-        } else {
-            RoleForcedSkill.do({ game });
-            RoleStaticSkill.do({ game });
-        }
-    }
 };
 
 export interface RelatiGameState {
-    game?: RelatiGame;
-    grid?: RelatiGrid;
-    player?: RelatiPlayer;
+    game: RelatiGame;
+    role: RelatiRole;
 };
 
 export interface RelatiGameStep {
     turn: RelatiGame["turn"];
-    grid: RelatiGrid;
     role: RelatiRole;
-}
+};

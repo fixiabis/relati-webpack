@@ -5,7 +5,10 @@ import { RelatiPathParam } from "../rules/RelatiPath";
 import { RelatiRecovery } from "../skills/RelatiRecovery";
 
 export class Od extends RelatiRole {
-    static detail: string = "連結能力極廣的角色";
+    static common = {
+        name: "奧德",
+        detail: "連結能力極廣的角色"
+    };
 
     constructor(
         grid: RelatiGrid,

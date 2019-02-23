@@ -9,6 +9,9 @@
 })(function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    ;
+    exports.RelatiBombing = {
+        type: "action",
+        name: 
+    };
 });
-//# sourceMappingURL=RelatiSkill.js.map
+//# sourceMappingURL=RelatiBombing.js.map

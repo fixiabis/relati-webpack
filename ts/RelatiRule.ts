@@ -1,14 +1,14 @@
 import { RelatiGrid } from "./RelatiBoard";
 import { RelatiGameState } from "./RelatiGame";
 
-export interface RelatiRule<State = {}> {
+export interface RelatiRule<State = RelatiGameState> {
     name: string;
     detail: string;
-    allow(state: RelatiGameState & State): boolean;
+    allow(state: State): boolean;
 }
 
-export interface RelatiRuleTraceable<State = {}> extends RelatiRule<State> {
-    trace(state: RelatiGameState & State): RelatiRuleTrace[];
+export interface RelatiRuleTraceable<State = RelatiGameState> extends RelatiRule<State> {
+    trace(state: State): RelatiRuleTrace[];
 }
 
 export interface RelatiRuleTrace {
