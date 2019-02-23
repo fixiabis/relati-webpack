@@ -10,6 +10,8 @@ export declare class RelatiGame {
     steps: RelatiGameStep[];
     constructor(playerBadges: string[], board: RelatiBoard);
     readonly nowPlayer: RelatiPlayer;
+    start(): void;
+    selectGrid(grid: RelatiGrid, roleType: "normal" | "knight" | "wizard" | "leader" | undefined, owner: RelatiPlayer): void;
 }
 export interface RelatiGameState {
     game?: RelatiGame;

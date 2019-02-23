@@ -1,4 +1,4 @@
-import { RelatiRoleConstructor } from "./RelatiRole";
+import { RelatiRoleConstructor, RelatiRoleType } from "./RelatiRole";
 import { RelatiGrid } from "./RelatiBoard";
 import { RelatiGame } from "./RelatiGame";
 export declare class RelatiPlayer {
@@ -11,5 +11,5 @@ export declare class RelatiPlayer {
     draw(times?: number): void;
     shuffle(): void;
     selectRole(roleIndex: number): RelatiRoleConstructor;
-    selectGrid(grid: RelatiGrid): void;
+    selectGrid(grid: RelatiGrid, roleType?: RelatiRoleType): void;
 }

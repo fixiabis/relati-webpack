@@ -10,22 +10,22 @@ import { RolePlacement } from "./js/skills/RolePlacement";
 var board: RelatiBoard = new GridBoard(9, 9);
 var gridCount = board.gridList.length;
 
-var player1 = new RelatiPlayer("O");
-var player2 = new RelatiPlayer("X");
+var game = new RelatiGame(["O", "X"], board);
+var player1 = game.players[0];
+var player2 = game.players[1];
 
 for (var i = 0; i < gridCount; i++) {
     player1.deck.push(Od);
     player2.deck.push(Xa);
 }
 
-var game = new RelatiGame([player1, player2], board);
+game.start();
 
 function selectGrid(coordinate: string, owner: RelatiPlayer, type?: RelatiRoleType) {
     owner.draw();
     var grid = board.query(coordinate);
-    var roleConstructor: RelatiRoleConstructor = owner.selectRole(0);
-    var role = new roleConstructor(grid, owner, type);
-    RolePlacement.do({ game, role });
+    owner.selectRole(0);
+    owner.selectGrid(grid, type);
 }
 
 selectGrid("E5", player1, "leader");
