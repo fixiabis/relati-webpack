@@ -1,10 +1,11 @@
 import { RelatiPlayer, RelatiCard } from "./RelatiPlayer";
 import { RelatiBoard, RelatiGrid } from "./RelatiBoard";
-import { RelatiRole, RelatiRoleType, RelatiRoleInfo } from "./RelatiRole";
+import { RelatiRole, RelatiRoleType } from "./RelatiRole";
 import { RelatiSkill } from "./RelatiSkill";
 import { RoleForcedSkill } from "./skills/RoleForcedSkill";
 import { RoleStaticSkill } from "./skills/RoleStaticSkill";
 import { RolePlacement } from "./skills/RolePlacement";
+import { Judgement } from "./rules/Judgement";
 
 export type RelatiGameResult = "O Win" | "X Win" | "Relati";
 
@@ -26,46 +27,48 @@ export class RelatiGame {
             player.draw(5);
         }
 
-        console.log("遊戲開始");
-
         while (!this.result) {
             var player = this.nowPlayer;
             player.draw();
 
-            console.log("等待選取格子");
+            if (!Judgement.allow({ game: this })) {
+                this.turn++;
+
+                if (!Judgement.allow({ game: this })) {
+                    this.result = "Relati";
+                } else {
+                    this.result = (
+                        this.nowPlayer.badge + " Win"
+                    ) as RelatiGameResult;
+                }
+
+                break;
+            }
 
             var grid = await new Promise<RelatiGrid>(
                 resolve => player.gridSelect = resolve
             );
 
-            console.log(`選取格子:${grid.coordinate}`);
-
             if (grid.role && grid.role.owner == player) {
-                console.log("等待選取技能");
-
                 var skill = await new Promise<maybeExists<RelatiSkill>>(
                     resolve => player.skillSelect = resolve
                 );
 
                 if (!skill || skill.type != "action") continue;
-                console.log(`選取技能:${skill.name}`);
                 this.execute(skill, grid.role);
                 continue;
             }
 
-            console.log("等待選取卡牌");
             var card = await new Promise<maybeExists<RelatiCard>>(
                 resolve => player.cardSelect = resolve
             );
 
             if (!card) continue;
-            console.log(`選取卡牌:${(card.info as RelatiRoleInfo).name}`)
 
             var type: maybeExists<RelatiRoleType>;
             if (this.turn < this.playerCount) type = "leader";
             var role = new card(grid, player, type);
 
-            console.log("放置角色");
             this.execute(RolePlacement, role);
         }
     }

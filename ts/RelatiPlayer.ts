@@ -1,4 +1,4 @@
-import { RelatiRoleConstructor, RelatiRoleType } from "./RelatiRole";
+import { RelatiRoleConstructor } from "./RelatiRole";
 import { RelatiGame } from "./RelatiGame";
 import { RelatiGrid } from "./RelatiBoard";
 import { RelatiSkill } from "./RelatiSkill";
@@ -14,7 +14,7 @@ export class RelatiPlayer {
     public cardSelect?: (value?: RelatiCard) => void;
     public skillSelect?: (value?: RelatiSkill) => void;
 
-    constructor(public badge: string) { }
+    constructor(public badge: RelatiPlayerBadge) { }
 
     draw(times = 1) {
         for (var i = 0; i < times; i++) this.hand.push(
