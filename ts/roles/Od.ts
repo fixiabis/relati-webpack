@@ -1,34 +1,22 @@
-import { RelatiRole, RelatiRoleType, RelatiRoleInfo } from "../RelatiRole";
-import { RelatiGrid } from "../RelatiBoard";
-import { RelatiPlayer } from "../RelatiPlayer";
+import { RelatiRoleInfo } from "../RelatiRole";
 import { RelatiPathParam } from "../rules/RelatiPath";
-import { RelatiRecovery } from "../skills/RelatiRecovery";
 
-export class Od extends RelatiRole {
-    static info: RelatiRoleInfo = {
+export var Od: RelatiRoleInfo = {
+    type: "normal",
+    name: "奧德",
+    detail: "連結能力極廣的角色",
+    status: ["relati-receiver"],
+    params: {
+        "relati-source": RelatiPathParam.Common,
+        "relati-target": RelatiPathParam.Common
+    },
+    leader: {
+        type: "leader",
         name: "奧德",
         detail: "連結能力極廣的角色",
+        status: ["relati-launcher"],
         params: {
-            "relati-source": RelatiPathParam.Common,
             "relati-target": RelatiPathParam.Common
         }
-    };
-
-    constructor(
-        grid: RelatiGrid,
-        owner: RelatiPlayer,
-        type: RelatiRoleType = "normal"
-    ) {
-        super(grid, owner, type);
-
-        if (type == "leader") {
-            this.gain("relati-launcher");
-            this.skills.push(RelatiRecovery);
-        } else {
-            this.gain("relati-receiver");
-            this.params["relati-source"] = RelatiPathParam.Common;
-        }
-
-        this.params["relati-target"] = RelatiPathParam.Common;
     }
-}
+};

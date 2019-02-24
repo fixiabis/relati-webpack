@@ -10,15 +10,40 @@
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var RelatiRole = /** @class */ (function () {
-        function RelatiRole(grid, owner, type) {
-            if (type === void 0) { type = "normal"; }
+        function RelatiRole(grid, owner, param) {
+            if (param === void 0) { param = "normal"; }
             this.grid = grid;
             this.owner = owner;
-            this.type = type;
+            this.info = {
+                type: "normal",
+                name: "無名",
+                detail: "沒有那種東西"
+            };
             this.status = {};
             this.points = {};
             this.params = {};
             this.skills = [];
+            if (typeof param == "string") {
+                this.type = param;
+            }
+            else {
+                var type = param.type, status = param.status, points = param.points, params = param.params, skills = param.skills;
+                this.type = type;
+                this.info = param;
+                if (status)
+                    this.gain.apply(this, status);
+                if (points)
+                    for (var name in points) {
+                        this.points[name] = points[name];
+                    }
+                if (params)
+                    for (var name in params) {
+                        this.params[name] = params[name];
+                    }
+                if (skills) {
+                    this.skills = this.skills.concat(skills);
+                }
+            }
         }
         RelatiRole.prototype.is = function (status, type) {
             if (typeof status === "string")

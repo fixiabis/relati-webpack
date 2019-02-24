@@ -1,8 +1,8 @@
-import { RelatiRoleConstructor } from "./RelatiRole";
+import { RelatiRoleInfo } from "./RelatiRole";
 import { RelatiGame } from "./RelatiGame";
 import { RelatiGrid } from "./RelatiBoard";
 import { RelatiSkill } from "./RelatiSkill";
-export declare type RelatiCard = RelatiRoleConstructor;
+export declare type RelatiCard = RelatiRoleInfo;
 export declare type RelatiPlayerBadge = "O" | "X";
 export declare class RelatiPlayer {
     badge: RelatiPlayerBadge;

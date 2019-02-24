@@ -12,6 +12,12 @@ export interface RelatiRoleConstructor {
         owner: RelatiPlayer,
         type?: RelatiRoleType
     ): RelatiRole;
+
+    new(
+        grid: RelatiGrid,
+        owner: RelatiPlayer,
+        info: RelatiRoleInfo
+    ): RelatiRole;
 }
 
 export interface RelatiRole {
@@ -20,6 +26,12 @@ export interface RelatiRole {
 }
 
 export class RelatiRole {
+    public type: RelatiRoleType;
+    public info: RelatiRoleInfo = {
+        type: "normal",
+        name: "無名",
+        detail: "沒有那種東西"
+    };
     public status: { [status: string]: boolean } = {};
     public points: { [points: string]: number } = {};
     public params: { [params: string]: string } = {};
@@ -28,8 +40,31 @@ export class RelatiRole {
     constructor(
         public grid: RelatiGrid,
         public owner: RelatiPlayer,
-        public type: RelatiRoleType = "normal"
-    ) { }
+        param: RelatiRoleType | RelatiRoleInfo = "normal"
+    ) {
+        if (typeof param == "string") {
+            this.type = param;
+        } else {
+            var { type, status, points, params, skills } = param;
+
+            this.type = type;
+            this.info = param;
+
+            if (status) this.gain(...status);
+
+            if (points) for (var name in points) {
+                this.points[name] = points[name];
+            }
+
+            if (params) for (var name in params) {
+                this.params[name] = params[name];
+            }
+
+            if (skills) {
+                this.skills = this.skills.concat(skills);
+            }
+        }
+    }
 
     is(status: RelatiRoleStatus | RelatiRoleStatus[], type?: "all" | "any") {
         if (typeof status === "string") return this.status[status];
@@ -77,8 +112,10 @@ export type RelatiRoleStatus = (
 );
 
 export interface RelatiRoleInfo extends RelatiInfo {
-    status?: RelatiRole["status"];
+    type: RelatiRoleType;
+    status?: RelatiRoleStatus[];
     points?: RelatiRole["points"];
     params?: RelatiRole["params"];
-    skills?: RelatiRole["status"];
+    skills?: RelatiRole["skills"];
+    leader?: RelatiRoleInfo
 }

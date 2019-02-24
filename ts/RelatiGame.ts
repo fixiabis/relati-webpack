@@ -65,10 +65,12 @@ export class RelatiGame {
 
             if (!card) continue;
 
-            var type: maybeExists<RelatiRoleType> = undefined;
-            if (this.turn < this.playerCount) type = "leader";
-            var role = new card(grid, player, type);
+            if (this.turn < this.playerCount) {
+                if (!card.leader) continue;
+                card = card.leader;
+            }
 
+            var role = new RelatiRole(grid, player, card);
             await this.execute(RolePlacement, role);
         }
     }

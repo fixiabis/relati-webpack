@@ -1,56 +1,33 @@
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
 (function (factory) {
     if (typeof module === "object" && typeof module.exports === "object") {
         var v = factory(require, exports);
         if (v !== undefined) module.exports = v;
     }
     else if (typeof define === "function" && define.amd) {
-        define(["require", "exports", "../RelatiRole", "../rules/RelatiPath", "../skills/RelatiRecovery"], factory);
+        define(["require", "exports", "../rules/RelatiPath"], factory);
     }
 })(function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    var RelatiRole_1 = require("../RelatiRole");
     var RelatiPath_1 = require("../rules/RelatiPath");
-    var RelatiRecovery_1 = require("../skills/RelatiRecovery");
-    var Od = /** @class */ (function (_super) {
-        __extends(Od, _super);
-        function Od(grid, owner, type) {
-            if (type === void 0) { type = "normal"; }
-            var _this = _super.call(this, grid, owner, type) || this;
-            if (type == "leader") {
-                _this.gain("relati-launcher");
-                _this.skills.push(RelatiRecovery_1.RelatiRecovery);
-            }
-            else {
-                _this.gain("relati-receiver");
-                _this.params["relati-source"] = RelatiPath_1.RelatiPathParam.Common;
-            }
-            _this.params["relati-target"] = RelatiPath_1.RelatiPathParam.Common;
-            return _this;
-        }
-        Od.info = {
+    exports.Od = {
+        type: "normal",
+        name: "奧德",
+        detail: "連結能力極廣的角色",
+        status: ["relati-receiver"],
+        params: {
+            "relati-source": RelatiPath_1.RelatiPathParam.Common,
+            "relati-target": RelatiPath_1.RelatiPathParam.Common
+        },
+        leader: {
+            type: "leader",
             name: "奧德",
             detail: "連結能力極廣的角色",
+            status: ["relati-launcher"],
             params: {
-                "relati-source": RelatiPath_1.RelatiPathParam.Common,
                 "relati-target": RelatiPath_1.RelatiPathParam.Common
             }
-        };
-        return Od;
-    }(RelatiRole_1.RelatiRole));
-    exports.Od = Od;
+        }
+    };
 });
 //# sourceMappingURL=Od.js.map

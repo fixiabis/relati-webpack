@@ -39,11 +39,12 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (v !== undefined) module.exports = v;
     }
     else if (typeof define === "function" && define.amd) {
-        define(["require", "exports", "./skills/RoleForcedSkill", "./skills/RoleStaticSkill", "./skills/RolePlacement", "./rules/Judgement"], factory);
+        define(["require", "exports", "./RelatiRole", "./skills/RoleForcedSkill", "./skills/RoleStaticSkill", "./skills/RolePlacement", "./rules/Judgement"], factory);
     }
 })(function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    var RelatiRole_1 = require("./RelatiRole");
     var RoleForcedSkill_1 = require("./skills/RoleForcedSkill");
     var RoleStaticSkill_1 = require("./skills/RoleStaticSkill");
     var RolePlacement_1 = require("./skills/RolePlacement");
@@ -60,7 +61,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         }
         RelatiGame.prototype.start = function () {
             return __awaiter(this, void 0, void 0, function () {
-                var _i, _a, player, player, grid, skill, card, type, role;
+                var _i, _a, player, player, grid, skill, card, role;
                 return __generator(this, function (_b) {
                     switch (_b.label) {
                         case 0:
@@ -103,10 +104,12 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
                             card = _b.sent();
                             if (!card)
                                 return [3 /*break*/, 1];
-                            type = undefined;
-                            if (this.turn < this.playerCount)
-                                type = "leader";
-                            role = new card(grid, player, type);
+                            if (this.turn < this.playerCount) {
+                                if (!card.leader)
+                                    return [3 /*break*/, 1];
+                                card = card.leader;
+                            }
+                            role = new RelatiRole_1.RelatiRole(grid, player, card);
                             return [4 /*yield*/, this.execute(RolePlacement_1.RolePlacement, role)];
                         case 7:
                             _b.sent();

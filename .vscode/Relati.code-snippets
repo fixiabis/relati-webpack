@@ -18,22 +18,12 @@
 		"scope": "javascript,typescript",
 		"prefix": "RelatiRole",
 		"body": [
-			"import { RelatiRole, RelatiRoleType } from \"../RelatiRole\";",
-			"import { RelatiGrid } from \"../RelatiBoard\";",
-			"import { RelatiPlayer } from \"../RelatiPlayer\";\n",
-			"export class ${1:RoleName} extends RelatiRole {",
-			"    static common = {",
-			"        name: \"${2:角色名稱}\",",
-			"        detail: \"${3:角色說明}\"",
-			"    };\n",
-			"    constructor(",
-			"        grid: RelatiGrid,",
-			"        owner: RelatiPlayer,",
-			"        type: RelatiRoleType = \"normal\"",
-			"    ) {",
-			"        super(grid, owner, type);",
-			"    }",
-			"}"
+			"import { RelatiRoleInfo } from \"../RelatiRole\";\n",
+			"export var ${1:RoleName}: RelatiRoleInfo = {",
+			"    type: \"${2:RoleType}\",",
+			"    name: \"${3:角色名稱}\",",
+			"    detail: \"${4:角色說明}\"",
+			"};"
 		],
 		"description": "生成Relati角色"
 	},
