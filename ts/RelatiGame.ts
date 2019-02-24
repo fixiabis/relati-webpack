@@ -55,7 +55,7 @@ export class RelatiGame {
                 );
 
                 if (!skill || skill.type != "action") continue;
-                this.execute(skill, grid.role);
+                await this.execute(skill, grid.role);
                 continue;
             }
 
@@ -69,7 +69,7 @@ export class RelatiGame {
             if (this.turn < this.playerCount) type = "leader";
             var role = new card(grid, player, type);
 
-            this.execute(RolePlacement, role);
+            await this.execute(RolePlacement, role);
         }
     }
 

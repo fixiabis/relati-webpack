@@ -72,7 +72,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
                             }
                             _b.label = 1;
                         case 1:
-                            if (!!this.result) return [3 /*break*/, 6];
+                            if (!!this.result) return [3 /*break*/, 8];
                             player = this.nowPlayer;
                             player.draw();
                             if (!Judgement_1.Judgement.allow({ game: this })) {
@@ -83,30 +83,34 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
                                 else {
                                     this.result = (this.nowPlayer.badge + " Win");
                                 }
-                                return [3 /*break*/, 6];
+                                return [3 /*break*/, 8];
                             }
                             return [4 /*yield*/, new Promise(function (select) { return player.gridSelect = select; })];
                         case 2:
                             grid = _b.sent();
-                            if (!(grid.role && grid.role.owner == player)) return [3 /*break*/, 4];
+                            if (!(grid.role && grid.role.owner == player)) return [3 /*break*/, 5];
                             return [4 /*yield*/, new Promise(function (select) { return player.skillSelect = select; })];
                         case 3:
                             skill = _b.sent();
                             if (!skill || skill.type != "action")
                                 return [3 /*break*/, 1];
-                            this.execute(skill, grid.role);
+                            return [4 /*yield*/, this.execute(skill, grid.role)];
+                        case 4:
+                            _b.sent();
                             return [3 /*break*/, 1];
-                        case 4: return [4 /*yield*/, new Promise(function (select) { return player.cardSelect = select; })];
-                        case 5:
+                        case 5: return [4 /*yield*/, new Promise(function (select) { return player.cardSelect = select; })];
+                        case 6:
                             card = _b.sent();
                             if (!card)
                                 return [3 /*break*/, 1];
                             if (this.turn < this.playerCount)
                                 type = "leader";
                             role = new card(grid, player, type);
-                            this.execute(RolePlacement_1.RolePlacement, role);
+                            return [4 /*yield*/, this.execute(RolePlacement_1.RolePlacement, role)];
+                        case 7:
+                            _b.sent();
                             return [3 /*break*/, 1];
-                        case 6: return [2 /*return*/];
+                        case 8: return [2 /*return*/];
                     }
                 });
             });
