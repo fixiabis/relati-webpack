@@ -103,6 +103,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
                             card = _b.sent();
                             if (!card)
                                 return [3 /*break*/, 1];
+                            type = undefined;
                             if (this.turn < this.playerCount)
                                 type = "leader";
                             role = new card(grid, player, type);
@@ -135,13 +136,13 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
                             return [4 /*yield*/, skill.do({ game: game, role: role })];
                         case 1:
                             _a.sent();
+                            game.steps.push({ turn: turn, role: role, skill: skill });
                             return [4 /*yield*/, RoleForcedSkill_1.RoleForcedSkill.do({ game: game, role: role })];
                         case 2:
                             _a.sent();
                             return [4 /*yield*/, RoleStaticSkill_1.RoleStaticSkill.do({ game: game, role: role })];
                         case 3:
                             _a.sent();
-                            game.steps.push({ turn: turn, role: role, skill: skill });
                             return [2 /*return*/];
                     }
                 });

@@ -65,7 +65,7 @@ export class RelatiGame {
 
             if (!card) continue;
 
-            var type: maybeExists<RelatiRoleType>;
+            var type: maybeExists<RelatiRoleType> = undefined;
             if (this.turn < this.playerCount) type = "leader";
             var role = new card(grid, player, type);
 
@@ -82,9 +82,9 @@ export class RelatiGame {
         if (game.nowPlayer != role.owner) return console.warn("尚未輪到該玩家");
         var { turn } = game;
         await skill.do({ game, role });
+        game.steps.push({ turn, role, skill });
         await RoleForcedSkill.do({ game, role });
         await RoleStaticSkill.do({ game, role });
-        game.steps.push({ turn, role, skill });
     }
 };
 

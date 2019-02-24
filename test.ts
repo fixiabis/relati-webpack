@@ -16,3 +16,6 @@ for (var i = 0; i < gridCount; i++) {
 }
 
 game.start();
+
+var gridSelect = (coor: string) => game.nowPlayer.selectGrid(board.query(coor));
+var roleSelect = () => game.nowPlayer.selectCard(0);
