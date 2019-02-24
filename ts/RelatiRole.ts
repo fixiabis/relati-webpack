@@ -51,18 +51,9 @@ export class RelatiRole {
             this.info = param;
 
             if (status) this.gain(...status);
-
-            if (points) for (var name in points) {
-                this.points[name] = points[name];
-            }
-
-            if (params) for (var name in params) {
-                this.params[name] = params[name];
-            }
-
-            if (skills) {
-                this.skills = this.skills.concat(skills);
-            }
+            if (points) Object.assign(this.points, points);
+            if (params) Object.assign(this.params, params);
+            if (skills) Object.assign(this.skills, skills);
         }
     }
 

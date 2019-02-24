@@ -33,16 +33,11 @@
                 if (status)
                     this.gain.apply(this, status);
                 if (points)
-                    for (var name in points) {
-                        this.points[name] = points[name];
-                    }
+                    Object.assign(this.points, points);
                 if (params)
-                    for (var name in params) {
-                        this.params[name] = params[name];
-                    }
-                if (skills) {
-                    this.skills = this.skills.concat(skills);
-                }
+                    Object.assign(this.params, params);
+                if (skills)
+                    Object.assign(this.skills, skills);
             }
         }
         RelatiRole.prototype.is = function (status, type) {

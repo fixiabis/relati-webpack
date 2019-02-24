@@ -1,6 +1,6 @@
 import { RelatiPlayer, RelatiCard } from "./RelatiPlayer";
 import { RelatiBoard, RelatiGrid } from "./RelatiBoard";
-import { RelatiRole, RelatiRoleType } from "./RelatiRole";
+import { RelatiRole } from "./RelatiRole";
 import { RelatiSkill } from "./RelatiSkill";
 import { RoleForcedSkill } from "./skills/RoleForcedSkill";
 import { RoleStaticSkill } from "./skills/RoleStaticSkill";
