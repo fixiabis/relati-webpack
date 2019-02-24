@@ -38,14 +38,24 @@ export class RelatiPlayer {
 
     selectCard(cardIndex: number) {
         var card = this.hand.splice(cardIndex, 1)[0];
-        if (this.cardSelect) this.cardSelect(card);
+
+        if (this.cardSelect) {
+            this.cardSelect(card);
+            delete this.cardSelect;
+        }
     }
 
     selectGrid(grid: RelatiGrid) {
-        if (this.gridSelect) this.gridSelect(grid);
+        if (this.gridSelect) {
+            this.gridSelect(grid);
+            delete this.gridSelect;
+        }
     }
 
     selectSkill(skill: RelatiSkill) {
-        if (this.skillSelect) this.skillSelect(skill);
+        if (this.skillSelect) {
+            this.skillSelect(skill);
+            delete this.skillSelect;
+        }
     }
 }

@@ -34,16 +34,22 @@
         };
         RelatiPlayer.prototype.selectCard = function (cardIndex) {
             var card = this.hand.splice(cardIndex, 1)[0];
-            if (this.cardSelect)
+            if (this.cardSelect) {
                 this.cardSelect(card);
+                delete this.cardSelect;
+            }
         };
         RelatiPlayer.prototype.selectGrid = function (grid) {
-            if (this.gridSelect)
+            if (this.gridSelect) {
                 this.gridSelect(grid);
+                delete this.gridSelect;
+            }
         };
         RelatiPlayer.prototype.selectSkill = function (skill) {
-            if (this.skillSelect)
+            if (this.skillSelect) {
                 this.skillSelect(skill);
+                delete this.skillSelect;
+            }
         };
         return RelatiPlayer;
     }());

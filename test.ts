@@ -16,19 +16,3 @@ for (var i = 0; i < gridCount; i++) {
 }
 
 game.start();
-
-// var grid = board.query("E5");
-// player1.selectGrid(grid);
-// player1.selectCard(0);
-
-// var grid = board.query("D4");
-// player2.selectGrid(grid);
-// player2.selectCard(0);
-
-// var grid = board.query("E3");
-// player1.selectGrid(grid);
-// player1.selectCard(0);
-
-// var grid = board.query("E4");
-// player2.selectGrid(grid);
-// player2.selectCard(0);
