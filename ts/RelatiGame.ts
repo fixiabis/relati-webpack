@@ -46,12 +46,12 @@ export class RelatiGame {
             }
 
             var grid = await new Promise<RelatiGrid>(
-                resolve => player.gridSelect = resolve
+                select => player.gridSelect = select
             );
 
             if (grid.role && grid.role.owner == player) {
                 var skill = await new Promise<maybeExists<RelatiSkill>>(
-                    resolve => player.skillSelect = resolve
+                    select => player.skillSelect = select
                 );
 
                 if (!skill || skill.type != "action") continue;
@@ -60,7 +60,7 @@ export class RelatiGame {
             }
 
             var card = await new Promise<maybeExists<RelatiCard>>(
-                resolve => player.cardSelect = resolve
+                select => player.cardSelect = select
             );
 
             if (!card) continue;
@@ -97,4 +97,9 @@ export interface RelatiGameStep {
     turn: RelatiGame["turn"];
     role: RelatiRole;
     skill: RelatiSkill;
+};
+
+export interface RelatiInfo {
+    name: string;
+    detail: string;
 };

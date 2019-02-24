@@ -1,9 +1,7 @@
 import { RelatiGrid } from "./RelatiBoard";
-import { RelatiGameState } from "./RelatiGame";
+import { RelatiGameState, RelatiInfo } from "./RelatiGame";
 
-export interface RelatiRule<State = RelatiGameState> {
-    name: string;
-    detail: string;
+export interface RelatiRule<State = RelatiGameState> extends RelatiInfo {
     allow(state: State): boolean;
 }
 

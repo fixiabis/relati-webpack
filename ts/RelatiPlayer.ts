@@ -37,9 +37,8 @@ export class RelatiPlayer {
     }
 
     selectCard(cardIndex: number) {
-        if (this.cardSelect) {
-            this.cardSelect(this.hand.splice(cardIndex, 1)[0]);
-        }
+        var card = this.hand.splice(cardIndex, 1)[0];
+        if (this.cardSelect) this.cardSelect(card);
     }
 
     selectGrid(grid: RelatiGrid) {

@@ -24,3 +24,7 @@ export interface RelatiGameStep {
     role: RelatiRole;
     skill: RelatiSkill;
 }
+export interface RelatiInfo {
+    name: string;
+    detail: string;
+}

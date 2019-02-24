@@ -85,18 +85,18 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
                                 }
                                 return [3 /*break*/, 6];
                             }
-                            return [4 /*yield*/, new Promise(function (resolve) { return player.gridSelect = resolve; })];
+                            return [4 /*yield*/, new Promise(function (select) { return player.gridSelect = select; })];
                         case 2:
                             grid = _b.sent();
                             if (!(grid.role && grid.role.owner == player)) return [3 /*break*/, 4];
-                            return [4 /*yield*/, new Promise(function (resolve) { return player.skillSelect = resolve; })];
+                            return [4 /*yield*/, new Promise(function (select) { return player.skillSelect = select; })];
                         case 3:
                             skill = _b.sent();
                             if (!skill || skill.type != "action")
                                 return [3 /*break*/, 1];
                             this.execute(skill, grid.role);
                             return [3 /*break*/, 1];
-                        case 4: return [4 /*yield*/, new Promise(function (resolve) { return player.cardSelect = resolve; })];
+                        case 4: return [4 /*yield*/, new Promise(function (select) { return player.cardSelect = select; })];
                         case 5:
                             card = _b.sent();
                             if (!card)
@@ -146,6 +146,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         return RelatiGame;
     }());
     exports.RelatiGame = RelatiGame;
+    ;
     ;
     ;
     ;

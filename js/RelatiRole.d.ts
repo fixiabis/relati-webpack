@@ -1,6 +1,7 @@
 import { RelatiGrid } from "./RelatiBoard";
 import { RelatiPlayer } from "./RelatiPlayer";
 import { RelatiSkill } from "./RelatiSkill";
+import { RelatiInfo } from "./RelatiGame";
 export declare type RelatiRoleType = "normal" | "knight" | "wizard" | "leader";
 export interface RelatiRoleConstructor {
     info: RelatiRoleInfo;
@@ -33,9 +34,7 @@ export declare namespace RelatiRoleStatus {
     var Relati: string[];
 }
 export declare type RelatiRoleStatus = (RelatiRoleStatus.Relati);
-export interface RelatiRoleInfo {
-    name: string;
-    detail: string;
+export interface RelatiRoleInfo extends RelatiInfo {
     status?: RelatiRole["status"];
     points?: RelatiRole["points"];
     params?: RelatiRole["params"];

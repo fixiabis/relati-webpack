@@ -1,10 +1,8 @@
-import { RelatiGameState } from "./RelatiGame";
+import { RelatiGameState, RelatiInfo } from "./RelatiGame";
 
 export type RelatiSkillType = "action" | "effect" | "static" | "forced";
 
-export interface RelatiSkill<State = RelatiGameState> {
-    name: string;
+export interface RelatiSkill<State = RelatiGameState> extends RelatiInfo {
     type: RelatiSkillType;
-    detail: string;
     do(state: State): void;
 };

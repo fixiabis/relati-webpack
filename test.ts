@@ -1,7 +1,5 @@
 import { GridBoard } from "./js/base/GridBoard";
-import { RelatiBoard } from "./js/RelatiBoard";
-import { RelatiPlayer } from "./js/RelatiPlayer";
-import { RelatiGame } from "./js/RelatiGame";
+import { RelatiBoard, RelatiPlayer, RelatiGame } from "./js/Relati";
 import { Od } from "./js/roles/Od";
 import { Xa } from "./js/roles/Xa";
 

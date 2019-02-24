@@ -33,9 +33,9 @@
             game.playerCount = game.players.length;
         };
         RelatiPlayer.prototype.selectCard = function (cardIndex) {
-            if (this.cardSelect) {
-                this.cardSelect(this.hand.splice(cardIndex, 1)[0]);
-            }
+            var card = this.hand.splice(cardIndex, 1)[0];
+            if (this.cardSelect)
+                this.cardSelect(card);
         };
         RelatiPlayer.prototype.selectGrid = function (grid) {
             if (this.gridSelect)
