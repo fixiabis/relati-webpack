@@ -1,8 +1,8 @@
 import { RelatiSkill } from "../RelatiSkill";
 
-export var RoleForcedSkill: RelatiSkill = {
-    type: "forced",
-    name: "角色強制技能啟動",
+export var RoleEffect: RelatiSkill = {
+    type: "effect",
+    name: "角色被動技能啟動",
     detail: "任何效果發動時將會啟動",
     async do({ game }) {
         var { board } = game;
