@@ -10,7 +10,7 @@ export var RoleEffect: RelatiSkill<{ game: RelatiGame }> = {
 
         for (var { role } of board.gridList) {
             if (role) for (var skill of role.skills) {
-                if (skill.type == "forced") {
+                if (skill.type == "effect") {
                     await skill.do({ role, game });
                 }
             }

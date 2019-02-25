@@ -39,54 +39,50 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (v !== undefined) module.exports = v;
     }
     else if (typeof define === "function" && define.amd) {
-        define(["require", "exports", "../rules/RelatiPath"], factory);
+        define(["require", "exports"], factory);
     }
 })(function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    var RelatiPath_1 = require("../rules/RelatiPath");
-    exports.RelatiRecovery = {
+    exports.RoleEffect = {
         type: "effect",
-        name: "連結恢復",
-        detail: "將所有連結狀態恢復",
+        name: "角色被動技能啟動",
+        detail: "任何效果發動時將會啟動",
         do: function (_a) {
-            var game = _a.game, role = _a.role;
+            var game = _a.game;
             return __awaiter(this, void 0, void 0, function () {
-                var owner, grid, board, _i, _b, grid;
-                return __generator(this, function (_c) {
-                    if (game.turn < game.playerCount)
-                        return [2 /*return*/, console.warn("有玩家尚未下子")];
-                    if (!role.is("relati-launcher"))
-                        return [2 /*return*/, console.warn("該角色不該擁有此技能")];
-                    owner = role.owner, grid = role.grid;
-                    board = grid.board;
-                    for (_i = 0, _b = board.gridList; _i < _b.length; _i++) {
-                        grid = _b[_i];
-                        if (grid.role && grid.role.owner == owner) {
-                            grid.role.lost("relati-repeater");
-                        }
+                var board, _i, _b, role, _c, _d, skill;
+                return __generator(this, function (_e) {
+                    switch (_e.label) {
+                        case 0:
+                            board = game.board;
+                            _i = 0, _b = board.gridList;
+                            _e.label = 1;
+                        case 1:
+                            if (!(_i < _b.length)) return [3 /*break*/, 6];
+                            role = _b[_i].role;
+                            if (!role) return [3 /*break*/, 5];
+                            _c = 0, _d = role.skills;
+                            _e.label = 2;
+                        case 2:
+                            if (!(_c < _d.length)) return [3 /*break*/, 5];
+                            skill = _d[_c];
+                            if (!(skill.type == "effect")) return [3 /*break*/, 4];
+                            return [4 /*yield*/, skill.do({ role: role, game: game })];
+                        case 3:
+                            _e.sent();
+                            _e.label = 4;
+                        case 4:
+                            _c++;
+                            return [3 /*break*/, 2];
+                        case 5:
+                            _i++;
+                            return [3 /*break*/, 1];
+                        case 6: return [2 /*return*/];
                     }
-                    recovery(role);
-                    return [2 /*return*/];
                 });
             });
         }
     };
-    function recovery(role) {
-        if (role.is("relati-repeater"))
-            return;
-        role.gain("relati-repeater");
-        var receiversTrace = RelatiPath_1.RelatiPath.trace({
-            role: role,
-            status: ["relati-receiver"],
-            fromType: "relati-target",
-            toType: "relati-source"
-        });
-        for (var _i = 0, receiversTrace_1 = receiversTrace; _i < receiversTrace_1.length; _i++) {
-            var target = receiversTrace_1[_i].target;
-            if (target.role)
-                recovery(target.role);
-        }
-    }
 });
-//# sourceMappingURL=RelatiRecovery.js.map
+//# sourceMappingURL=RoleEffect.js.map

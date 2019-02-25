@@ -1,9 +1,9 @@
 import { RelatiRoleInfo } from "../RelatiRole";
 import { RelatiPathParam } from "../rules/RelatiPath";
 
-export var Od: RelatiRoleInfo = {
+export var NormalXa: RelatiRoleInfo = {
     type: "normal",
-    name: "奧德",
+    name: "科薩",
     detail: "連結能力極廣的角色",
     status: ["relati-receiver"],
     points: {
@@ -15,7 +15,7 @@ export var Od: RelatiRoleInfo = {
     },
     leader: {
         type: "leader",
-        name: "奧德",
+        name: "科薩",
         detail: "連結能力極廣的角色",
         status: ["relati-launcher"],
         points: {

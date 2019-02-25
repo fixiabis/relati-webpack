@@ -39,16 +39,15 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (v !== undefined) module.exports = v;
     }
     else if (typeof define === "function" && define.amd) {
-        define(["require", "exports", "./RelatiRole", "./skills/RoleForcedSkill", "./skills/RoleStaticSkill", "./skills/RolePlacement", "./rules/Judgement"], factory);
+        define(["require", "exports", "./RelatiRole", "./skills/RolePlacement", "./rules/Judgement", "./skills/RoleEffect"], factory);
     }
 })(function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var RelatiRole_1 = require("./RelatiRole");
-    var RoleForcedSkill_1 = require("./skills/RoleForcedSkill");
-    var RoleStaticSkill_1 = require("./skills/RoleStaticSkill");
     var RolePlacement_1 = require("./skills/RolePlacement");
     var Judgement_1 = require("./rules/Judgement");
+    var RoleEffect_1 = require("./skills/RoleEffect");
     var RelatiGame = /** @class */ (function () {
         function RelatiGame(board, players) {
             if (players === void 0) { players = []; }
@@ -61,7 +60,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         }
         RelatiGame.prototype.start = function () {
             return __awaiter(this, void 0, void 0, function () {
-                var _i, _a, player, player, grid, skill, card, role;
+                var _i, _a, player, player, grid, skill, card, allPlayerReady, role;
                 return __generator(this, function (_b) {
                     switch (_b.label) {
                         case 0:
@@ -104,7 +103,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
                             card = _b.sent();
                             if (!card)
                                 return [3 /*break*/, 1];
-                            if (this.turn < this.playerCount) {
+                            allPlayerReady = this.turn >= this.playerCount;
+                            if (!allPlayerReady) {
                                 if (!card.leader)
                                     return [3 /*break*/, 1];
                                 card = card.leader;
@@ -113,6 +113,13 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
                             return [4 /*yield*/, this.execute(RolePlacement_1.RolePlacement, role)];
                         case 7:
                             _b.sent();
+                            if (allPlayerReady) {
+                                if (grid.role == role && player.leader && card.points) {
+                                    player.leader.points["summon-assets"] -= card.points["summon-cost"];
+                                }
+                            }
+                            else
+                                player.leader = role;
                             return [3 /*break*/, 1];
                         case 8: return [2 /*return*/];
                     }
@@ -140,11 +147,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
                         case 1:
                             _a.sent();
                             game.steps.push({ turn: turn, role: role, skill: skill });
-                            return [4 /*yield*/, RoleForcedSkill_1.RoleForcedSkill.do({ game: game, role: role })];
+                            return [4 /*yield*/, RoleEffect_1.RoleEffect.do({ game: game })];
                         case 2:
-                            _a.sent();
-                            return [4 /*yield*/, RoleStaticSkill_1.RoleStaticSkill.do({ game: game, role: role })];
-                        case 3:
                             _a.sent();
                             return [2 /*return*/];
                     }

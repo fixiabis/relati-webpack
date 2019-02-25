@@ -2,10 +2,9 @@ import { RelatiPlayer, RelatiCard } from "./RelatiPlayer";
 import { RelatiBoard, RelatiGrid } from "./RelatiBoard";
 import { RelatiRole } from "./RelatiRole";
 import { RelatiSkill } from "./RelatiSkill";
-import { RoleForcedSkill } from "./skills/RoleForcedSkill";
-import { RoleStaticSkill } from "./skills/RoleStaticSkill";
 import { RolePlacement } from "./skills/RolePlacement";
 import { Judgement } from "./rules/Judgement";
+import { RoleEffect } from "./skills/RoleEffect";
 
 export type RelatiGameResult = "O Win" | "X Win" | "Relati";
 
@@ -76,7 +75,7 @@ export class RelatiGame {
             await this.execute(RolePlacement, role);
             
             if (allPlayerReady) {
-                if (grid.role == role) {
+                if (grid.role == role && player.leader && card.points) {
                     player.leader.points["summon-assets"] -= card.points["summon-cost"];
                 }
             } else player.leader = role;
