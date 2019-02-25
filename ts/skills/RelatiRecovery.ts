@@ -3,7 +3,7 @@ import { RelatiRole } from "../RelatiRole";
 import { RelatiPath } from "../rules/RelatiPath";
 
 export var RelatiRecovery: RelatiSkill = {
-    type: "static",
+    type: "effect",
     name: "連結恢復",
     detail: "將所有連結狀態恢復",
     async do({ game, role }) {
