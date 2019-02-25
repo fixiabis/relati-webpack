@@ -1,6 +1,7 @@
 import { RelatiSkill } from "../RelatiSkill";
+import { RelatiGame } from "../RelatiGame";
 
-export var RoleEffect: RelatiSkill = {
+export var RoleEffect: RelatiSkill<{ game: RelatiGame }> = {
     type: "effect",
     name: "角色被動技能啟動",
     detail: "任何效果發動時將會啟動",
