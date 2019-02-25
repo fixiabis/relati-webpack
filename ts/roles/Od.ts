@@ -19,7 +19,7 @@ export var Od: RelatiRoleInfo = {
         detail: "連結能力極廣的角色",
         status: ["relati-launcher"],
         points: {
-            "summon-assets": 41
+            "summon-assets": 40
         },
         params: {
             "relati-target": RelatiPathParam.Common
