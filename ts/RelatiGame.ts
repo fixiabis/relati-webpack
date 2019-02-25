@@ -93,8 +93,7 @@ export class RelatiGame {
         var { turn } = game;
         await skill.do({ game, role });
         game.steps.push({ turn, role, skill });
-        await RoleForcedSkill.do({ game, role });
-        await RoleStaticSkill.do({ game, role });
+        await RoleEffect.do({ game });
     }
 };
 
