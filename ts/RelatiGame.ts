@@ -64,14 +64,22 @@ export class RelatiGame {
             );
 
             if (!card) continue;
+            
+            var allPlayerReady = this.turn >= this.playerCount;
 
-            if (this.turn < this.playerCount) {
+            if (!allPlayerReady) {
                 if (!card.leader) continue;
                 card = card.leader;
             }
 
             var role = new RelatiRole(grid, player, card);
             await this.execute(RolePlacement, role);
+            
+            if (allPlayerReady) {
+                if (grid.role == role) {
+                    player.leader.points["summon-assets"] -= card.points["summon-cost"];
+                }
+            } else player.leader = role;
         }
     }
 
