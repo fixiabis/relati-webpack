@@ -1,4 +1,4 @@
-import { RelatiRoleInfo } from "./RelatiRole";
+import { RelatiRole, RelatiRoleInfo } from "./RelatiRole";
 import { RelatiGame } from "./RelatiGame";
 import { RelatiGrid } from "./RelatiBoard";
 import { RelatiSkill } from "./RelatiSkill";
@@ -10,6 +10,7 @@ export class RelatiPlayer {
     public deck: RelatiCard[] = [];
     public hand: RelatiCard[] = [];
     public game?: RelatiGame;
+    public leader?: RelatiRole;
     public gridSelect?: (value: RelatiGrid) => void;
     public cardSelect?: (value?: RelatiCard) => void;
     public skillSelect?: (value?: RelatiSkill) => void;
