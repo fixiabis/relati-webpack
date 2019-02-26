@@ -19,11 +19,11 @@ export var RelatiRecovery: RelatiSkill = {
             }
         }
 
-        recovery(role);
+        await recovery(role);
     }
 };
 
-function recovery(role: RelatiRole) {
+async function recovery(role: RelatiRole) {
     if (role.is("relati-repeater")) return;
     role.gain("relati-repeater");
 
@@ -34,7 +34,9 @@ function recovery(role: RelatiRole) {
         toType: "relati-source"
     });
 
-    for (var { target } of receiversTrace) {
-        if (target.role) recovery(target.role);
-    }
+    await Promise.all(receiversTrace.map(
+        ({ target }) => new Promise(function (resolve) {
+            if (target.role) return resolve(recovery(target.role));
+        })
+    ));
 }

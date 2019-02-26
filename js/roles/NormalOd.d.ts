@@ -1,2 +1,2 @@
-import { RelatiRoleInfo } from "../RelatiRole";
-export declare var NormalOd: RelatiRoleInfo;
+import { RelatiRoleInfoParam } from "../RelatiRole";
+export declare var NormalOd: RelatiRoleInfoParam;

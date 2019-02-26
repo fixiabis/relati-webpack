@@ -39,7 +39,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (v !== undefined) module.exports = v;
     }
     else if (typeof define === "function" && define.amd) {
-        define(["require", "exports", "./RelatiRole", "./skills/RolePlacement", "./rules/Judgement", "./skills/RoleEffect"], factory);
+        define(["require", "exports", "./RelatiRole", "./skills/RolePlacement", "./rules/Judgement", "./skills/RoleEffect", "./skills/RoleInfoUpdate"], factory);
     }
 })(function (require, exports) {
     "use strict";
@@ -48,6 +48,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     var RolePlacement_1 = require("./skills/RolePlacement");
     var Judgement_1 = require("./rules/Judgement");
     var RoleEffect_1 = require("./skills/RoleEffect");
+    var RoleInfoUpdate_1 = require("./skills/RoleInfoUpdate");
     var RelatiGame = /** @class */ (function () {
         function RelatiGame(board, players) {
             if (players === void 0) { players = []; }
@@ -149,6 +150,9 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
                             game.steps.push({ turn: turn, role: role, skill: skill });
                             return [4 /*yield*/, RoleEffect_1.RoleEffect.do({ game: game })];
                         case 2:
+                            _a.sent();
+                            return [4 /*yield*/, RoleInfoUpdate_1.RoleInfoUpdate.do({ game: game })];
+                        case 3:
                             _a.sent();
                             return [2 /*return*/];
                     }

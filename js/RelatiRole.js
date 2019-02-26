@@ -23,13 +23,12 @@
             this.points = {};
             this.params = {};
             this.skills = [];
-            if (typeof param == "string") {
+            if (typeof param == "string")
                 this.type = param;
-            }
             else {
                 var type = param.type, status = param.status, points = param.points, params = param.params, skills = param.skills;
                 this.type = type;
-                this.info = param;
+                Object.assign(this.info, param);
                 if (status)
                     this.gain.apply(this, status);
                 if (points)

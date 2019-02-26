@@ -15,9 +15,7 @@
         name: "奧德",
         detail: "連結能力極廣的角色",
         status: ["relati-receiver"],
-        points: {
-            "summon-cost": 1
-        },
+        points: { "summon-cost": 1 },
         params: {
             "relati-source": RelatiPath_1.RelatiPathParam.Common,
             "relati-target": RelatiPath_1.RelatiPathParam.Common
@@ -27,9 +25,7 @@
             name: "奧德",
             detail: "連結能力極廣的角色",
             status: ["relati-launcher"],
-            points: {
-                "summon-assets": 40
-            },
+            points: { "summon-assets": 40 },
             params: {
                 "relati-target": RelatiPath_1.RelatiPathParam.Common
             }

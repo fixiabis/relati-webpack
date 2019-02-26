@@ -5,7 +5,7 @@ import { RelatiInfo } from "./RelatiGame";
 
 export type RelatiRoleType = "normal" | "knight" | "wizard" | "leader";
 export interface RelatiRoleConstructor {
-    info: RelatiRoleInfo;
+    info: RelatiRoleBasicInfo;
 
     new(
         grid: RelatiGrid,
@@ -16,7 +16,7 @@ export interface RelatiRoleConstructor {
     new(
         grid: RelatiGrid,
         owner: RelatiPlayer,
-        info: RelatiRoleInfo
+        info: RelatiRoleInfoParam
     ): RelatiRole;
 }
 
@@ -27,7 +27,7 @@ export interface RelatiRole {
 
 export class RelatiRole {
     public type: RelatiRoleType;
-    public info: RelatiRoleInfo = {
+    public info: RelatiRoleBasicInfo = {
         type: "normal",
         name: "無名",
         detail: "沒有那種東西"
@@ -40,17 +40,16 @@ export class RelatiRole {
     constructor(
         public grid: RelatiGrid,
         public owner: RelatiPlayer,
-        param: RelatiRoleType | RelatiRoleInfo = "normal"
+        param: RelatiRoleInfoParam | RelatiRoleType = "normal"
     ) {
-        if (typeof param == "string") {
-            this.type = param;
-        } else {
+        if (typeof param == "string") this.type = param;
+        else {
             var { type, status, points, params, skills } = param;
 
             this.type = type;
-            this.info = param;
+            Object.assign(this.info, param);
 
-            if (status) this.gain(...status);
+            if (status) this.gain(...status as RelatiRoleStatus[]);
             if (points) Object.assign(this.points, points);
             if (params) Object.assign(this.params, params);
             if (skills) Object.assign(this.skills, skills);
@@ -102,11 +101,25 @@ export type RelatiRoleStatus = (
     RelatiRoleStatus.Relati
 );
 
-export interface RelatiRoleInfo extends RelatiInfo {
+export interface RelatiRoleBasicInfo extends RelatiInfo {
     type: RelatiRoleType;
+    status?: RelatiRole["status"];
+    points?: RelatiRole["points"];
+    params?: RelatiRole["params"];
+    skills?: RelatiRole["skills"];
+    leader?: RelatiRoleInfoParam;
+}
+
+export type RelatiRoleInfoParam = RelatiInfo & {
     status?: RelatiRoleStatus[];
     points?: RelatiRole["points"];
     params?: RelatiRole["params"];
     skills?: RelatiRole["skills"];
-    leader?: RelatiRoleInfo
-}
+    leader?: RelatiRoleInfoParam;
+} & ({
+    type: "normal" | "knight" | "wizard";
+    points: { "summon-cost": number };
+} | {
+    type: "leader";
+    points: { "summon-assets": number };
+});

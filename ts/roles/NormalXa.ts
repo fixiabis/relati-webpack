@@ -1,7 +1,7 @@
-import { RelatiRoleInfo } from "../RelatiRole";
+import { RelatiRoleInfoParam } from "../RelatiRole";
 import { RelatiPathParam } from "../rules/RelatiPath";
 
-export var NormalXa: RelatiRoleInfo = {
+export var NormalXa: RelatiRoleInfoParam = {
     type: "normal",
     name: "科薩",
     detail: "連結能力極廣的角色",

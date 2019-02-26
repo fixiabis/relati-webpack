@@ -1,2 +1,2 @@
-import { RelatiRoleInfo } from "../RelatiRole";
-export declare var NormalXa: RelatiRoleInfo;
+import { RelatiRoleInfoParam } from "../RelatiRole";
+export declare var NormalXa: RelatiRoleInfoParam;

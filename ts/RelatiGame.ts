@@ -5,6 +5,7 @@ import { RelatiSkill } from "./RelatiSkill";
 import { RolePlacement } from "./skills/RolePlacement";
 import { Judgement } from "./rules/Judgement";
 import { RoleEffect } from "./skills/RoleEffect";
+import { RoleInfoUpdate } from "./skills/RoleInfoUpdate";
 
 export type RelatiGameResult = "O Win" | "X Win" | "Relati";
 
@@ -63,7 +64,7 @@ export class RelatiGame {
             );
 
             if (!card) continue;
-            
+
             var allPlayerReady = this.turn >= this.playerCount;
 
             if (!allPlayerReady) {
@@ -73,7 +74,7 @@ export class RelatiGame {
 
             var role = new RelatiRole(grid, player, card);
             await this.execute(RolePlacement, role);
-            
+
             if (allPlayerReady) {
                 if (grid.role == role && player.leader && card.points) {
                     player.leader.points["summon-assets"] -= card.points["summon-cost"];
@@ -93,6 +94,7 @@ export class RelatiGame {
         await skill.do({ game, role });
         game.steps.push({ turn, role, skill });
         await RoleEffect.do({ game });
+        await RoleInfoUpdate.do({ game });
     }
 };
 

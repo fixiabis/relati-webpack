@@ -39,72 +39,35 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (v !== undefined) module.exports = v;
     }
     else if (typeof define === "function" && define.amd) {
-        define(["require", "exports", "../rules/RelatiPath"], factory);
+        define(["require", "exports"], factory);
     }
 })(function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    var RelatiPath_1 = require("../rules/RelatiPath");
-    exports.RelatiRecovery = {
+    exports.RoleInfoUpdate = {
         type: "effect",
-        name: "連結恢復",
-        detail: "將所有連結狀態恢復",
+        name: "角色資訊更新",
+        detail: "更新角色的資訊",
         do: function (_a) {
-            var game = _a.game, role = _a.role;
+            var game = _a.game;
             return __awaiter(this, void 0, void 0, function () {
-                var owner, grid, board, _i, _b, grid;
+                var board, _i, _b, role, info;
                 return __generator(this, function (_c) {
-                    switch (_c.label) {
-                        case 0:
-                            if (game.turn < game.playerCount)
-                                return [2 /*return*/, console.warn("有玩家尚未下子")];
-                            if (!role.is("relati-launcher"))
-                                return [2 /*return*/, console.warn("該角色不該擁有此技能")];
-                            owner = role.owner, grid = role.grid;
-                            board = grid.board;
-                            for (_i = 0, _b = board.gridList; _i < _b.length; _i++) {
-                                grid = _b[_i];
-                                if (grid.role && grid.role.owner == owner) {
-                                    grid.role.lost("relati-repeater");
-                                }
-                            }
-                            return [4 /*yield*/, recovery(role)];
-                        case 1:
-                            _c.sent();
-                            return [2 /*return*/];
+                    board = game.board;
+                    for (_i = 0, _b = board.gridList; _i < _b.length; _i++) {
+                        role = _b[_i].role;
+                        if (role) {
+                            info = role.info;
+                            Object.assign(info.status = {}, role.status);
+                            Object.assign(info.points = {}, role.points);
+                            Object.assign(info.params = {}, role.params);
+                            Object.assign(info.skills = [], role.skills);
+                        }
                     }
+                    return [2 /*return*/];
                 });
             });
         }
     };
-    function recovery(role) {
-        return __awaiter(this, void 0, void 0, function () {
-            var receiversTrace;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        if (role.is("relati-repeater"))
-                            return [2 /*return*/];
-                        role.gain("relati-repeater");
-                        receiversTrace = RelatiPath_1.RelatiPath.trace({
-                            role: role,
-                            status: ["relati-receiver"],
-                            fromType: "relati-target",
-                            toType: "relati-source"
-                        });
-                        return [4 /*yield*/, Promise.all(receiversTrace.map(function (_a) {
-                                var target = _a.target;
-                                return new Promise(function (resolve) {
-                                    if (target.role)
-                                        return resolve(recovery(target.role));
-                                });
-                            }))];
-                    case 1:
-                        _a.sent();
-                        return [2 /*return*/];
-                }
-            });
-        });
-    }
 });
-//# sourceMappingURL=RelatiRecovery.js.map
+//# sourceMappingURL=RoleInfoUpdate.js.map
