@@ -1,13 +1,8 @@
+import { RelatiInfo } from "./Relati";
 import { RelatiGrid } from "./RelatiBoard";
 import { RelatiPlayer } from "./RelatiPlayer";
 import { RelatiSkill } from "./RelatiSkill";
-import { RelatiInfo } from "./RelatiGame";
 export declare type RelatiRoleType = "normal" | "knight" | "wizard" | "leader";
-export interface RelatiRoleConstructor {
-    info: RelatiRoleBasicInfo;
-    new (grid: RelatiGrid, owner: RelatiPlayer, type?: RelatiRoleType): RelatiRole;
-    new (grid: RelatiGrid, owner: RelatiPlayer, info: RelatiRoleInfoParam): RelatiRole;
-}
 export interface RelatiRole {
     is(status: RelatiRoleStatus): boolean;
     is(status: RelatiRoleStatus[], type: "all" | "any"): boolean;

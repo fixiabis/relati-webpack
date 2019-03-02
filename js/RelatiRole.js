@@ -16,8 +16,8 @@
             this.owner = owner;
             this.info = {
                 type: "normal",
-                name: "無名",
-                detail: "沒有那種東西"
+                name: "unknown",
+                detail: "unknown"
             };
             this.status = {};
             this.points = {};
@@ -29,8 +29,11 @@
                 var type = param.type, status = param.status, points = param.points, params = param.params, skills = param.skills;
                 this.type = type;
                 Object.assign(this.info, param);
-                if (status)
+                if (status) {
                     this.gain.apply(this, status);
+                    this.info.status = {};
+                    Object.assign(this.info.status, this.status);
+                }
                 if (points)
                     Object.assign(this.points, points);
                 if (params)

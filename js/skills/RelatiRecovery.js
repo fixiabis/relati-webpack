@@ -56,10 +56,9 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
                 return __generator(this, function (_c) {
                     switch (_c.label) {
                         case 0:
-                            if (game.turn < game.playerCount)
-                                return [2 /*return*/, console.warn("有玩家尚未下子")];
-                            if (!role.is("relati-launcher"))
-                                return [2 /*return*/, console.warn("該角色不該擁有此技能")];
+                            if (game.turn < game.playerCount ||
+                                !role || !role.is("relati-launcher"))
+                                return [2 /*return*/];
                             owner = role.owner, grid = role.grid;
                             board = grid.board;
                             for (_i = 0, _b = board.gridList; _i < _b.length; _i++) {
@@ -95,8 +94,9 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
                         return [4 /*yield*/, Promise.all(receiversTrace.map(function (_a) {
                                 var target = _a.target;
                                 return new Promise(function (resolve) {
-                                    if (target.role)
-                                        return resolve(recovery(target.role));
+                                    if (!target.role)
+                                        return resolve();
+                                    recovery(target.role).then(resolve);
                                 });
                             }))];
                     case 1:

@@ -29,8 +29,7 @@
             }
         };
         RelatiPlayer.prototype.join = function (game) {
-            game.players.push(this);
-            game.playerCount = game.players.length;
+            game.addPlayer(this);
         };
         RelatiPlayer.prototype.selectCard = function (cardIndex) {
             var card = this.hand.splice(cardIndex, 1)[0];

@@ -1,4 +1,5 @@
-import { RelatiGameState, RelatiInfo } from "./RelatiGame";
+import { RelatiInfo } from "./Relati";
+import { RelatiGameState } from "./RelatiGame";
 
 export type RelatiSkillType = "action" | "effect";
 

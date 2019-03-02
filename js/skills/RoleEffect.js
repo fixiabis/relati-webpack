@@ -49,9 +49,10 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         name: "角色被動技能啟動",
         detail: "任何效果發動時將會啟動",
         do: function (_a) {
-            var game = _a.game;
+            var game = _a.game, grid = _a.grid, role = _a.role, card = _a.card, skill = _a.skill;
+            var role;
             return __awaiter(this, void 0, void 0, function () {
-                var board, _i, _b, role, _c, _d, skill;
+                var board, _i, _b, _c, _d, roleSkill;
                 return __generator(this, function (_e) {
                     switch (_e.label) {
                         case 0:
@@ -66,9 +67,9 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
                             _e.label = 2;
                         case 2:
                             if (!(_c < _d.length)) return [3 /*break*/, 5];
-                            skill = _d[_c];
-                            if (!(skill.type == "effect")) return [3 /*break*/, 4];
-                            return [4 /*yield*/, skill.do({ role: role, game: game })];
+                            roleSkill = _d[_c];
+                            if (!(roleSkill.type == "effect")) return [3 /*break*/, 4];
+                            return [4 /*yield*/, roleSkill.do({ game: game, grid: grid, role: role, card: card, skill: skill })];
                         case 3:
                             _e.sent();
                             _e.label = 4;

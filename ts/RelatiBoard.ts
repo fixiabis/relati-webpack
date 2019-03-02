@@ -8,11 +8,11 @@ export interface RelatiGrid extends Grid {
     queries(command: string): RelatiGrid[];
 }
 
-export interface RelatiGridHasRole extends RelatiGrid { role: RelatiRole; }
-
 export interface RelatiBoard extends GridBoard {
     gridList: RelatiGrid[];
     grids: RelatiGrid[][];
     query(command: string): RelatiGrid;
     queries(command: string): RelatiGrid[];
 }
+
+export type RelatiGridHasRole = RelatiGrid & { role: RelatiRole };

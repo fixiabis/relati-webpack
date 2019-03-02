@@ -1,6 +1,4 @@
-export * from "./RelatiGame";
-export * from "./RelatiBoard";
-export * from "./RelatiPlayer";
-export * from "./RelatiRule";
-export * from "./RelatiRole";
-export * from "./RelatiSkill";
+export interface RelatiInfo {
+    name: string;
+    detail: string;
+}

@@ -1,17 +1,16 @@
 import { RelatiSkill } from "../RelatiSkill";
-import { RelatiGame } from "../RelatiGame";
 
-export var RoleEffect: RelatiSkill<{ game: RelatiGame }> = {
+export var RoleEffect: RelatiSkill = {
     type: "effect",
     name: "角色被動技能啟動",
     detail: "任何效果發動時將會啟動",
-    async do({ game }) {
+    async do({ game, grid, role, card, skill }) {
         var { board } = game;
 
         for (var { role } of board.gridList) {
-            if (role) for (var skill of role.skills) {
-                if (skill.type == "effect") {
-                    await skill.do({ role, game });
+            if (role) for (var roleSkill of role.skills) {
+                if (roleSkill.type == "effect") {
+                    await roleSkill.do({ game, grid, role, card, skill });
                 }
             }
         }

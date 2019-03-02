@@ -1,7 +1,12 @@
 import { RelatiSkill } from "../RelatiSkill";
 import { Placement } from "../rules/Placement";
+import { RelatiGame } from "../RelatiGame";
+import { RelatiRole } from "../RelatiRole";
 
-export var RolePlacement: RelatiSkill = {
+export var RolePlacement: RelatiSkill<{
+    game: RelatiGame,
+    role: RelatiRole
+}> = {
     type: "action",
     name: "角色放置",
     detail: "放置角色至棋盤格",

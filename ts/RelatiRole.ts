@@ -1,24 +1,10 @@
+import { RelatiInfo } from "./Relati";
 import { RelatiGrid } from "./RelatiBoard";
 import { RelatiPlayer } from "./RelatiPlayer";
 import { RelatiSkill } from "./RelatiSkill";
-import { RelatiInfo } from "./RelatiGame";
+import { RelatiRule } from "./RelatiRule";
 
 export type RelatiRoleType = "normal" | "knight" | "wizard" | "leader";
-export interface RelatiRoleConstructor {
-    info: RelatiRoleBasicInfo;
-
-    new(
-        grid: RelatiGrid,
-        owner: RelatiPlayer,
-        type?: RelatiRoleType
-    ): RelatiRole;
-
-    new(
-        grid: RelatiGrid,
-        owner: RelatiPlayer,
-        info: RelatiRoleInfoParam
-    ): RelatiRole;
-}
 
 export interface RelatiRole {
     is(status: RelatiRoleStatus): boolean;
@@ -29,8 +15,8 @@ export class RelatiRole {
     public type: RelatiRoleType;
     public info: RelatiRoleBasicInfo = {
         type: "normal",
-        name: "無名",
-        detail: "沒有那種東西"
+        name: "unknown",
+        detail: "unknown"
     };
     public status: { [status: string]: boolean } = {};
     public points: { [points: string]: number } = {};
@@ -49,7 +35,12 @@ export class RelatiRole {
             this.type = type;
             Object.assign(this.info, param);
 
-            if (status) this.gain(...status as RelatiRoleStatus[]);
+            if (status) {
+                this.gain(...status as RelatiRoleStatus[]);
+                this.info.status = {};
+                Object.assign(this.info.status, this.status);
+            }
+
             if (points) Object.assign(this.points, points);
             if (params) Object.assign(this.params, params);
             if (skills) Object.assign(this.skills, skills);

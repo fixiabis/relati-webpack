@@ -1,46 +1,58 @@
-import { RelatiPlayer, RelatiCard } from "./RelatiPlayer";
-import { RelatiBoard, RelatiGrid } from "./RelatiBoard";
 import { RelatiRole } from "./RelatiRole";
 import { RelatiSkill } from "./RelatiSkill";
-import { RolePlacement } from "./skills/RolePlacement";
-import { Judgement } from "./rules/Judgement";
+import { RelatiBoard, RelatiGrid } from "./RelatiBoard";
+import { RelatiPlayer, RelatiCard, RelatiPlayerHasLeader } from "./RelatiPlayer";
 import { RoleEffect } from "./skills/RoleEffect";
 import { RoleInfoUpdate } from "./skills/RoleInfoUpdate";
+import { RolePlacement } from "./skills/RolePlacement";
+import { Judgement } from "./rules/Judgement";
 
 export type RelatiGameResult = "O Win" | "X Win" | "Relati";
 
+export interface RelatiGameState {
+    game: RelatiGame;
+    card?: RelatiCard;
+    role?: RelatiRole;
+    grid?: RelatiGrid;
+    skill?: RelatiSkill;
+}
+
+export interface RelatiGameStep {
+    turn: RelatiGame["turn"];
+    role: RelatiRole;
+    skill: RelatiSkill;
+}
+
 export class RelatiGame {
     public turn = 0;
-    public playerCount: number = 0;
     public steps: RelatiGameStep[] = [];
     public result?: RelatiGameResult;
 
     constructor(
         public board: RelatiBoard,
         public players: RelatiPlayer[] = []
-    ) { this.playerCount = players.length; }
+    ) { }
 
     async start() {
-        for (var player of this.players) {
-            player.game = this;
+        var game = this;
+
+        for (var player of game.players) {
+            player.game = game;
             player.shuffle();
             player.draw(5);
         }
 
-        while (!this.result) {
-            var player = this.nowPlayer;
+        while (!game.result) {
+            var player = game.nowPlayer;
             player.draw();
 
-            if (!Judgement.allow({ game: this })) {
-                this.turn++;
+            if (!Judgement.allow({ game })) {
+                game.turn++;
 
-                if (!Judgement.allow({ game: this })) {
-                    this.result = "Relati";
-                } else {
-                    this.result = (
-                        this.nowPlayer.badge + " Win"
-                    ) as RelatiGameResult;
-                }
+                if (!Judgement.allow({ game })) game.result = "Relati";
+                else game.result = (
+                    game.nowPlayer.badge + " Win"
+                ) as RelatiGameResult;
 
                 break;
             }
@@ -49,13 +61,20 @@ export class RelatiGame {
                 select => player.gridSelect = select
             );
 
+            await RoleEffect.do({ game, grid });
+            await RoleInfoUpdate.do({ game });
+
             if (grid.role && grid.role.owner == player) {
+                var { role } = grid;
                 var skill = await new Promise<maybeExists<RelatiSkill>>(
                     select => player.skillSelect = select
                 );
 
+                await RoleEffect.do({ game, role, skill });
+                await RoleInfoUpdate.do({ game });
+
                 if (!skill || skill.type != "action") continue;
-                await this.execute(skill, grid.role);
+                await game.execute(skill, grid.role);
                 continue;
             }
 
@@ -63,9 +82,12 @@ export class RelatiGame {
                 select => player.cardSelect = select
             );
 
+            await RoleEffect.do({ game, card });
+            await RoleInfoUpdate.do({ game });
+
             if (!card) continue;
 
-            var allPlayerReady = this.turn >= this.playerCount;
+            var allPlayerReady = game.turn >= game.playerCount;
 
             if (!allPlayerReady) {
                 if (!card.leader) continue;
@@ -73,43 +95,35 @@ export class RelatiGame {
             }
 
             var role = new RelatiRole(grid, player, card);
-            await this.execute(RolePlacement, role);
+            await game.execute(RolePlacement, role);
 
             if (allPlayerReady) {
-                if (grid.role == role && player.leader && card.points) {
-                    player.leader.points["summon-assets"] -= card.points["summon-cost"];
+                if (grid.role == role) {
+                    (
+                        player as RelatiPlayerHasLeader
+                    ).leader.points["summon-assets"] -= card.points["summon-cost"];
                 }
             } else player.leader = role;
         }
     }
 
+    get playerCount() { return this.players.length; }
+
     get nowPlayer() {
         return this.players[this.turn % this.playerCount];
     }
 
+    addPlayer(player: RelatiPlayer) { this.players.push(player); }
+
     async execute(skill: RelatiSkill, role: RelatiRole) {
         var game = this;
-        if (game.nowPlayer != role.owner) return console.warn("尚未輪到該玩家");
+        if (game.nowPlayer != role.owner) return;
+
         var { turn } = game;
         await skill.do({ game, role });
         game.steps.push({ turn, role, skill });
+
         await RoleEffect.do({ game });
         await RoleInfoUpdate.do({ game });
     }
-};
-
-export interface RelatiGameState {
-    game: RelatiGame;
-    role: RelatiRole;
-};
-
-export interface RelatiGameStep {
-    turn: RelatiGame["turn"];
-    role: RelatiRole;
-    skill: RelatiSkill;
-};
-
-export interface RelatiInfo {
-    name: string;
-    detail: string;
-};
+}

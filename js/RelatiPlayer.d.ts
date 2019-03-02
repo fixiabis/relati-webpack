@@ -21,3 +21,6 @@ export declare class RelatiPlayer {
     selectGrid(grid: RelatiGrid): void;
     selectSkill(skill: RelatiSkill): void;
 }
+export declare type RelatiPlayerHasLeader = RelatiPlayer & {
+    leader: RelatiRole;
+};

@@ -33,8 +33,7 @@ export class RelatiPlayer {
     }
 
     join(game: RelatiGame) {
-        game.players.push(this);
-        game.playerCount = game.players.length;
+        game.addPlayer(this);
     }
 
     selectCard(cardIndex: number) {
@@ -60,3 +59,5 @@ export class RelatiPlayer {
         }
     }
 }
+
+export type RelatiPlayerHasLeader = RelatiPlayer & { leader: RelatiRole };

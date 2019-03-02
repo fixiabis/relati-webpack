@@ -1,5 +1,5 @@
 import { RelatiRuleTrace, RelatiRuleTraceable } from "../RelatiRule";
-import { RelatiGrid } from "../RelatiBoard";
+import { RelatiGrid, RelatiGridHasRole } from "../RelatiBoard";
 import { RelatiRoleStatus, RelatiRole } from "../RelatiRole";
 import { RelatiPlayer } from "../RelatiPlayer";
 import { Grid } from "../base/GridBoard";
@@ -18,6 +18,7 @@ export var RelatiPath: RelatiPathRule = {
     detail: "判斷是否能夠連結",
     allow({ role, status, fromType, toType }) {
         var { owner } = role;
+
         var paths = RelatiGridPathRouter(
             role.params[fromType],
             role.grid
@@ -28,7 +29,7 @@ export var RelatiPath: RelatiPathRule = {
 
             if (
                 reliable(target, owner, status) &&
-                relatiable(target, role.grid, toType)
+                relatiable(target as RelatiGridHasRole, role.grid, toType)
             ) {
                 if (unobstructed(routes)) return true;
             }
@@ -50,7 +51,7 @@ export var RelatiPath: RelatiPathRule = {
 
             if (
                 reliable(target, owner, status) &&
-                relatiable(target, role.grid, toType)
+                relatiable(target as RelatiGridHasRole, role.grid, toType)
             ) {
                 if (unobstructed(routes)) traces.push(path);
             }
@@ -73,9 +74,9 @@ function reliable(
     );
 }
 
-function relatiable(fromGrid: RelatiGrid, toGrid: RelatiGrid, type: string) {
+function relatiable(fromGrid: RelatiGridHasRole, toGrid: RelatiGrid, type: string) {
     var paths = RelatiGridPathRouter(
-        (fromGrid.role as RelatiRole).params[type],
+        fromGrid.role.params[type],
         fromGrid
     );
 

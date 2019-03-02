@@ -1,7 +1,7 @@
 import { RelatiSkill } from "../RelatiSkill";
 import { RelatiGame } from "../RelatiGame";
 
-export var RoleInfoUpdate: RelatiSkill<{ game: RelatiGame }> = {
+export var RoleInfoUpdate: RelatiSkill = {
     type: "effect",
     name: "角色資訊更新",
     detail: "更新角色的資訊",
