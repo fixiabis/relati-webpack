@@ -1,24 +1,24 @@
-import { RelatiRoleInfoParam } from "../RelatiRole";
-import { RelatiPathParam } from "../rules/RelatiPath";
+import { RelatiRoleInfo } from "../RelatiRole";
+import { RelatiProtocolParam } from "../rules/RelatiProtocol";
 
-export var NormalOd: RelatiRoleInfoParam = {
+export var NormalOd: RelatiRoleInfo = {
     type: "normal",
     name: "奧德",
     detail: "連結能力極廣的角色",
-    status: ["relati-receiver"],
+    gain: ["relati-receiver"],
     points: { "summon-cost": 1 },
     params: {
-        "relati-source": RelatiPathParam.Common,
-        "relati-target": RelatiPathParam.Common
+        "relati-source": RelatiProtocolParam.Common,
+        "relati-target": RelatiProtocolParam.Common
     },
     leader: {
         type: "leader",
         name: "奧德",
         detail: "連結能力極廣的角色",
-        status: ["relati-launcher"],
+        gain: ["relati-launcher"],
         points: { "summon-assets": 40 },
         params: {
-            "relati-target": RelatiPathParam.Common
+            "relati-target": RelatiProtocolParam.Common
         }
     }
 };

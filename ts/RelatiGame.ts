@@ -1,37 +1,40 @@
+import { RelatiBoard, RelatiGrid } from "./RelatiBoard";
+import { RelatiPlayer, RelatiCard } from "./RelatiPlayer";
 import { RelatiRole } from "./RelatiRole";
 import { RelatiSkill } from "./RelatiSkill";
-import { RelatiBoard, RelatiGrid } from "./RelatiBoard";
-import { RelatiPlayer, RelatiCard, RelatiPlayerHasLeader } from "./RelatiPlayer";
+import { GridBoard } from "./base/GridBoard";
 import { RoleEffect } from "./skills/RoleEffect";
-import { RoleInfoUpdate } from "./skills/RoleInfoUpdate";
-import { RolePlacement } from "./skills/RolePlacement";
 import { Judgement } from "./rules/Judgement";
+import { RoleSummon } from "./skills/RoleSummon";
 
-export type RelatiGameResult = "O Win" | "X Win" | "Relati";
+export type RelatiGameState = {
+    game: RelatiGame,
+    grid?: RelatiGrid,
+    card?: RelatiCard,
+    role?: RelatiRole,
+    skill?: RelatiSkill
+};
 
-export interface RelatiGameState {
-    game: RelatiGame;
-    card?: RelatiCard;
-    role?: RelatiRole;
-    grid?: RelatiGrid;
-    skill?: RelatiSkill;
-}
-
-export interface RelatiGameStep {
-    turn: RelatiGame["turn"];
-    role: RelatiRole;
-    skill: RelatiSkill;
-}
+export type RelatiGameStep = (
+    { grid: RelatiGrid } |
+    { card: RelatiCard } |
+    { role: RelatiRole, skill: RelatiSkill }
+) & { turn: number };
 
 export class RelatiGame {
     public turn = 0;
     public steps: RelatiGameStep[] = [];
-    public result?: RelatiGameResult;
+    public board: RelatiBoard;
+    public result?: string;
+    public gridSelectable: boolean = false;
+    public cardSelectable: boolean = false;
+    public skillSelectable: boolean = false;
+    public skillExecutable: boolean = false;
 
     constructor(
-        public board: RelatiBoard,
+        size: number = 5,
         public players: RelatiPlayer[] = []
-    ) { }
+    ) { this.board = new GridBoard(size, size) as RelatiBoard; }
 
     async start() {
         var game = this;
@@ -43,87 +46,76 @@ export class RelatiGame {
         }
 
         while (!game.result) {
-            var player = game.nowPlayer;
+            var { nowPlayer: player } = game;
             player.draw();
 
             if (!Judgement.allow({ game })) {
                 game.turn++;
 
-                if (!Judgement.allow({ game })) game.result = "Relati";
-                else game.result = (
-                    game.nowPlayer.badge + " Win"
-                ) as RelatiGameResult;
+                if (!Judgement.allow({ game })) game.result = "Draw";
+                else game.result = game.nowPlayer.name + " Win";
 
                 break;
             }
 
-            var grid = await new Promise<RelatiGrid>(
-                select => player.gridSelect = select
-            );
+            game.gridSelectable = false;
+            game.cardSelectable = false;
+            game.skillSelectable = false;
+            game.skillExecutable = false;
 
-            await RoleEffect.do({ game, grid });
-            await RoleInfoUpdate.do({ game });
-
-            if (grid.role && grid.role.owner == player) {
-                var { role } = grid;
-                var skill = await new Promise<maybeExists<RelatiSkill>>(
-                    select => player.skillSelect = select
-                );
-
-                await RoleEffect.do({ game, role, skill });
-                await RoleInfoUpdate.do({ game });
-
-                if (!skill || skill.type != "action") continue;
-                await game.execute(skill, grid.role);
-                continue;
-            }
-
-            var card = await new Promise<maybeExists<RelatiCard>>(
-                select => player.cardSelect = select
-            );
-
-            await RoleEffect.do({ game, card });
-            await RoleInfoUpdate.do({ game });
-
-            if (!card) continue;
-
-            var allPlayerReady = game.turn >= game.playerCount;
-
-            if (!allPlayerReady) {
-                if (!card.leader) continue;
-                card = card.leader;
-            }
-
-            var role = new RelatiRole(grid, player, card);
-            await game.execute(RolePlacement, role);
-
-            if (allPlayerReady) {
-                if (grid.role == role) {
-                    (
-                        player as RelatiPlayerHasLeader
-                    ).leader.points["summon-assets"] -= card.points["summon-cost"];
-                }
-            } else player.leader = role;
+            await game.round(player);
         }
     }
 
-    get playerCount() { return this.players.length; }
+    async round(player: RelatiPlayer) {
+        var game = this;
+        var { allPlayerReady } = this;
+        var role: maybeExists<RelatiRole>;
+        var grid: maybeExists<RelatiGrid>;
+        var card: maybeExists<RelatiCard>;
+        var skill: maybeExists<RelatiSkill>;
 
-    get nowPlayer() {
-        return this.players[this.turn % this.playerCount];
+        do {
+            grid = await new Promise<RelatiGrid>(select => player.gridSelect = select);
+            game.gridSelectable = grid != undefined;
+            if (game.gridSelectable) RoleEffect.do({ game, grid });
+        } while (!game.gridSelectable);
+
+        if (grid.role) {
+            do {
+                skill = await new Promise<RelatiSkill>(select => player.skillSelect = select);
+                game.skillSelectable = skill != undefined;
+                if (game.skillSelectable) RoleEffect.do({ game, role: grid.role, skill });
+            } while (!game.skillSelectable);
+
+            role = grid.role;
+        } else {
+            do {
+                card = await new Promise<RelatiCard>(select => player.cardSelect = select);
+                if (allPlayerReady && card) card = card.leader;
+                game.cardSelectable = card != undefined;
+                if (game.cardSelectable) RoleEffect.do({ game, card });
+            } while (!game.cardSelectable);
+
+            role = new RelatiRole(grid, player, card);
+            skill = RoleSummon;
+        }
+
+        game.execute(skill, role);
     }
 
-    addPlayer(player: RelatiPlayer) { this.players.push(player); }
+    addPlayer(player: RelatiPlayer) {
+        this.players.push(player);
+    }
+
+    get playerCount() { return this.players.length; }
+    get nowPlayer() { return this.players[this.turn % this.playerCount]; }
+    get allPlayerReady() { return this.turn >= this.playerCount; }
 
     async execute(skill: RelatiSkill, role: RelatiRole) {
-        var game = this;
-        if (game.nowPlayer != role.owner) return;
-
-        var { turn } = game;
-        await skill.do({ game, role });
-        game.steps.push({ turn, role, skill });
-
-        await RoleEffect.do({ game });
-        await RoleInfoUpdate.do({ game });
+        if (this.nowPlayer != role.owner) return;
+        await skill.do({ game: this, role });
+        await RoleEffect.do({ game: this, role });
+        this.turn++;
     }
 }

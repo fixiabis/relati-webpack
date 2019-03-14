@@ -1,30 +1,40 @@
-import { RelatiRole } from "./RelatiRole";
-import { RelatiSkill } from "./RelatiSkill";
 import { RelatiBoard, RelatiGrid } from "./RelatiBoard";
 import { RelatiPlayer, RelatiCard } from "./RelatiPlayer";
-export declare type RelatiGameResult = "O Win" | "X Win" | "Relati";
-export interface RelatiGameState {
+import { RelatiRole } from "./RelatiRole";
+import { RelatiSkill } from "./RelatiSkill";
+export declare type RelatiGameState = {
     game: RelatiGame;
+    grid?: RelatiGrid;
     card?: RelatiCard;
     role?: RelatiRole;
-    grid?: RelatiGrid;
     skill?: RelatiSkill;
-}
-export interface RelatiGameStep {
-    turn: RelatiGame["turn"];
+};
+export declare type RelatiGameStep = ({
+    grid: RelatiGrid;
+} | {
+    card: RelatiCard;
+} | {
     role: RelatiRole;
     skill: RelatiSkill;
-}
+}) & {
+    turn: number;
+};
 export declare class RelatiGame {
-    board: RelatiBoard;
     players: RelatiPlayer[];
     turn: number;
     steps: RelatiGameStep[];
-    result?: RelatiGameResult;
-    constructor(board: RelatiBoard, players?: RelatiPlayer[]);
+    board: RelatiBoard;
+    result?: string;
+    gridSelectable: boolean;
+    cardSelectable: boolean;
+    skillSelectable: boolean;
+    skillExecutable: boolean;
+    constructor(size?: number, players?: RelatiPlayer[]);
     start(): Promise<void>;
+    round(player: RelatiPlayer): Promise<void>;
+    addPlayer(player: RelatiPlayer): void;
     readonly playerCount: number;
     readonly nowPlayer: RelatiPlayer;
-    addPlayer(player: RelatiPlayer): void;
+    readonly allPlayerReady: boolean;
     execute(skill: RelatiSkill, role: RelatiRole): Promise<void>;
 }

@@ -45,19 +45,20 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var Placement_1 = require("../rules/Placement");
-    exports.RolePlacement = {
+    exports.RoleSummon = {
         type: "action",
-        name: "角色放置",
+        name: "召喚角色",
         detail: "放置角色至棋盤格",
         do: function (_a) {
-            var game = _a.game, role = _a.role;
+            var game = _a.game, allPlayerReady = _a.game.allPlayerReady, role = _a.role, _b = _a.role, grid = _b.grid, leader = _b.owner.leader;
             return __awaiter(this, void 0, void 0, function () {
-                var grid;
-                return __generator(this, function (_b) {
-                    grid = role.grid;
-                    if (Placement_1.Placement.allow({ role: role, game: game })) {
-                        grid.role = role;
-                        game.turn++;
+                return __generator(this, function (_c) {
+                    if (!Placement_1.Placement.allow({ game: game, role: role }))
+                        return [2 /*return*/];
+                    grid.role = role;
+                    game.turn++;
+                    if (allPlayerReady) {
+                        leader.points["summon-assets"] -= (role.points["summon-cost"]);
                     }
                     return [2 /*return*/];
                 });
@@ -65,4 +66,4 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         }
     };
 });
-//# sourceMappingURL=RolePlacement.js.map
+//# sourceMappingURL=RoleSummon.js.map

@@ -1,9 +1,9 @@
 import { RelatiSkill } from "../RelatiSkill";
 import { RelatiRole } from "../RelatiRole";
 import { RelatiGame } from "../RelatiGame";
-export interface RelatiRecoveryState {
+export interface RelatiDestoryState {
     game: RelatiGame;
     role: RelatiRole;
 }
-export declare type RelatiRecoverySkill = RelatiSkill<RelatiRecoveryState>;
-export declare let RelatiRecovery: RelatiRecoverySkill;
+export declare type RelatiDestorySkill = RelatiSkill<RelatiDestoryState>;
+export declare let RelatiDestory: RelatiDestorySkill;

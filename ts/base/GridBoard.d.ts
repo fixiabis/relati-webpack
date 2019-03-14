@@ -21,8 +21,11 @@ declare class GridQueryCache {
 }
 /** 棋盤格 */
 export declare class Grid extends GridQueryCache {
+    /** 所屬棋盤 */
     readonly board: GridBoard;
+    /** X軸座標 */
     readonly x: number;
+    /** Y軸座標 */
     readonly y: number;
     /** 座標(英數) */
     coordinate: string;
@@ -36,7 +39,13 @@ export declare class Grid extends GridQueryCache {
      * @param x 數學X座標
      * @param y 數學Y座標
      */
-    constructor(board: GridBoard, x: number, y: number);
+    constructor(
+    /** 所屬棋盤 */
+    board: GridBoard, 
+    /** X軸座標 */
+    x: number, 
+    /** Y軸座標 */
+    y: number);
     /**
      * 使用相對座標進行棋盤格查詢，查詢後暫存，
      * 若下次有相同查詢請求時將直接返回查詢結果

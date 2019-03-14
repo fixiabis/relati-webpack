@@ -44,45 +44,26 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 })(function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.RoleForcedSkill = {
-        type: "forced",
-        name: "角色強制技能啟動",
-        detail: "任何效果發動時將會啟動",
+    exports.RelatiDestory = {
+        type: "effect",
+        name: "連結破壞",
+        detail: "將對方所有角色的連結轉發機能撤銷",
+        priority: 0,
         do: function (_a) {
-            var game = _a.game;
+            var owner = _a.role.owner, gridList = _a.game.board.gridList;
             return __awaiter(this, void 0, void 0, function () {
-                var board, _i, _b, role, _c, _d, skill;
-                return __generator(this, function (_e) {
-                    switch (_e.label) {
-                        case 0:
-                            board = game.board;
-                            _i = 0, _b = board.gridList;
-                            _e.label = 1;
-                        case 1:
-                            if (!(_i < _b.length)) return [3 /*break*/, 6];
-                            role = _b[_i].role;
-                            if (!role) return [3 /*break*/, 5];
-                            _c = 0, _d = role.skills;
-                            _e.label = 2;
-                        case 2:
-                            if (!(_c < _d.length)) return [3 /*break*/, 5];
-                            skill = _d[_c];
-                            if (!(skill.type == "forced")) return [3 /*break*/, 4];
-                            return [4 /*yield*/, skill.do({ role: role, game: game })];
-                        case 3:
-                            _e.sent();
-                            _e.label = 4;
-                        case 4:
-                            _c++;
-                            return [3 /*break*/, 2];
-                        case 5:
-                            _i++;
-                            return [3 /*break*/, 1];
-                        case 6: return [2 /*return*/];
+                var _i, gridList_1, role;
+                return __generator(this, function (_b) {
+                    for (_i = 0, gridList_1 = gridList; _i < gridList_1.length; _i++) {
+                        role = gridList_1[_i].role;
+                        if (role && role.owner !== owner) {
+                            role.lost("relati-repeater");
+                        }
                     }
+                    return [2 /*return*/];
                 });
             });
         }
     };
 });
-//# sourceMappingURL=RoleForcedSkill.js.map
+//# sourceMappingURL=RelatiDestory.js.map

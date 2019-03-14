@@ -10,8 +10,8 @@
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var RelatiPlayer = /** @class */ (function () {
-        function RelatiPlayer(badge) {
-            this.badge = badge;
+        function RelatiPlayer(name) {
+            this.name = name;
             this.deck = [];
             this.hand = [];
         }
@@ -29,6 +29,7 @@
             }
         };
         RelatiPlayer.prototype.join = function (game) {
+            this.game = game;
             game.addPlayer(this);
         };
         RelatiPlayer.prototype.selectCard = function (cardIndex) {

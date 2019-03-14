@@ -1,3 +1,4 @@
+/** @overview 擴充棋盤資訊 */
 (function (factory) {
     if (typeof module === "object" && typeof module.exports === "object") {
         var v = factory(require, exports);

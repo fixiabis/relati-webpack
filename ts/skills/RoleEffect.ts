@@ -1,18 +1,52 @@
 import { RelatiSkill } from "../RelatiSkill";
+import { RelatiGame } from "../RelatiGame";
+import { RelatiRole } from "../RelatiRole";
+import { RelatiGrid } from "../RelatiBoard";
+import { RelatiCard } from "../RelatiPlayer";
 
-export var RoleEffect: RelatiSkill = {
-    type: "effect",
-    name: "角色被動技能啟動",
-    detail: "任何效果發動時將會啟動",
-    async do({ game, grid, role, card, skill }) {
-        var { board } = game;
+export interface RoleEffectState {
+    game: RelatiGame;
+    grid?: RelatiGrid;
+    role?: RelatiRole;
+    card?: RelatiCard;
+    skill?: RelatiSkill;
+}
 
-        for (var { role } of board.gridList) {
-            if (role) for (var roleSkill of role.skills) {
-                if (roleSkill.type == "effect") {
-                    await roleSkill.do({ game, grid, role, card, skill });
-                }
-            }
+export type RoleEffectSkill = RelatiSkill<RoleEffectState>;
+
+export let RoleEffect: RoleEffectSkill = {
+    type: "action",
+    name: "角色被動技能",
+    detail: "觸發所有被動技能",
+    async do({ game, game: { board: { gridList } }, grid, role, card, skill }) {
+        var skillPriority = 0;
+
+        do {
+            var skillActived = false;
+
+            await Promise.all(gridList.map(grid => new Promise(resolve => {
+                if (!grid.role) return resolve();
+
+                Promise.all(grid.role.skills.map(skill => new Promise<void>(skillExecuted => {
+                    if (skill.type != "effect" || skill.priority != skillPriority) {
+                        return skillExecuted();
+                    }
+
+                    skillActived = true;
+                    skill.do({ game, grid, role, card, skill }).then(skillExecuted);
+                    skillExecuted();
+                }))).then(resolve);
+            })));
+
+            skillPriority++;
+        } while (skillActived);
+
+        for (var { role } of gridList) {
+            if (!role) continue;
+            Object.assign(role.info.status, role.status);
+            Object.assign(role.info.points, role.points);
+            Object.assign(role.info.params, role.params);
+            Object.assign(role.info.skills, role.skills);
         }
     }
 };

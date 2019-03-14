@@ -11,40 +11,31 @@ export declare class RelatiRole {
     grid: RelatiGrid;
     owner: RelatiPlayer;
     type: RelatiRoleType;
-    info: RelatiRoleBasicInfo;
-    status: {
-        [status: string]: boolean;
-    };
-    points: {
-        [points: string]: number;
-    };
-    params: {
-        [params: string]: string;
-    };
+    info: RelatiRoleInfo;
+    name: string;
+    detail: string;
+    status: JSONData<boolean>;
+    points: JSONData<number>;
+    params: JSONData<string>;
     skills: RelatiSkill[];
-    constructor(grid: RelatiGrid, owner: RelatiPlayer, param?: RelatiRoleInfoParam | RelatiRoleType);
+    constructor(grid: RelatiGrid, owner: RelatiPlayer, param?: RelatiRoleInfo | RelatiRoleType);
     gain(...status: RelatiRoleStatus[]): void;
     lost(...status: RelatiRoleStatus[]): void;
 }
 export declare namespace RelatiRoleStatus {
     type Relati = ("relati-launcher" | "relati-repeater" | "relati-receiver");
-    var Relati: string[];
+    let Relati: string[];
 }
 export declare type RelatiRoleStatus = (RelatiRoleStatus.Relati);
-export interface RelatiRoleBasicInfo extends RelatiInfo {
+export declare type RelatiRoleInfo = RelatiInfo & {
     type: RelatiRoleType;
+    gain?: RelatiRoleStatus[];
+    lost?: RelatiRoleStatus[];
     status?: RelatiRole["status"];
     points?: RelatiRole["points"];
     params?: RelatiRole["params"];
     skills?: RelatiRole["skills"];
-    leader?: RelatiRoleInfoParam;
-}
-export declare type RelatiRoleInfoParam = RelatiInfo & {
-    status?: RelatiRoleStatus[];
-    points?: RelatiRole["points"];
-    params?: RelatiRole["params"];
-    skills?: RelatiRole["skills"];
-    leader?: RelatiRoleInfoParam;
+    leader?: RelatiRoleInfo;
 } & ({
     type: "normal" | "knight" | "wizard";
     points: {

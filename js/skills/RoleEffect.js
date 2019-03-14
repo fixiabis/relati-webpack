@@ -45,41 +45,51 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.RoleEffect = {
-        type: "effect",
-        name: "角色被動技能啟動",
-        detail: "任何效果發動時將會啟動",
+        type: "action",
+        name: "角色被動技能",
+        detail: "觸發所有被動技能",
         do: function (_a) {
-            var game = _a.game, grid = _a.grid, role = _a.role, card = _a.card, skill = _a.skill;
+            var game = _a.game, gridList = _a.game.board.gridList, grid = _a.grid, role = _a.role, card = _a.card, skill = _a.skill;
             var role;
             return __awaiter(this, void 0, void 0, function () {
-                var board, _i, _b, _c, _d, roleSkill;
-                return __generator(this, function (_e) {
-                    switch (_e.label) {
+                var skillPriority, skillActived, _i, gridList_1;
+                return __generator(this, function (_b) {
+                    switch (_b.label) {
                         case 0:
-                            board = game.board;
-                            _i = 0, _b = board.gridList;
-                            _e.label = 1;
+                            skillPriority = 0;
+                            _b.label = 1;
                         case 1:
-                            if (!(_i < _b.length)) return [3 /*break*/, 6];
-                            role = _b[_i].role;
-                            if (!role) return [3 /*break*/, 5];
-                            _c = 0, _d = role.skills;
-                            _e.label = 2;
+                            skillActived = false;
+                            return [4 /*yield*/, Promise.all(gridList.map(function (grid) { return new Promise(function (resolve) {
+                                    if (!grid.role)
+                                        return resolve();
+                                    Promise.all(grid.role.skills.map(function (skill) { return new Promise(function (skillExecuted) {
+                                        if (skill.type != "effect" || skill.priority != skillPriority) {
+                                            return skillExecuted();
+                                        }
+                                        skillActived = true;
+                                        skill.do({ game: game, grid: grid, role: role, card: card, skill: skill }).then(skillExecuted);
+                                        skillExecuted();
+                                    }); })).then(resolve);
+                                }); }))];
                         case 2:
-                            if (!(_c < _d.length)) return [3 /*break*/, 5];
-                            roleSkill = _d[_c];
-                            if (!(roleSkill.type == "effect")) return [3 /*break*/, 4];
-                            return [4 /*yield*/, roleSkill.do({ game: game, grid: grid, role: role, card: card, skill: skill })];
+                            _b.sent();
+                            skillPriority++;
+                            _b.label = 3;
                         case 3:
-                            _e.sent();
-                            _e.label = 4;
+                            if (skillActived) return [3 /*break*/, 1];
+                            _b.label = 4;
                         case 4:
-                            _c++;
-                            return [3 /*break*/, 2];
-                        case 5:
-                            _i++;
-                            return [3 /*break*/, 1];
-                        case 6: return [2 /*return*/];
+                            for (_i = 0, gridList_1 = gridList; _i < gridList_1.length; _i++) {
+                                role = gridList_1[_i].role;
+                                if (!role)
+                                    continue;
+                                Object.assign(role.info.status, role.status);
+                                Object.assign(role.info.points, role.points);
+                                Object.assign(role.info.params, role.params);
+                                Object.assign(role.info.skills, role.skills);
+                            }
+                            return [2 /*return*/];
                     }
                 });
             });

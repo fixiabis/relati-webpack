@@ -39,27 +39,32 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (v !== undefined) module.exports = v;
     }
     else if (typeof define === "function" && define.amd) {
-        define(["require", "exports", "./RelatiRole", "./skills/RoleEffect", "./skills/RoleInfoUpdate", "./skills/RolePlacement", "./rules/Judgement"], factory);
+        define(["require", "exports", "./RelatiRole", "./base/GridBoard", "./skills/RoleEffect", "./rules/Judgement", "./skills/RoleSummon"], factory);
     }
 })(function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var RelatiRole_1 = require("./RelatiRole");
+    var GridBoard_1 = require("./base/GridBoard");
     var RoleEffect_1 = require("./skills/RoleEffect");
-    var RoleInfoUpdate_1 = require("./skills/RoleInfoUpdate");
-    var RolePlacement_1 = require("./skills/RolePlacement");
     var Judgement_1 = require("./rules/Judgement");
+    var RoleSummon_1 = require("./skills/RoleSummon");
     var RelatiGame = /** @class */ (function () {
-        function RelatiGame(board, players) {
+        function RelatiGame(size, players) {
+            if (size === void 0) { size = 5; }
             if (players === void 0) { players = []; }
-            this.board = board;
             this.players = players;
             this.turn = 0;
             this.steps = [];
+            this.gridSelectable = false;
+            this.cardSelectable = false;
+            this.skillSelectable = false;
+            this.skillExecutable = false;
+            this.board = new GridBoard_1.GridBoard(size, size);
         }
         RelatiGame.prototype.start = function () {
             return __awaiter(this, void 0, void 0, function () {
-                var game, _i, _a, player, player, grid, role, skill, card, allPlayerReady, role;
+                var game, _i, _a, player, player;
                 return __generator(this, function (_b) {
                     switch (_b.label) {
                         case 0:
@@ -72,76 +77,90 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
                             }
                             _b.label = 1;
                         case 1:
-                            if (!!game.result) return [3 /*break*/, 14];
+                            if (!!game.result) return [3 /*break*/, 3];
                             player = game.nowPlayer;
                             player.draw();
                             if (!Judgement_1.Judgement.allow({ game: game })) {
                                 game.turn++;
                                 if (!Judgement_1.Judgement.allow({ game: game }))
-                                    game.result = "Relati";
+                                    game.result = "Draw";
                                 else
-                                    game.result = (game.nowPlayer.badge + " Win");
-                                return [3 /*break*/, 14];
+                                    game.result = game.nowPlayer.name + " Win";
+                                return [3 /*break*/, 3];
                             }
-                            return [4 /*yield*/, new Promise(function (select) { return player.gridSelect = select; })];
+                            game.gridSelectable = false;
+                            game.cardSelectable = false;
+                            game.skillSelectable = false;
+                            game.skillExecutable = false;
+                            return [4 /*yield*/, game.round(player)];
                         case 2:
-                            grid = _b.sent();
-                            return [4 /*yield*/, RoleEffect_1.RoleEffect.do({ game: game, grid: grid })];
-                        case 3:
-                            _b.sent();
-                            return [4 /*yield*/, RoleInfoUpdate_1.RoleInfoUpdate.do({ game: game })];
-                        case 4:
-                            _b.sent();
-                            if (!(grid.role && grid.role.owner == player)) return [3 /*break*/, 9];
-                            role = grid.role;
-                            return [4 /*yield*/, new Promise(function (select) { return player.skillSelect = select; })];
-                        case 5:
-                            skill = _b.sent();
-                            return [4 /*yield*/, RoleEffect_1.RoleEffect.do({ game: game, role: role, skill: skill })];
-                        case 6:
-                            _b.sent();
-                            return [4 /*yield*/, RoleInfoUpdate_1.RoleInfoUpdate.do({ game: game })];
-                        case 7:
-                            _b.sent();
-                            if (!skill || skill.type != "action")
-                                return [3 /*break*/, 1];
-                            return [4 /*yield*/, game.execute(skill, grid.role)];
-                        case 8:
                             _b.sent();
                             return [3 /*break*/, 1];
-                        case 9: return [4 /*yield*/, new Promise(function (select) { return player.cardSelect = select; })];
-                        case 10:
-                            card = _b.sent();
-                            return [4 /*yield*/, RoleEffect_1.RoleEffect.do({ game: game, card: card })];
-                        case 11:
-                            _b.sent();
-                            return [4 /*yield*/, RoleInfoUpdate_1.RoleInfoUpdate.do({ game: game })];
-                        case 12:
-                            _b.sent();
-                            if (!card)
-                                return [3 /*break*/, 1];
-                            allPlayerReady = game.turn >= game.playerCount;
-                            if (!allPlayerReady) {
-                                if (!card.leader)
-                                    return [3 /*break*/, 1];
-                                card = card.leader;
-                            }
-                            role = new RelatiRole_1.RelatiRole(grid, player, card);
-                            return [4 /*yield*/, game.execute(RolePlacement_1.RolePlacement, role)];
-                        case 13:
-                            _b.sent();
-                            if (allPlayerReady) {
-                                if (grid.role == role) {
-                                    player.leader.points["summon-assets"] -= card.points["summon-cost"];
-                                }
-                            }
-                            else
-                                player.leader = role;
-                            return [3 /*break*/, 1];
-                        case 14: return [2 /*return*/];
+                        case 3: return [2 /*return*/];
                     }
                 });
             });
+        };
+        RelatiGame.prototype.round = function (player) {
+            return __awaiter(this, void 0, void 0, function () {
+                var game, allPlayerReady, role, grid, card, skill;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0:
+                            game = this;
+                            allPlayerReady = this.allPlayerReady;
+                            _a.label = 1;
+                        case 1: return [4 /*yield*/, new Promise(function (select) { return player.gridSelect = select; })];
+                        case 2:
+                            grid = _a.sent();
+                            game.gridSelectable = grid != undefined;
+                            if (game.gridSelectable)
+                                RoleEffect_1.RoleEffect.do({ game: game, grid: grid });
+                            _a.label = 3;
+                        case 3:
+                            if (!game.gridSelectable) return [3 /*break*/, 1];
+                            _a.label = 4;
+                        case 4:
+                            if (!grid.role) return [3 /*break*/, 9];
+                            _a.label = 5;
+                        case 5: return [4 /*yield*/, new Promise(function (select) { return player.skillSelect = select; })];
+                        case 6:
+                            skill = _a.sent();
+                            game.skillSelectable = skill != undefined;
+                            if (game.skillSelectable)
+                                RoleEffect_1.RoleEffect.do({ game: game, role: grid.role, skill: skill });
+                            _a.label = 7;
+                        case 7:
+                            if (!game.skillSelectable) return [3 /*break*/, 5];
+                            _a.label = 8;
+                        case 8:
+                            role = grid.role;
+                            return [3 /*break*/, 13];
+                        case 9: return [4 /*yield*/, new Promise(function (select) { return player.cardSelect = select; })];
+                        case 10:
+                            card = _a.sent();
+                            if (allPlayerReady && card)
+                                card = card.leader;
+                            game.cardSelectable = card != undefined;
+                            if (game.cardSelectable)
+                                RoleEffect_1.RoleEffect.do({ game: game, card: card });
+                            _a.label = 11;
+                        case 11:
+                            if (!game.cardSelectable) return [3 /*break*/, 9];
+                            _a.label = 12;
+                        case 12:
+                            role = new RelatiRole_1.RelatiRole(grid, player, card);
+                            skill = RoleSummon_1.RoleSummon;
+                            _a.label = 13;
+                        case 13:
+                            game.execute(skill, role);
+                            return [2 /*return*/];
+                    }
+                });
+            });
+        };
+        RelatiGame.prototype.addPlayer = function (player) {
+            this.players.push(player);
         };
         Object.defineProperty(RelatiGame.prototype, "playerCount", {
             get: function () { return this.players.length; },
@@ -149,33 +168,29 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
             configurable: true
         });
         Object.defineProperty(RelatiGame.prototype, "nowPlayer", {
-            get: function () {
-                return this.players[this.turn % this.playerCount];
-            },
+            get: function () { return this.players[this.turn % this.playerCount]; },
             enumerable: true,
             configurable: true
         });
-        RelatiGame.prototype.addPlayer = function (player) { this.players.push(player); };
+        Object.defineProperty(RelatiGame.prototype, "allPlayerReady", {
+            get: function () { return this.turn >= this.playerCount; },
+            enumerable: true,
+            configurable: true
+        });
         RelatiGame.prototype.execute = function (skill, role) {
             return __awaiter(this, void 0, void 0, function () {
-                var game, turn;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
                         case 0:
-                            game = this;
-                            if (game.nowPlayer != role.owner)
+                            if (this.nowPlayer != role.owner)
                                 return [2 /*return*/];
-                            turn = game.turn;
-                            return [4 /*yield*/, skill.do({ game: game, role: role })];
+                            return [4 /*yield*/, skill.do({ game: this, role: role })];
                         case 1:
                             _a.sent();
-                            game.steps.push({ turn: turn, role: role, skill: skill });
-                            return [4 /*yield*/, RoleEffect_1.RoleEffect.do({ game: game })];
+                            return [4 /*yield*/, RoleEffect_1.RoleEffect.do({ game: this, role: role })];
                         case 2:
                             _a.sent();
-                            return [4 /*yield*/, RoleInfoUpdate_1.RoleInfoUpdate.do({ game: game })];
-                        case 3:
-                            _a.sent();
+                            this.turn++;
                             return [2 /*return*/];
                     }
                 });

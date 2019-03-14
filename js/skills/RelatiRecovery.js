@@ -39,43 +39,45 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (v !== undefined) module.exports = v;
     }
     else if (typeof define === "function" && define.amd) {
-        define(["require", "exports", "../rules/RelatiPath"], factory);
+        define(["require", "exports", "../rules/RelatiProtocol"], factory);
     }
 })(function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    var RelatiPath_1 = require("../rules/RelatiPath");
+    var RelatiProtocol_1 = require("../rules/RelatiProtocol");
     exports.RelatiRecovery = {
         type: "effect",
         name: "連結恢復",
         detail: "將所有連結狀態恢復",
+        priority: 1,
         do: function (_a) {
-            var game = _a.game, role = _a.role;
+            var game = _a.game, board = _a.game.board, role = _a.role, _b = _a.role, owner = _b.owner, grid = _b.grid;
+            var grid;
             return __awaiter(this, void 0, void 0, function () {
-                var owner, grid, board, _i, _b, grid;
-                return __generator(this, function (_c) {
-                    switch (_c.label) {
+                var _i, _c;
+                return __generator(this, function (_d) {
+                    switch (_d.label) {
                         case 0:
                             if (game.turn < game.playerCount ||
-                                !role || !role.is("relati-launcher"))
+                                !role.is("relati-launcher"))
                                 return [2 /*return*/];
-                            owner = role.owner, grid = role.grid;
-                            board = grid.board;
-                            for (_i = 0, _b = board.gridList; _i < _b.length; _i++) {
-                                grid = _b[_i];
+                            for (_i = 0, _c = board.gridList; _i < _c.length; _i++) {
+                                grid = _c[_i];
                                 if (grid.role && grid.role.owner == owner) {
                                     grid.role.lost("relati-repeater");
                                 }
                             }
                             return [4 /*yield*/, recovery(role)];
                         case 1:
-                            _c.sent();
+                            _d.sent();
                             return [2 /*return*/];
                     }
                 });
             });
         }
     };
+    var status = ["relati-receiver"];
+    var type = { from: "relati-target", to: "relati-source" };
     function recovery(role) {
         return __awaiter(this, void 0, void 0, function () {
             var receiversTrace;
@@ -85,12 +87,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
                         if (role.is("relati-repeater"))
                             return [2 /*return*/];
                         role.gain("relati-repeater");
-                        receiversTrace = RelatiPath_1.RelatiPath.trace({
-                            role: role,
-                            status: ["relati-receiver"],
-                            fromType: "relati-target",
-                            toType: "relati-source"
-                        });
+                        receiversTrace = RelatiProtocol_1.RelatiProtocol.trace({ role: role, status: status, type: type });
                         return [4 /*yield*/, Promise.all(receiversTrace.map(function (_a) {
                                 var target = _a.target;
                                 return new Promise(function (resolve) {

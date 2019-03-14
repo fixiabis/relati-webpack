@@ -1,28 +1,24 @@
-import { RelatiRoleInfoParam } from "../RelatiRole";
-import { RelatiPathParam } from "../rules/RelatiPath";
+import { RelatiRoleInfo } from "../RelatiRole";
+import { RelatiProtocolParam } from "../rules/RelatiProtocol";
 
-export var NormalXa: RelatiRoleInfoParam = {
+export var NormalXa: RelatiRoleInfo = {
     type: "normal",
     name: "科薩",
     detail: "連結能力極廣的角色",
-    status: ["relati-receiver"],
-    points: {
-        "summon-cost": 1
-    },
+    gain: ["relati-receiver"],
+    points: { "summon-cost": 1 },
     params: {
-        "relati-source": RelatiPathParam.Common,
-        "relati-target": RelatiPathParam.Common
+        "relati-source": RelatiProtocolParam.Common,
+        "relati-target": RelatiProtocolParam.Common
     },
     leader: {
         type: "leader",
         name: "科薩",
         detail: "連結能力極廣的角色",
-        status: ["relati-launcher"],
-        points: {
-            "summon-assets": 40
-        },
+        gain: ["relati-launcher"],
+        points: { "summon-assets": 40 },
         params: {
-            "relati-target": RelatiPathParam.Common
+            "relati-target": RelatiProtocolParam.Common
         }
     }
 };

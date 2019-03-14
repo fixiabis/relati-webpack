@@ -1,19 +1,19 @@
-import { RelatiRole, RelatiRoleInfoParam } from "./RelatiRole";
+import { RelatiRoleInfo, RelatiRole } from "./RelatiRole";
 import { RelatiGame } from "./RelatiGame";
 import { RelatiGrid } from "./RelatiBoard";
 import { RelatiSkill } from "./RelatiSkill";
-export declare type RelatiCard = RelatiRoleInfoParam;
-export declare type RelatiPlayerBadge = "O" | "X";
+export declare type RelatiCard = RelatiRoleInfo;
+export declare type RelatiAction<value> = ((value: value) => void);
 export declare class RelatiPlayer {
-    badge: RelatiPlayerBadge;
+    name: string;
+    game?: RelatiGame;
     deck: RelatiCard[];
     hand: RelatiCard[];
-    game?: RelatiGame;
     leader?: RelatiRole;
-    gridSelect?: (value: RelatiGrid) => void;
-    cardSelect?: (value?: RelatiCard) => void;
-    skillSelect?: (value?: RelatiSkill) => void;
-    constructor(badge: RelatiPlayerBadge);
+    gridSelect?: RelatiAction<RelatiGrid>;
+    cardSelect?: RelatiAction<RelatiCard>;
+    skillSelect?: RelatiAction<RelatiSkill>;
+    constructor(name: string);
     draw(times?: number): void;
     shuffle(): void;
     join(game: RelatiGame): void;
