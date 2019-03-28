@@ -13,6 +13,7 @@ export let RoleSummon: RoleSummonRule = {
     detail: "是否符合角色召喚的規則",
     allow({ game, role, role: { grid } }) {
         if (grid.role) return false;
+        if (game.playerNow != role.owner) return false;
         if (game.turn < game.playerCount) return true;
 
         return RelatiProtocol.allow({

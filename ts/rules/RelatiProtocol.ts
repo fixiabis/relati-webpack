@@ -3,6 +3,7 @@ import { RelatiRole, RelatiRoleStatus } from "../RelatiRole";
 import { RelatiGrid, RelatiGridHasRole } from "../RelatiBoard";
 import { Grid } from "../base/GridBoard";
 import { RelatiPlayer } from "../RelatiPlayer";
+import { JSONData } from "../Relati";
 
 export type RelatiProtocolType = "relati-source" | "relati-target";
 export type RelatiProtocolParams = RelatiRole["params"][RelatiProtocolType];

@@ -2,6 +2,7 @@ import { RelatiPlayer } from "./RelatiPlayer";
 import { RelatiBoard } from "./RelatiBoard";
 import { RelatiRole, RelatiRoleInfo } from "./RelatiRole";
 import { RelatiSkill } from "./RelatiSkill";
+import { JSONData } from "./Relati";
 
 export interface RelatGame {
     do(type: "role-create", role: RelatiRole): Promise<void>;
@@ -35,7 +36,13 @@ export class RelatiGame {
         type: RelatiGameEventType,
         owner: RelatiRole,
         skill: RelatiSkill<RelatiGameEventState>
-    ) { this.listeners[type].push({ owner, skill }); }
+    ) {
+        this.listeners[type].push({ owner, skill });
+        this.listeners[type].sort(
+            ({ skill: skill1 }, { skill: skill2 }) =>
+                skill1.priority - skill2.priority
+        );
+    }
 
     do(type: RelatiGameEventType, role?: RelatiRole, info?: RelatiRoleInfo) {
         return new Promise((resolve, reject) => {
@@ -49,7 +56,15 @@ export class RelatiGame {
             switch (type) {
                 case "role-create":
                     (role as RelatiRole).grid.role = role;
-                    (role as RelatiRole).born(this);
+
+                    for (let skill of (role as RelatiRole).skills) {
+                        if (skill.when) this.on(
+                            skill.when,
+                            role as RelatiRole,
+                            skill as RelatiSkill<RelatiGameEventState>
+                        );
+                    }
+
                     break;
 
                 case "role-update":
@@ -60,7 +75,7 @@ export class RelatiGame {
                     }
 
                     break;
-                
+
                 case "role-delete":
                     delete (role as RelatiRole).grid.role;
                     break;
@@ -68,7 +83,7 @@ export class RelatiGame {
                 case "role-leader":
                     (role as RelatiRole).owner.leader = role;
                     break;
-                
+
                 case "next-player":
                     this.turn++;
             }

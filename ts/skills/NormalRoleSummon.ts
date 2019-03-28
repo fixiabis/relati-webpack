@@ -18,12 +18,12 @@ export let NormalRoleSummon: NormalRoleSummonSkill = {
     async do({ game, role }) {
         if (!RoleSummon.allow({ game, role })) return;
 
-        game.do("role-create", role);
+        await game.do("role-create", role);
 
         if (game.turn < game.playerCount) {
-            game.do("role-leader", role);
+            await game.do("role-leader", role);
         }
 
-        game.do("next-player");
+        await game.do("next-player");
     }
 };

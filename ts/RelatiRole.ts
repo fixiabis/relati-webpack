@@ -1,7 +1,7 @@
 import { RelatiGrid } from "./RelatiBoard";
 import { RelatiPlayer } from "./RelatiPlayer";
 import { RelatiSkill } from "./RelatiSkill";
-import { RelatiGame } from "./RelatiGame";
+import { JSONData } from "./Relati";
 
 export type RelatiRoleType = "leader" | "normal" | "wizard" | "knight";
 
@@ -21,7 +21,7 @@ export class RelatiRole {
     public status: JSONData<boolean> = {};
     public points: JSONData<number> = {};
     public params: JSONData<string> = {};
-    public skills: RelatiSkill[] = [];
+    public skills: RelatiSkill<JSONData>[] = [];
 
     constructor(
         public grid: RelatiGrid,
@@ -50,8 +50,6 @@ export class RelatiRole {
     lost(...status: RelatiRoleStatus[]) {
         for (let name of status) this.status[name] = false;
     }
-
-    born(game: RelatiGame) { }
 }
 
 export namespace RelatiRoleStatus {

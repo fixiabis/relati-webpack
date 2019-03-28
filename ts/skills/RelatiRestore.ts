@@ -5,23 +5,24 @@ import { RelatiProtocol } from "../rules/RelatiProtocol";
 
 export interface RelatiRestoreState {
     game: RelatiGame;
-    role: RelatiRole;
+    owner: RelatiRole;
 }
 
 export type RelatiRestoreSkill = RelatiSkill<RelatiRestoreState>;
 
 export let RelatiRestore: RelatiRestoreSkill = {
+    when: "next-player",
     type: "effect",
     name: "連結恢復",
     detail: "恢復我方所有角色的連結轉發機能",
     priority: 10,
-    async do({ game, role }) {
+    async do({ game, owner }) {
         if (
             game.turn < game.playerCount ||
-            !role.is("relati-launcher")
+            !owner.is("relati-launcher")
         ) return;
 
-        await restore(role);
+        await restore(owner);
     }
 };
 
