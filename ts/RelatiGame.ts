@@ -1,5 +1,5 @@
 import { RelatiPlayer } from "./RelatiPlayer";
-import { RelatiBoard } from "./RelatiBoard";
+import { RelatiBoard, RelatiGrid } from "./RelatiBoard";
 import { RelatiRole, RelatiRoleInfo } from "./RelatiRole";
 import { RelatiSkill } from "./RelatiSkill";
 import { JSONData } from "./Relati";
@@ -86,6 +86,7 @@ export class RelatiGame {
 
                 case "next-player":
                     this.turn++;
+                    break;
             }
 
             resolve();
@@ -99,6 +100,7 @@ export interface RelatiGameState {
 }
 
 export type RelatiGameEventType = (
+    "grid-select" |
     "role-create" |
     "role-update" |
     "role-delete" |
