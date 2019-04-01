@@ -1,5 +1,5 @@
 import { RelatiPlayer } from "./RelatiPlayer";
-import { RelatiBoard, RelatiGrid } from "./RelatiBoard";
+import { RelatiBoard } from "./RelatiBoard";
 import { RelatiRole, RelatiRoleInfo } from "./RelatiRole";
 import { RelatiSkill } from "./RelatiSkill";
 import { JSONData } from "./Relati";
@@ -14,6 +14,7 @@ export interface RelatGame {
 
 export class RelatiGame {
     public turn = 0;
+    public players: RelatiPlayer[] = [];
     public eventPrevented = false;
 
     private listeners: JSONData<RelatiGameEvent[]> = {
@@ -26,8 +27,12 @@ export class RelatiGame {
 
     constructor(
         public board: RelatiBoard,
-        public players: RelatiPlayer[]
-    ) { }
+        playerNames: string[]
+    ) {
+        for (let name of playerNames) {
+            this.players.push(new RelatiPlayer(name, this));
+        }
+    }
 
     get playerCount() { return this.players.length; }
     get playerNow() { return this.players[this.turn % this.playerCount]; }

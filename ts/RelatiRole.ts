@@ -52,6 +52,14 @@ export class RelatiRole {
     }
 }
 
+export interface RelatiRoleConstructor {
+    new(
+        grid: RelatiGrid,
+        owner: RelatiPlayer,
+        type?: RelatiRoleType
+    ): RelatiRole;
+}
+
 export namespace RelatiRoleStatus {
     export type Relati = (
         "relati-launcher" |

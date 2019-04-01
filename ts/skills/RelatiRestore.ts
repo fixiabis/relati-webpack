@@ -1,10 +1,9 @@
 import { RelatiSkill } from "../RelatiSkill";
 import { RelatiRole, RelatiRoleParams, RelatiRoleStatus } from "../RelatiRole";
-import { RelatiGame } from "../RelatiGame";
 import { RelatiProtocol } from "../rules/RelatiProtocol";
+import { RelatiPlayer } from "../RelatiPlayer";
 
 export interface RelatiRestoreState {
-    game: RelatiGame;
     owner: RelatiRole;
 }
 
@@ -16,13 +15,9 @@ export let RelatiRestore: RelatiRestoreSkill = {
     name: "連結恢復",
     detail: "恢復我方所有角色的連結轉發機能",
     priority: 10,
-    async do({ game, owner }) {
-        if (
-            game.turn < game.playerCount ||
-            !owner.is("relati-launcher")
-        ) return;
-
-        await restore(owner);
+    async do({ owner }) {
+        if (!owner.is("relati-launcher")) return;
+        await restore(owner, owner.owner);
     }
 };
 
@@ -30,8 +25,8 @@ const sourceType: RelatiRoleParams = "relati-source";
 const targetType: RelatiRoleParams = "relati-target";
 const relyStatus: RelatiRoleStatus[] = ["relati-receiver"];
 
-async function restore(role: RelatiRole) {
-    if (role.is("relati-repeater")) return;
+async function restore(role: RelatiRole, owner: RelatiPlayer) {
+    if (role.owner != owner || role.is("relati-repeater")) return;
     role.gain("relati-repeater");
 
     var traces = RelatiProtocol.trace({
@@ -44,7 +39,7 @@ async function restore(role: RelatiRole) {
     await Promise.all(traces.map(({ target }) =>
         new Promise<void>(resolve => {
             if (!target.role) return resolve();
-            restore(target.role).then(resolve);
+            restore(target.role, owner).then(resolve);
         })
     ));
 }

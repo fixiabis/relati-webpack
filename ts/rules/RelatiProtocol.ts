@@ -12,13 +12,15 @@ export type RelatiProtocolRuleState = {
     role: RelatiRole,
     sourceType: RelatiProtocolType,
     targetType: RelatiProtocolType,
-    relyStatus: RelatiRoleStatus[]
+    relyStatus: RelatiRoleStatus[],
+    allowCache?: boolean
 };
 
 export type RelatiProtocolRule = {
     parse(
         grid: RelatiGrid,
-        protocol: RelatiProtocolParams
+        protocol: RelatiProtocolParams,
+        allowCache: boolean
     ): RelatiRuleTraces,
     cache: JSONData<JSONData<RelatiRuleTraces>>
 } & RelatiRuleTraceable<RelatiProtocolRuleState>;
@@ -26,40 +28,42 @@ export type RelatiProtocolRule = {
 export let RelatiProtocol: RelatiProtocolRule = {
     name: "Relati協定",
     detail: "判定是否符合Relati原則",
-    allow({ role, role: { owner, grid }, sourceType, targetType, relyStatus }) {
-        let protocolTraces = RelatiProtocol.parse(grid, role.params[targetType]);
+    allow({ role, role: { owner, grid }, sourceType, targetType, relyStatus, allowCache = true }) {
+        let protocolTraces = RelatiProtocol.parse(grid, role.params[targetType], allowCache);
 
         for (let { target, routes } of protocolTraces) {
             if (
                 reliable(target, owner, relyStatus) &&
-                relatiable(target, grid, sourceType) &&
+                relatiable(target, grid, sourceType, allowCache) &&
                 unobstructed(routes)
             ) return true;
         }
 
         return false;
     },
-    trace({ role, role: { owner, grid }, sourceType, targetType, relyStatus }) {
+    trace({ role, role: { owner, grid }, sourceType, targetType, relyStatus, allowCache = true }) {
         let traces: RelatiRuleTraces = [];
-        let protocolTraces = RelatiProtocol.parse(grid, role.params[targetType]);
+        let protocolTraces = RelatiProtocol.parse(grid, role.params[targetType], allowCache);
 
         for (let { target, routes } of protocolTraces) {
             if (
                 reliable(target, owner, relyStatus) &&
-                relatiable(target, grid, sourceType) &&
+                relatiable(target, grid, sourceType, allowCache) &&
                 unobstructed(routes)
             ) traces.push({ target, routes });
         }
 
         return traces;
     },
-    parse(grid, protocol) {
-        if (!RelatiProtocol.cache[grid.coordinate]) {
-            RelatiProtocol.cache[grid.coordinate] = {};
+    parse(grid, protocol, allowCache) {
+        let { cache } = RelatiProtocol;
+
+        if (!cache[grid.coordinate]) {
+            cache[grid.coordinate] = {};
         }
 
-        if (RelatiProtocol.cache[grid.coordinate][protocol]) {
-            return RelatiProtocol.cache[grid.coordinate][protocol];
+        if (cache[grid.coordinate][protocol] && allowCache) {
+            return cache[grid.coordinate][protocol];
         }
 
         let traces: RelatiRuleTraces = [];
@@ -73,7 +77,9 @@ export let RelatiProtocol: RelatiProtocolRule = {
             });
         }
 
-        return RelatiProtocol.cache[grid.coordinate][protocol] = traces;
+        if (allowCache) return cache[grid.coordinate][protocol] = traces;
+
+        return traces;
     },
     cache: {}
 };
@@ -106,10 +112,11 @@ function reliable(
 function relatiable(
     sourceGrid: RelatiGridHasRole,
     targetGrid: RelatiGrid,
-    type: string
+    type: string,
+    allowCache: boolean
 ) {
-    let protocolTrace = RelatiProtocol.parse(sourceGrid, sourceGrid.role.params[type]);
-    for (let { target } of protocolTrace) if (target == targetGrid) return true;
+    let protocolTraces = RelatiProtocol.parse(sourceGrid, sourceGrid.role.params[type], allowCache);
+    for (let { target } of protocolTraces) if (target == targetGrid) return true;
     return false;
 }
 
