@@ -1,55 +1,77 @@
 import { RelatiBoard } from "./RelatiBoard";
-import { RelatiPlayer } from "./RelatiPlayer";
-import { JSONData } from "./Relati";
-import { GridBoard } from "./base/GridBoard";
-import { RelatiRoleConstructor } from "./RelatiRole";
-import { RelatiGame } from "./RelatiGame";
-import { RoleSummon } from "./rules/RoleSummon";
+
+const space = 0b00000000;
+const RelatiLauncher = 0b00010000;
+const RelatiRepeater = 0b00001000;
+const RelatiReceiver = 0b00000100;
 
 export class RelatiAI {
-    constructor(
-        public game: RelatiGame,
-        public RoleConstructors: RelatiRoleConstructor[]
-    ) { }
+    analysis(board: BinaryBoard, owner: number) {
+        let boardWidth = board.width;
+        let boardHeight = board.height;
+        let boardLength = board.length;
 
-    analysis(board: RelatiBoard, owner: RelatiPlayer) {
-        let ownerGrid: JSONData<number> = {};
-        let otherGrid: JSONData<number> = {};
+        let ownerGrid = new Int8Array(boardLength);
+        let otherGrid = new Int8Array(boardLength);
         let hasGrid: boolean;
         let gridPoint = 100;
         let ownerPoint = 0;
         let otherPoint = 0;
 
-        for (let grid of board.gridList) {
-            if (!grid.role) continue;
-            let { coordinate } = grid;
+        for (let i = 0; i < boardLength; i++) {
+            let grid = board[i];
+            if (!grid) continue;
 
-            if (grid.role.owner == owner) {
-                ownerGrid[coordinate] = 101;
+            if ((grid & owner) == owner) {
+                ownerGrid[i] = 101;
             } else {
-                otherGrid[coordinate] = 101;
+                otherGrid[i] = 101;
             }
         }
 
         do {
             hasGrid = false;
 
-            for (let grid of board.gridList) {
-                let { coordinate } = grid;
+            for (let x = 0; x < boardWidth; x++) {
+                for (let y = 0; y < boardHeight; y++) {
+                    let i = board.getIdx(x, y);
 
-                if (ownerGrid[coordinate] == gridPoint + 1) {
-                    for (let nearBy of grid.queries("O")) {
-                        if (!nearBy || nearBy.role || ownerGrid[nearBy.coordinate]) continue;
-                        ownerGrid[nearBy.coordinate] = gridPoint;
-                        hasGrid = true;
+                    if (ownerGrid[i] == gridPoint + 1) {
+                        for (let dx = x - 1; dx < x + 2; dx++) {
+                            for (let dy = y - 1; dy < y + 2; dy++) {
+                                if (
+                                    dx == x && dy == y ||
+                                    dx < 0 || dy < 0 ||
+                                    dx >= boardWidth ||
+                                    dy >= boardHeight
+                                ) continue;
+
+                                let idx = board.getIdx(dx, dy);
+                                let grid = board[idx];
+                                if (grid || ownerGrid[idx]) continue;
+                                ownerGrid[idx] = gridPoint;
+                                hasGrid = true;
+                            }
+                        }
                     }
-                }
 
-                if (otherGrid[coordinate] == gridPoint + 1) {
-                    for (let nearBy of grid.queries("O")) {
-                        if (!nearBy || nearBy.role || otherGrid[nearBy.coordinate]) continue;
-                        otherGrid[nearBy.coordinate] = gridPoint;
-                        hasGrid = true;
+                    if (otherGrid[i] == gridPoint + 1) {
+                        for (let dx = x - 1; dx < x + 2; dx++) {
+                            for (let dy = y - 1; dy < y + 2; dy++) {
+                                if (
+                                    dx == x && dy == y ||
+                                    dx < 0 || dy < 0 ||
+                                    dx >= boardWidth ||
+                                    dy >= boardHeight
+                                ) continue;
+
+                                let idx = board.getIdx(dx, dy);
+                                let grid = board[idx];
+                                if (grid || otherGrid[idx]) continue;
+                                otherGrid[idx] = gridPoint;
+                                hasGrid = true;
+                            }
+                        }
                     }
                 }
             }
@@ -57,236 +79,103 @@ export class RelatiAI {
             gridPoint--;
         } while (hasGrid);
 
-        for (let { coordinate } of board.gridList) {
-            if (!ownerGrid[coordinate]) ownerGrid[coordinate] = 1;
-            if (!otherGrid[coordinate]) otherGrid[coordinate] = 1;
+        for (let i = 0; i < boardLength; i++) {
+            if (!ownerGrid[i]) ownerGrid[i] = 1;
+            if (!otherGrid[i]) otherGrid[i] = 1;
 
-            ownerPoint += ownerGrid[coordinate] - (
-                otherGrid[coordinate] -
-                ownerGrid[coordinate] + 1
+            ownerPoint += ownerGrid[i] - (
+                otherGrid[i] -
+                ownerGrid[i] + 1
             ) * 10;
 
-            otherPoint += otherGrid[coordinate] - (
-                ownerGrid[coordinate] -
-                otherGrid[coordinate] + 1
+            otherPoint += otherGrid[i] - (
+                ownerGrid[i] -
+                otherGrid[i] + 1
             ) * 10;
         }
 
         return { ownerPoint, otherPoint };
     }
 
-    cloneBoard(board: RelatiBoard) {
-        let { width, height } = board;
-        let cloneBoard = new GridBoard(width, height) as RelatiBoard;
-
-        for (let x = 0; x < width; x++) {
-            for (let y = 0; y < height; y++) {
-                let grid = board.grids[x][y];
-                let { role } = grid;
-                if (!role) continue;
-                let { owner } = role;
-                let RoleConstructor = role.constructor as RelatiRoleConstructor;
-
-                let cloneRole = new RoleConstructor(
-                    cloneBoard.grids[x][y],
-                    owner
-                );
-
-                for (let name in role.status) cloneRole.status[name] = role.status[name];
-                for (let name in role.points) cloneRole.points[name] = role.points[name];
-                for (let name in role.params) cloneRole.params[name] = role.params[name];
-                for (let name in role.skills) cloneRole.skills[name] = role.skills[name];
-
-                cloneBoard.grids[x][y].role = cloneRole;
-            }
-        }
-
-        return cloneBoard;
-    }
-
-    printBoard(board: RelatiBoard, type: "html" | "node-console" | "dev-console" = "dev-console") {
-        let first = true;
-
-        if (type == "dev-console") {
-            let colorO = "color: crimson";
-            let colorX = "color: royalblue";
-            let colorF = "color: #666";
-            let colorB = "color: #888";
-            let printParams: string[] = ["%c", colorB];
-
-            for (let y = 0; y < board.height; y++) {
-                if (first) first = false;
-                else printParams[0] += "\n";
-
-                printParams[0] += "|";
-
-                for (let x = 0; x < board.width; x++) {
-                    let grid = board.grids[x][y];
-
-                    if (!grid.role) printParams[0] += "   ";
-                    else {
-                        printParams[0] += ` %c${grid.role.owner.name} `;
-
-                        if (!grid.role.is("relati-repeater")) {
-                            printParams.push(colorF);
-                        } else if (grid.role.owner.name == "O") {
-                            printParams.push(colorO);
-                        } else if (grid.role.owner.name == "X") {
-                            printParams.push(colorX);
-                        } else {
-                            printParams.push(colorB);
-                        }
-                    }
-
-                    printParams[0] += "%c|";
-                    printParams.push(colorB);
-                }
-            }
-
-            console.log(...printParams);
-        }
-
-        if (type == "node-console") {
-            let printString = "";
-
-            for (let y = 0; y < board.height; y++) {
-                if (first) first = false;
-                else printString += "\n";
-
-                printString += "|";
-
-                for (let x = 0; x < board.width; x++) {
-                    let grid = board.grids[x][y];
-
-                    if (!grid.role) printString += "   ";
-                    else {
-                        printString += ` ${grid.role.owner.name} `;
-                    }
-
-                    printString += "|";
-                }
-            }
-
-            console.log(printString);
-        }
-    }
-
-    async traceStep(
-        board: RelatiBoard,
-        owner: RelatiPlayer,
-        other: RelatiPlayer,
+    syncTraceStep(
+        board: BinaryBoard,
+        owner: number,
+        other: number,
         level: number,
-        route: string[] = [],
+        route: number[] = [],
         isOwn: boolean = true,
-        inOwn: RelatiAIStep = { point: -Infinity, title: "inOwn", route: [] },
-        inOth: RelatiAIStep = { point: Infinity, title: "inOth", route: [] }
-    ): Promise<RelatiAIStep> {
+        inOwn: RelatiAIStep = { point: -Infinity, title: owner, route: [] },
+        inOth: RelatiAIStep = { point: Infinity, title: other, route: [] }
+    ): RelatiAIStep {
+        // console.group();
         if (isOwn) {
-            let steps = await Promise.all(board.gridList.map(grid =>
-                new Promise<RelatiAIStep>(async resolve => {
-                    let { coordinate: coor } = grid;
-
-                    if (grid.role) return resolve({
-                        point: -Infinity, coor,
-                        title: "inOwn", route
-                    });
-
-                    let role = new this.RoleConstructors[0](grid, owner);
-
-                    if (!RoleSummon.allow({
-                        game: this.game, role,
-                        allowCache: false
-                    })) return resolve({
-                        point: -Infinity, coor,
-                        title: "inOwn", route
-                    });
-
-                    let cloneBoard = this.cloneBoard(board);
-                    grid = cloneBoard.grids[grid.x][grid.y];
-                    role.grid = grid;
-
-                    grid.role = role;
-                    role.gain("relati-repeater");
+            for (let x = 0; x < board.width; x++) {
+                for (let y = 0; y < board.height; y++) {
+                    let idx = board.getIdx(x, y);
+                    let grid = board[idx];
+                    if (grid) continue;
+                    if (!isRelati(x, y, owner, board)) continue;
+                    board[idx] = owner | RelatiRepeater;
 
                     if (level) {
-                        let result = await this.traceStep(
-                            cloneBoard, owner, other, level - 1,
-                            [...route, coor],
+                        let step = this.syncTraceStep(
+                            board, owner, other, level - 1,
+                            [...route, idx],
                             !isOwn, inOwn, inOth
                         );
-                        result.coor = coor;
-                        return resolve(result);
+                        step.idx = idx;
+                        if (inOwn.point < step.point) inOwn = { ...step };
+                    } else {
+                        let point = this.analysis(board, owner).ownerPoint;
+                        if (inOwn.point < point) inOwn = {
+                            title: owner,
+                            point, route: [...route, idx]
+                        };
                     }
+                    // console.log(x, y, inOwn);
 
-                    let point = this.analysis(cloneBoard, owner).ownerPoint;
+                    board[idx] = space;
 
-                    return resolve({
-                        point, coor, title: "inOwn",
-                        route: [...route, coor]
-                    });
-                })
-            ));
-
-            for (let step of steps) {
-                if (inOwn.point < step.point) inOwn = { ...step };
-                if (inOth.point <= inOwn.point) break;
+                    if (inOth.point <= inOwn.point) break;
+                }
             }
-
-            // inOwn.steps = steps.filter(step => isFinite(step.point));
+            // console.groupEnd();
+            // console.log(inOwn);
 
             return inOwn;
         } else {
-            let steps = await Promise.all(board.gridList.map(grid =>
-                new Promise<RelatiAIStep>(async resolve => {
-                    let { coordinate: coor } = grid;
-
-                    if (grid.role) return resolve({
-                        point: Infinity, coor,
-                        title: "inOth", route
-                    });
-                    let role = new this.RoleConstructors[0](grid, other);
-
-                    if (!RoleSummon.allow({
-                        game: this.game, role,
-                        allowCache: false
-                    })) return resolve({
-                        point: Infinity, coor,
-                        title: "inOth", route
-                    });
-
-                    let cloneBoard = this.cloneBoard(board);
-                    grid = cloneBoard.grids[grid.x][grid.y];
-                    role.grid = grid;
-
-                    grid.role = role;
-                    role.gain("relati-repeater");
+            for (let x = 0; x < board.width; x++) {
+                for (let y = 0; y < board.height; y++) {
+                    let idx = board.getIdx(x, y)
+                    let grid = board[idx];
+                    if (grid) continue;
+                    if (!isRelati(x, y, other, board)) continue;
+                    board[idx] = other | RelatiRepeater;
 
                     if (level) {
-                        let result = await this.traceStep(
-                            cloneBoard, owner, other, level - 1,
-                            [...route, coor],
+                        let step = this.syncTraceStep(
+                            board, owner, other, level - 1,
+                            [...route, idx],
                             !isOwn, inOwn, inOth
                         );
-                        result.coor = coor;
-                        return resolve(result);
+                        step.idx = idx;
+                        if (inOth.point > step.point) inOth = { ...step };
+                    } else {
+                        let point = this.analysis(board, owner).ownerPoint;
+                        if (inOth.point > point) inOth = {
+                            title: other,
+                            point, route: [...route, idx]
+                        };
                     }
+                    // console.log(x, y, inOth);
 
-                    let point = this.analysis(cloneBoard, owner).ownerPoint;
+                    board[idx] = space;
 
-                    return resolve({
-                        point, coor,
-                        title: "inOth",
-                        route: [...route, coor]
-                    });
-                })
-            ));
-
-            for (let step of steps) {
-                if (inOth.point > step.point) inOth = { ...step };
-                if (inOth.point <= inOwn.point) break;
+                    if (inOth.point <= inOwn.point) break;
+                }
             }
-
-            // inOth.steps = steps.filter(step => isFinite(step.point));
+            // console.groupEnd();
+            // console.log(inOth);
 
             return inOth;
         }
@@ -294,9 +183,91 @@ export class RelatiAI {
 }
 
 export interface RelatiAIStep {
-    coor?: string;
-    title: string;
+    idx?: number;
+    title: number;
     point: number;
-    route: string[],
+    route: number[];
     steps?: RelatiAIStep[];
 }
+
+export class BinaryBoard extends Int8Array {
+    public width: number;
+    public height: number;
+
+    constructor(board: RelatiBoard | BinaryBoard) {
+        if (board instanceof BinaryBoard) {
+            super(board.length);
+
+            for (let i = 0; i < board.length; i++) {
+                this[i] = board[i];
+            }
+        } else {
+            super(board.gridList.length);
+
+            for (let i = 0; i < board.gridList.length; i++) {
+                let grid = board.gridList[i];
+                if (!grid.role) continue;
+
+                let binRole = 0b00000000;
+
+                if (grid.role.owner.name == "O") binRole = 0b00000001;
+                else binRole = 0b00000010;
+
+                if (grid.role.is("relati-launcher")) binRole |= RelatiLauncher;
+                if (grid.role.is("relati-repeater")) binRole |= RelatiRepeater;
+                if (grid.role.is("relati-receiver")) binRole |= RelatiReceiver;
+
+                this[i] = binRole;
+            }
+        }
+
+        this.width = board.width;
+        this.height = board.height;
+    }
+
+    getCoor(i: number) {
+        let y = i % this.height;
+        let x = (i - y) / this.width;
+        return [x, y];
+    }
+
+    getIdx(x: number, y: number) {
+        return x * this.width + y;
+    }
+
+    getGrid(x: number, y: number) {
+        return this[this.getIdx(x, y)];
+    }
+}
+
+function isRelati(x: number, y: number, owner: number, board: BinaryBoard) {
+    let boardWidth = board.width;
+    let boardHeight = board.height;
+
+    for (let dx = x - 1; dx < x + 2; dx++) {
+        for (let dy = y - 1; dy < y + 2; dy++) {
+            if (
+                dx == x && dy == y ||
+                dx < 0 || dy < 0 ||
+                dx >= boardWidth ||
+                dy >= boardHeight
+            ) continue;
+
+            let grid = board.getGrid(dx, dy);
+
+            if (
+                (grid & owner) == owner &&
+                (grid & RelatiRepeater) == RelatiRepeater
+            ) return true;
+        }
+    }
+    return false;
+}
+
+// symbolN 0b000xxx00
+// symbolO 0b000xxx01
+// symbolX 0b000xxx10
+
+// source  0b0001xx00
+// normal  0b00001100
+// frozen  0b00000100
