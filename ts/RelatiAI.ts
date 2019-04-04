@@ -80,17 +80,17 @@ export class RelatiAI {
         } while (hasGrid);
 
         for (let i = 0; i < boardLength; i++) {
-            if (!ownerGrid[i]) ownerGrid[i] = 1;
-            if (!otherGrid[i]) otherGrid[i] = 1;
+            if (!ownerGrid[i]) ownerGrid[i] = board[i] ? 0 : 1;
+            if (!otherGrid[i]) otherGrid[i] = board[i] ? 0 : 1;
 
             ownerPoint += ownerGrid[i] - (
                 otherGrid[i] -
-                ownerGrid[i] + 1
+                ownerGrid[i]
             ) * 10;
 
             otherPoint += otherGrid[i] - (
                 ownerGrid[i] -
-                otherGrid[i] + 1
+                otherGrid[i]
             ) * 10;
         }
 
@@ -104,10 +104,10 @@ export class RelatiAI {
         level: number,
         route: number[] = [],
         isOwn: boolean = true,
-        inOwn: RelatiAIStep = { point: -Infinity, title: owner, route: [] },
-        inOth: RelatiAIStep = { point: Infinity, title: other, route: [] }
+        inOwn: RelatiAIStep = { point: -Infinity, in: owner, route: [] },
+        inOth: RelatiAIStep = { point: Infinity, in: other, route: [] }
     ): RelatiAIStep {
-        // console.group();
+        console.groupCollapsed(`start level: ${level}, isOwn: ${isOwn}`);
         if (isOwn) {
             for (let x = 0; x < board.width; x++) {
                 for (let y = 0; y < board.height; y++) {
@@ -118,30 +118,28 @@ export class RelatiAI {
                     board[idx] = owner | RelatiRepeater;
 
                     if (level) {
+                        console.log(idx);
                         let step = this.syncTraceStep(
                             board, owner, other, level - 1,
                             [...route, idx],
                             !isOwn, inOwn, inOth
                         );
-                        step.idx = idx;
-                        if (inOwn.point < step.point) inOwn = { ...step };
+                        if (inOwn.point < step.point) inOwn = { ...step, idx };
                     } else {
                         let point = this.analysis(board, owner).ownerPoint;
                         if (inOwn.point < point) inOwn = {
-                            title: owner,
+                            in: owner, idx,
                             point, route: [...route, idx]
                         };
                     }
-                    // console.log(x, y, inOwn);
 
                     board[idx] = space;
-
-                    if (inOth.point <= inOwn.point) break;
+                    console.log(inOwn);
+                    // if (inOth.point <= inOwn.point) break;
                 }
             }
-            // console.groupEnd();
-            // console.log(inOwn);
 
+            console.groupEnd();
             return inOwn;
         } else {
             for (let x = 0; x < board.width; x++) {
@@ -153,38 +151,41 @@ export class RelatiAI {
                     board[idx] = other | RelatiRepeater;
 
                     if (level) {
+                        console.log(idx);
                         let step = this.syncTraceStep(
                             board, owner, other, level - 1,
                             [...route, idx],
                             !isOwn, inOwn, inOth
                         );
-                        step.idx = idx;
-                        if (inOth.point > step.point) inOth = { ...step };
+                        if (inOth.point > step.point) inOth = { ...step, idx };
                     } else {
                         let point = this.analysis(board, owner).ownerPoint;
                         if (inOth.point > point) inOth = {
-                            title: other,
+                            in: other, idx,
                             point, route: [...route, idx]
                         };
                     }
-                    // console.log(x, y, inOth);
 
                     board[idx] = space;
-
-                    if (inOth.point <= inOwn.point) break;
+                    console.log(inOth);
+                    // if (inOth.point <= inOwn.point) break;
                 }
             }
-            // console.groupEnd();
-            // console.log(inOth);
 
+            console.groupEnd();
             return inOth;
         }
+    }
+
+    getGridCoor(idx: number, board: BinaryBoard) {
+        let [x, y] = board.getCoor(idx);
+        return `${String.fromCharCode(x + 65)}${y + 1}`;
     }
 }
 
 export interface RelatiAIStep {
     idx?: number;
-    title: number;
+    in: number;
     point: number;
     route: number[];
     steps?: RelatiAIStep[];
@@ -208,7 +209,7 @@ export class BinaryBoard extends Int8Array {
                 let grid = board.gridList[i];
                 if (!grid.role) continue;
 
-                let binRole = 0b00000000;
+                let binRole = space;
 
                 if (grid.role.owner.name == "O") binRole = 0b00000001;
                 else binRole = 0b00000010;
