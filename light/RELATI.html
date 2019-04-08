@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="RELATI.js"></script>
+</head>
+
+<body>
+    <script>
+        var board = new RelatiBoard(9, 9);
+        var game = new RelatiGame(board, RELATI_COMMON, 2);
+        var AI = new RelatiAI(game);
+
+        game.selectGrid(board.query("E5"), RELATI_SYMBOL_O);
+        game.selectGrid(board.query("E4"), RELATI_SYMBOL_X);
+        console.log(AI.traceStep(RELATI_SYMBOL_O, RELATI_SYMBOL_X, 4));
+
+        let [tic, tac] = (now => [
+            () => now = new Date().getTime(),
+            () => new Date().getTime() - now
+        ])(0);
+    </script>
+</body>
+
+</html>
