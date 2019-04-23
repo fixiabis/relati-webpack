@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Relati</title>
+    <script src="./GridBoard/GridBoard.js"></script>
+    <script src="./RelatiBoard.js"></script>
+    <script src="./RelatiRoutes.js"></script>
+    <script src="./RelatiAction.js"></script>
+    <script src="./RelatiView.js"></script>
+    <script src="./RelatiGame.js"></script>
+    <style>
+        body {
+            margin: 0px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+
+<body>
+    <script>
+        var board = new RelatiBoard(9, 9);
+        var boardView = new RelatiBoardView(board, document.body);
+        var game = new RelatiGame(board, boardView);
+    </script>
+</body>
+
+</html>
