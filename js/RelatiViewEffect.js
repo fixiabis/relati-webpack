@@ -73,6 +73,6 @@ var Relati;
                     relatiEffect(targetGrid, routeType, color, game, turn);
                 }
             }
-        }, 500);
+        }, 250);
     }
 })(Relati || (Relati = {}));
