@@ -1,7 +1,7 @@
 .relati-effect-line {
     stroke-dashoffset: 0;
     stroke-dasharray: 15;
-    animation: relati-effect-line 0.5s linear;
+    animation: relati-effect-line 0.25s linear;
 }
 
 @keyframes relati-effect-line {
