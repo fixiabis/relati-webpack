@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Relati</title>
+    <link rel="stylesheet" href="./css/page.css">
+    <link rel="stylesheet" href="./css/relati.css">
+    <script src="./js/GridBoard.js"></script>
+    <script src="./js/RelatiBoard.js"></script>
+    <script src="./js/RelatiRoutes.js"></script>
+    <script src="./js/RelatiAction.js"></script>
+    <script src="./js/RelatiView.js"></script>
+    <script src="./js/RelatiViewEffect.js"></script>
+    <script src="./js/RelatiGame.js"></script>
+    <style>
+        #board-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: calc(100% - 120px);
+        }
+
+        .controls {
+            width: 100%;
+            height: 60px;
+        }
+    </style>
+</head>
+
+<body>
+    <input type="radio" name="page-switcher" id="game-page-switch">
+    <div id="game-page" class="page">
+        <div class="controls"></div>
+        <div id="board-container"></div>
+        <div class="controls"></div>
+    </div>
+    <input type="radio" name="page-switcher" id="main-page-switch" checked>
+    <div id="main-page" class="page"></div>
+    <input type="radio" name="page-switcher" id="help-page-switch">
+    <div id="help-page" class="page"></div>
+    <script>
+        let gameView = document.querySelector("#board-container");
+        with (Relati) {
+            var board = new RelatiBoard(9, 9);
+            var boardView = new RelatiBoardView(board, gameView);
+            var game = new RelatiGame(board, boardView, BY_COMMON_RELATI);
+        }
+    </script>
+</body>
+
+</html>
