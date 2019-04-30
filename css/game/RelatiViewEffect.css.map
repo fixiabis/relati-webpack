@@ -1,0 +1,9 @@
+{
+    "version": 3,
+    "mappings": "AAAA,AAAA,GAAG,CAAC,mBAAmB,CAAC;EACpB,iBAAiB,EAAE,CAAC;EACpB,gBAAgB,EAAE,EAAE;EACpB,OAAO,EAAE,GAAG;EACZ,SAAS,EAAE,+BAA+B;CAC7C;;AAED,UAAU,CAAV,kBAAU;EACN,EAAE;IACE,iBAAiB,EAAE,EAAE",
+    "sources": [
+        "../../scss/game/RelatiViewEffect.scss"
+    ],
+    "names": [],
+    "file": "RelatiViewEffect.css"
+}

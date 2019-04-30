@@ -140,6 +140,7 @@ namespace Relati {
                     if (grid.is(RELATI_LAUNCHER)) {
                         symbolAttr["stroke-width"] = "1.2";
                         this.view.appendChild(createSVG("path", symbolAttr));
+
                         symbolAttr["stroke-width"] = "0.6";
                         symbolAttr["stroke"] = "#f2f2f2";
                         this.view.appendChild(createSVG("path", symbolAttr));
