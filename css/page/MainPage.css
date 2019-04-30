@@ -1,1 +1,22 @@
-/* No CSS *//*# sourceMappingURL=MainPage.css.map */
+#main-page #main-title {
+  font-size: 90px;
+  font-family: sans-serif;
+}
+
+#main-page #main-controls {
+  width: 150px;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+
+#main-page #main-controls .to-game-page {
+  background-color: crimson;
+  background-image: url(../../svg/play.svg);
+}
+
+#main-page #main-controls .to-help-page {
+  background-color: royalblue;
+  background-image: url(../../svg/help.svg);
+}
+/*# sourceMappingURL=MainPage.css.map */
