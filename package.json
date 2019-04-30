@@ -1,0 +1,30 @@
+{
+  "name": "relati",
+  "version": "1.0.0",
+  "description": "board game",
+  "main": "index.js",
+  "dependencies": {
+    "awesome-typescript-loader": "^5.2.1",
+    "html-webpack-plugin": "^3.2.0",
+    "webpack-cli": "^3.3.1"
+  },
+  "devDependencies": {
+    "node-sass": "^4.12.0",
+    "sass-loader": "^7.1.0",
+    "webpack": "^4.30.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fixiabis/Relati.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/fixiabis/Relati/issues"
+  },
+  "homepage": "https://github.com/fixiabis/Relati#readme"
+}
