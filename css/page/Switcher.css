@@ -80,7 +80,7 @@ html, body {
   height: 50px;
   border-radius: 5px;
   background-color: #888;
-  background-image: url(../../svg/go-back.svg);
+  background-image: url(../../svg/back.svg);
   background-repeat: no-repeat;
   background-position: center;
   -webkit-transition: -webkit-transform 0.5s;
