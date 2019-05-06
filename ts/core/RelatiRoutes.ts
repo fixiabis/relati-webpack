@@ -10,11 +10,13 @@ let {
     DRCT_FRR, DRCT_FLL, DRCT_BRR, DRCT_BLL
 } = GRID_DRCT;
 
+/** 一般Relati路徑 */
 const NORMAL_ROUTES = [
     DRCT_F, DRCT_B, DRCT_R, DRCT_L,
     DRCT_FR, DRCT_FL, DRCT_BR, DRCT_BL
 ];
 
+/** 遠程Relati路徑 */
 const REMOTE_NORMAL_ROUTES = [
     [DRCT_2F, DRCT_F],
     [DRCT_2B, DRCT_B],
@@ -26,6 +28,7 @@ const REMOTE_NORMAL_ROUTES = [
     [DRCT_2BL, DRCT_BL]
 ];
 
+/** 遠程穩定Relati路徑 */
 const REMOTE_STABLE_ROUTES = [
     [DRCT_FFR, DRCT_2F, DRCT_F],
     [DRCT_FFR, DRCT_FR, DRCT_F],
@@ -53,9 +56,18 @@ const REMOTE_STABLE_ROUTES = [
     [DRCT_BLL, DRCT_BL, DRCT_L]
 ];
 
+/** 使用一般Relati路徑類型 */
 export const BY_NORMAL_RELATI = 0;
+
+/** 使用通用Relati路徑類型 */
 export const BY_COMMON_RELATI = 1;
 
+/**
+ * 取得Relati路徑
+ * @param grid 棋盤格
+ * @param status 狀態
+ * @param routeType 路徑類型
+ */
 export function getRelatiRoutesBy(grid: RelatiGrid, status: number, routeType: number) {
     let routes: RelatiGrid[] = [];
 
@@ -98,6 +110,12 @@ export function getRelatiRoutesBy(grid: RelatiGrid, status: number, routeType: n
     return routes;
 }
 
+/**
+ * 是否有Relati路徑
+ * @param grid 棋盤格
+ * @param status 狀態
+ * @param routeType 路徑類型
+ */
 export function hasRelatiRoutesBy(grid: RelatiGrid, status: number, routeType: number) {
     switch (routeType) {
         case BY_COMMON_RELATI:
@@ -138,6 +156,12 @@ export function hasRelatiRoutesBy(grid: RelatiGrid, status: number, routeType: n
     return false;
 }
 
+/**
+ * 追溯Relati路徑
+ * @param grid 棋盤格
+ * @param status 狀態
+ * @param routeType 路徑類型
+ */
 export function getRelatiTracesBy(grid: RelatiGrid, status: number, routeType: number) {
     let routes: RelatiGrid[][] = [];
 

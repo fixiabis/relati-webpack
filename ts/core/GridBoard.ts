@@ -1,3 +1,11 @@
+/**
+ * 棋盤格方向
+ * C: (x = 0, y = 0)
+ * F: (x = x, y - 1)
+ * B: (x = x, y + 1)
+ * R: (x + 1, y = y)
+ * L: (x - 1, y = y)
+ */
 export enum GRID_DRCT {
     DRCT_C = 0x0000,
     DRCT_F = 0x1000,
@@ -28,13 +36,26 @@ export enum GRID_DRCT {
     DRCT_BLL = 0x0102
 }
 
+/** 棋盤格 */
 export class Grid {
+    /** 原始陣列索引 */
     public i: number;
 
-    constructor(public board: GridBoard, public x: number, public y: number) {
+    constructor(
+        /** 所屬棋盤 */
+        public board: GridBoard,
+        /** X座標 */
+        public x: number,
+        /** Y座標 */
+        public y: number
+    ) {
         this.i = x * board.height + y;
     }
 
+    /**
+     * 取得相對位置的棋盤格
+     * @param drct 方向，使用 GRID_DRCT 可簡單取得
+     */
     getGrid(drct: number) {
         let f = (0xF000 & drct) >> 12;
         let b = (0x0F00 & drct) >> 8;
@@ -48,11 +69,19 @@ export class Grid {
     }
 }
 
+/** 棋盤 */
 export class GridBoard {
+    /** 所有棋盤格 */
     public grids: Grid[];
+    /** 棋盤格總數 */
     public length: number;
 
-    constructor(public width: number, public height: number) {
+    constructor(
+        /** 棋盤寬度 */
+        public width: number,
+        /** 棋盤高度 */
+        public height: number
+    ) {
         let grids: Grid[] = [];
 
         this.grids = grids;
@@ -66,6 +95,11 @@ export class GridBoard {
         }
     }
 
+    /**
+     * 取得絕對位置的棋盤格
+     * @param x X座標
+     * @param y Y座標
+     */
     getGrid(x: number, y: number) {
         if (
             x < 0 || x >= this.width ||
