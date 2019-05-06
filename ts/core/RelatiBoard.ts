@@ -1,4 +1,4 @@
-import { GridBoard, Grid } from "./GridBoard";
+import { Grid, GridBoard } from "./GridBoard";
 
 export const RELATI_SYMBOL_N = 0b00000000;
 export const RELATI_SYMBOL_O = 0b00000001;
@@ -15,24 +15,34 @@ export interface RelatiGrid extends Grid {
 export class RelatiGrid extends Grid {
     public body: number = 0;
 
-    constructor(
-        board: RelatiBoard,
-        x: number,
-        y: number
-    ) { super(board, x, y); }
+    constructor(board: RelatiBoard, x: number, y: number) {
+        super(board, x, y);
+    }
 
-    is(status: number) { return (this.body & status) === status; }
-    gain(status: number) { return this.body |= status; }
-    lost(status: number) { return this.body &= ~status; }
+    is(status: number) {
+        return (this.body & status) === status;
+    }
 
-    get symbol() { return this.body & 0b00000111; }
+    gain(status: number) {
+        return this.body |= status;
+    }
+
+    lost(status: number) {
+        return this.body &= ~status;
+    }
+
+    get symbol() {
+        return this.body & 0b00000111;
+    }
 
     set symbol(symbol: number) {
         this.lost(0b00000111);
         this.gain(symbol);
     }
 
-    get isSpace() { return this.body === RELATI_SYMBOL_N; }
+    get isSpace() {
+        return this.body === RELATI_SYMBOL_N;
+    }
 }
 
 export interface RelatiBoard extends GridBoard {

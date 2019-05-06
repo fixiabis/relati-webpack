@@ -1,61 +1,56 @@
-import {
-    GRID_DRCT_F, GRID_DRCT_B, GRID_DRCT_R, GRID_DRCT_L,
-    GRID_DRCT_FR, GRID_DRCT_FL, GRID_DRCT_BR, GRID_DRCT_BL,
-    GRID_DRCT_2F, GRID_DRCT_2B, GRID_DRCT_2R, GRID_DRCT_2L,
-    GRID_DRCT_2FR, GRID_DRCT_2FL, GRID_DRCT_2BR, GRID_DRCT_2BL,
-    GRID_DRCT_FFR, GRID_DRCT_FFL, GRID_DRCT_BBR, GRID_DRCT_BBL,
-    GRID_DRCT_FRR, GRID_DRCT_FLL, GRID_DRCT_BRR, GRID_DRCT_BLL
-} from "./GridBoard";
-
+import { GRID_DRCT } from "./GridBoard";
 import { RelatiGrid } from "./RelatiBoard";
 
-const NORMAL_RELATI_ROUTES = [
-    GRID_DRCT_F,
-    GRID_DRCT_B,
-    GRID_DRCT_R,
-    GRID_DRCT_L,
-    GRID_DRCT_FR,
-    GRID_DRCT_FL,
-    GRID_DRCT_BR,
-    GRID_DRCT_BL
+let {
+    DRCT_F, DRCT_B, DRCT_R, DRCT_L,
+    DRCT_FR, DRCT_FL, DRCT_BR, DRCT_BL,
+    DRCT_2F, DRCT_2B, DRCT_2R, DRCT_2L,
+    DRCT_2FR, DRCT_2FL, DRCT_2BR, DRCT_2BL,
+    DRCT_FFR, DRCT_FFL, DRCT_BBR, DRCT_BBL,
+    DRCT_FRR, DRCT_FLL, DRCT_BRR, DRCT_BLL
+} = GRID_DRCT;
+
+const NORMAL_ROUTES = [
+    DRCT_F, DRCT_B, DRCT_R, DRCT_L,
+    DRCT_FR, DRCT_FL, DRCT_BR, DRCT_BL
 ];
 
-const REMOTE_NORMAL_RELATI_ROUTES = [
-    [GRID_DRCT_2F, GRID_DRCT_F],
-    [GRID_DRCT_2B, GRID_DRCT_B],
-    [GRID_DRCT_2R, GRID_DRCT_R],
-    [GRID_DRCT_2L, GRID_DRCT_L],
-    [GRID_DRCT_2FR, GRID_DRCT_FR],
-    [GRID_DRCT_2FL, GRID_DRCT_FL],
-    [GRID_DRCT_2BR, GRID_DRCT_BR],
-    [GRID_DRCT_2BL, GRID_DRCT_BL]
+const REMOTE_NORMAL_ROUTES = [
+    [DRCT_2F, DRCT_F],
+    [DRCT_2B, DRCT_B],
+    [DRCT_2R, DRCT_R],
+    [DRCT_2L, DRCT_L],
+    [DRCT_2FR, DRCT_FR],
+    [DRCT_2FL, DRCT_FL],
+    [DRCT_2BR, DRCT_BR],
+    [DRCT_2BL, DRCT_BL]
 ];
 
-const REMOTE_STABLE_RELATI_ROUTES = [
-    [GRID_DRCT_FFR, GRID_DRCT_2F, GRID_DRCT_F],
-    [GRID_DRCT_FFR, GRID_DRCT_FR, GRID_DRCT_F],
-    [GRID_DRCT_FFR, GRID_DRCT_FR, GRID_DRCT_R],
-    [GRID_DRCT_FFL, GRID_DRCT_2F, GRID_DRCT_F],
-    [GRID_DRCT_FFL, GRID_DRCT_FL, GRID_DRCT_F],
-    [GRID_DRCT_FFL, GRID_DRCT_FL, GRID_DRCT_L],
-    [GRID_DRCT_BBR, GRID_DRCT_2B, GRID_DRCT_B],
-    [GRID_DRCT_BBR, GRID_DRCT_BR, GRID_DRCT_B],
-    [GRID_DRCT_BBR, GRID_DRCT_BR, GRID_DRCT_R],
-    [GRID_DRCT_BBL, GRID_DRCT_2B, GRID_DRCT_B],
-    [GRID_DRCT_BBL, GRID_DRCT_BL, GRID_DRCT_B],
-    [GRID_DRCT_BBL, GRID_DRCT_BL, GRID_DRCT_L],
-    [GRID_DRCT_FRR, GRID_DRCT_FR, GRID_DRCT_F],
-    [GRID_DRCT_FRR, GRID_DRCT_2R, GRID_DRCT_R],
-    [GRID_DRCT_FRR, GRID_DRCT_FR, GRID_DRCT_R],
-    [GRID_DRCT_FLL, GRID_DRCT_FL, GRID_DRCT_F],
-    [GRID_DRCT_FLL, GRID_DRCT_2L, GRID_DRCT_L],
-    [GRID_DRCT_FLL, GRID_DRCT_FL, GRID_DRCT_L],
-    [GRID_DRCT_BRR, GRID_DRCT_BR, GRID_DRCT_B],
-    [GRID_DRCT_BRR, GRID_DRCT_2R, GRID_DRCT_R],
-    [GRID_DRCT_BRR, GRID_DRCT_BR, GRID_DRCT_R],
-    [GRID_DRCT_BLL, GRID_DRCT_BL, GRID_DRCT_B],
-    [GRID_DRCT_BLL, GRID_DRCT_2L, GRID_DRCT_L],
-    [GRID_DRCT_BLL, GRID_DRCT_BL, GRID_DRCT_L]
+const REMOTE_STABLE_ROUTES = [
+    [DRCT_FFR, DRCT_2F, DRCT_F],
+    [DRCT_FFR, DRCT_FR, DRCT_F],
+    [DRCT_FFR, DRCT_FR, DRCT_R],
+    [DRCT_FFL, DRCT_2F, DRCT_F],
+    [DRCT_FFL, DRCT_FL, DRCT_F],
+    [DRCT_FFL, DRCT_FL, DRCT_L],
+    [DRCT_BBR, DRCT_2B, DRCT_B],
+    [DRCT_BBR, DRCT_BR, DRCT_B],
+    [DRCT_BBR, DRCT_BR, DRCT_R],
+    [DRCT_BBL, DRCT_2B, DRCT_B],
+    [DRCT_BBL, DRCT_BL, DRCT_B],
+    [DRCT_BBL, DRCT_BL, DRCT_L],
+    [DRCT_FRR, DRCT_FR, DRCT_F],
+    [DRCT_FRR, DRCT_2R, DRCT_R],
+    [DRCT_FRR, DRCT_FR, DRCT_R],
+    [DRCT_FLL, DRCT_FL, DRCT_F],
+    [DRCT_FLL, DRCT_2L, DRCT_L],
+    [DRCT_FLL, DRCT_FL, DRCT_L],
+    [DRCT_BRR, DRCT_BR, DRCT_B],
+    [DRCT_BRR, DRCT_2R, DRCT_R],
+    [DRCT_BRR, DRCT_BR, DRCT_R],
+    [DRCT_BLL, DRCT_BL, DRCT_B],
+    [DRCT_BLL, DRCT_2L, DRCT_L],
+    [DRCT_BLL, DRCT_BL, DRCT_L]
 ];
 
 export const BY_NORMAL_RELATI = 0;
@@ -67,9 +62,9 @@ export function getRelatiRoutesBy(grid: RelatiGrid, status: number, routeType: n
     switch (routeType) {
         case BY_COMMON_RELATI:
             for (let i = 0; i < 24; i++) {
-                let targetGrid = grid.getGrid(REMOTE_STABLE_RELATI_ROUTES[i][0]);
-                let middleGrid1 = grid.getGrid(REMOTE_STABLE_RELATI_ROUTES[i][1]);
-                let middleGrid2 = grid.getGrid(REMOTE_STABLE_RELATI_ROUTES[i][2]);
+                let targetGrid = grid.getGrid(REMOTE_STABLE_ROUTES[i][0]);
+                let middleGrid1 = grid.getGrid(REMOTE_STABLE_ROUTES[i][1]);
+                let middleGrid2 = grid.getGrid(REMOTE_STABLE_ROUTES[i][2]);
 
                 if (
                     targetGrid &&
@@ -80,8 +75,8 @@ export function getRelatiRoutesBy(grid: RelatiGrid, status: number, routeType: n
             }
 
             for (let i = 0; i < 8; i++) {
-                let targetGrid = grid.getGrid(REMOTE_NORMAL_RELATI_ROUTES[i][0]);
-                let middleGrid = grid.getGrid(REMOTE_NORMAL_RELATI_ROUTES[i][1]);
+                let targetGrid = grid.getGrid(REMOTE_NORMAL_ROUTES[i][0]);
+                let middleGrid = grid.getGrid(REMOTE_NORMAL_ROUTES[i][1]);
 
                 if (
                     targetGrid &&
@@ -91,7 +86,7 @@ export function getRelatiRoutesBy(grid: RelatiGrid, status: number, routeType: n
             }
         case BY_NORMAL_RELATI:
             for (let i = 0; i < 8; i++) {
-                let targetGrid = grid.getGrid(NORMAL_RELATI_ROUTES[i]);
+                let targetGrid = grid.getGrid(NORMAL_ROUTES[i]);
 
                 if (
                     targetGrid &&
@@ -107,9 +102,9 @@ export function hasRelatiRoutesBy(grid: RelatiGrid, status: number, routeType: n
     switch (routeType) {
         case BY_COMMON_RELATI:
             for (let i = 0; i < 24; i++) {
-                let targetGrid = grid.getGrid(REMOTE_STABLE_RELATI_ROUTES[i][0]);
-                let middleGrid1 = grid.getGrid(REMOTE_STABLE_RELATI_ROUTES[i][1]);
-                let middleGrid2 = grid.getGrid(REMOTE_STABLE_RELATI_ROUTES[i][2]);
+                let targetGrid = grid.getGrid(REMOTE_STABLE_ROUTES[i][0]);
+                let middleGrid1 = grid.getGrid(REMOTE_STABLE_ROUTES[i][1]);
+                let middleGrid2 = grid.getGrid(REMOTE_STABLE_ROUTES[i][2]);
 
                 if (
                     targetGrid &&
@@ -120,8 +115,8 @@ export function hasRelatiRoutesBy(grid: RelatiGrid, status: number, routeType: n
             }
 
             for (let i = 0; i < 8; i++) {
-                let targetGrid = grid.getGrid(REMOTE_NORMAL_RELATI_ROUTES[i][0]);
-                let middleGrid = grid.getGrid(REMOTE_NORMAL_RELATI_ROUTES[i][1]);
+                let targetGrid = grid.getGrid(REMOTE_NORMAL_ROUTES[i][0]);
+                let middleGrid = grid.getGrid(REMOTE_NORMAL_ROUTES[i][1]);
 
                 if (
                     targetGrid &&
@@ -131,7 +126,7 @@ export function hasRelatiRoutesBy(grid: RelatiGrid, status: number, routeType: n
             }
         case BY_NORMAL_RELATI:
             for (let i = 0; i < 8; i++) {
-                let targetGrid = grid.getGrid(NORMAL_RELATI_ROUTES[i]);
+                let targetGrid = grid.getGrid(NORMAL_ROUTES[i]);
 
                 if (
                     targetGrid &&
@@ -149,9 +144,9 @@ export function getRelatiTracesBy(grid: RelatiGrid, status: number, routeType: n
     switch (routeType) {
         case BY_COMMON_RELATI:
             for (let i = 0; i < 24; i++) {
-                let targetGrid = grid.getGrid(REMOTE_STABLE_RELATI_ROUTES[i][0]);
-                let middleGrid1 = grid.getGrid(REMOTE_STABLE_RELATI_ROUTES[i][1]);
-                let middleGrid2 = grid.getGrid(REMOTE_STABLE_RELATI_ROUTES[i][2]);
+                let targetGrid = grid.getGrid(REMOTE_STABLE_ROUTES[i][0]);
+                let middleGrid1 = grid.getGrid(REMOTE_STABLE_ROUTES[i][1]);
+                let middleGrid2 = grid.getGrid(REMOTE_STABLE_ROUTES[i][2]);
 
                 if (
                     targetGrid &&
@@ -162,8 +157,8 @@ export function getRelatiTracesBy(grid: RelatiGrid, status: number, routeType: n
             }
 
             for (let i = 0; i < 8; i++) {
-                let targetGrid = grid.getGrid(REMOTE_NORMAL_RELATI_ROUTES[i][0]);
-                let middleGrid = grid.getGrid(REMOTE_NORMAL_RELATI_ROUTES[i][1]);
+                let targetGrid = grid.getGrid(REMOTE_NORMAL_ROUTES[i][0]);
+                let middleGrid = grid.getGrid(REMOTE_NORMAL_ROUTES[i][1]);
 
                 if (
                     targetGrid &&
@@ -173,7 +168,7 @@ export function getRelatiTracesBy(grid: RelatiGrid, status: number, routeType: n
             }
         case BY_NORMAL_RELATI:
             for (let i = 0; i < 8; i++) {
-                let targetGrid = grid.getGrid(NORMAL_RELATI_ROUTES[i]);
+                let targetGrid = grid.getGrid(NORMAL_ROUTES[i]);
 
                 if (
                     targetGrid &&

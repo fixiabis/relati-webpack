@@ -1,30 +1,32 @@
-export const GRID_DRCT_C = 0x0000;
-export const GRID_DRCT_F = 0x1000;
-export const GRID_DRCT_B = 0x0100;
-export const GRID_DRCT_R = 0x0010;
-export const GRID_DRCT_L = 0x0001;
-export const GRID_DRCT_FR = 0x1010;
-export const GRID_DRCT_FL = 0x1001;
-export const GRID_DRCT_BR = 0x0110;
-export const GRID_DRCT_BL = 0x0101;
+export enum GRID_DRCT {
+    DRCT_C = 0x0000,
+    DRCT_F = 0x1000,
+    DRCT_B = 0x0100,
+    DRCT_R = 0x0010,
+    DRCT_L = 0x0001,
+    DRCT_FR = 0x1010,
+    DRCT_FL = 0x1001,
+    DRCT_BR = 0x0110,
+    DRCT_BL = 0x0101,
 
-export const GRID_DRCT_2F = 0x2000;
-export const GRID_DRCT_2B = 0x0200;
-export const GRID_DRCT_2R = 0x0020;
-export const GRID_DRCT_2L = 0x0002;
-export const GRID_DRCT_2FR = 0x2020;
-export const GRID_DRCT_2FL = 0x2002;
-export const GRID_DRCT_2BR = 0x0220;
-export const GRID_DRCT_2BL = 0x0202;
+    DRCT_2F = 0x2000,
+    DRCT_2B = 0x0200,
+    DRCT_2R = 0x0020,
+    DRCT_2L = 0x0002,
+    DRCT_2FR = 0x2020,
+    DRCT_2FL = 0x2002,
+    DRCT_2BR = 0x0220,
+    DRCT_2BL = 0x0202,
 
-export const GRID_DRCT_FFR = 0x2010;
-export const GRID_DRCT_FFL = 0x2001;
-export const GRID_DRCT_BBR = 0x0210;
-export const GRID_DRCT_BBL = 0x0201;
-export const GRID_DRCT_FRR = 0x1020;
-export const GRID_DRCT_FLL = 0x1002;
-export const GRID_DRCT_BRR = 0x0120;
-export const GRID_DRCT_BLL = 0x0102;
+    DRCT_FFR = 0x2010,
+    DRCT_FFL = 0x2001,
+    DRCT_BBR = 0x0210,
+    DRCT_BBL = 0x0201,
+    DRCT_FRR = 0x1020,
+    DRCT_FLL = 0x1002,
+    DRCT_BRR = 0x0120,
+    DRCT_BLL = 0x0102
+}
 
 export class Grid {
     public i: number;
@@ -34,25 +36,27 @@ export class Grid {
     }
 
     getGrid(drct: number) {
-        let F = (0xF000 & drct) >> 12;
-        let B = (0x0F00 & drct) >> 8;
-        let R = (0x00F0 & drct) >> 4;
-        let L = (0x000F & drct);
+        let f = (0xF000 & drct) >> 12;
+        let b = (0x0F00 & drct) >> 8;
+        let r = (0x00F0 & drct) >> 4;
+        let l = (0x000F & drct);
 
-        let x = this.x + R - L;
-        let y = this.y + B - F;
+        let x = this.x + r - l;
+        let y = this.y + b - f;
 
         return this.board.getGrid(x, y);
     }
 }
 
 export class GridBoard {
-    public length: number;
     public grids: Grid[];
+    public length: number;
 
     constructor(public width: number, public height: number) {
-        let length: number = width * height;
         let grids: Grid[] = [];
+
+        this.grids = grids;
+        this.length = width * height;
 
         for (let x = 0; x < width; x++) {
             for (let y = 0; y < height; y++) {
@@ -60,9 +64,6 @@ export class GridBoard {
                 grids[grid.i] = grid;
             }
         }
-
-        this.grids = grids;
-        this.length = length;
     }
 
     getGrid(x: number, y: number) {
