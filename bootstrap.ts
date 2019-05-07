@@ -2,7 +2,7 @@ import "./scss/view/RelatiEffectView.scss";
 
 import { RelatiBoard } from "./ts/core/RelatiBoard";
 import { RelatiGame } from "./ts/core/RelatiGame";
-import { BY_COMMON_RELATI } from "./ts/core/RelatiRoutes";
+import { BY_COMMON_RELATI, BY_NORMAL_RELATI } from "./ts/core/RelatiRoutes";
 import { RelatiBoardView } from "./ts/view/RelatiBoardView";
 import { createRelatiEffect, createHintEffect } from "./ts/view/RelatiEffectView";
 
@@ -13,7 +13,7 @@ var boardView = new RelatiBoardView(board, document.body);
 boardView.resize();
 window.addEventListener("resize", boardView.resize.bind(boardView));
 
-boardView.view.addEventListener("click", function (event: MouseEvent) {
+boardView.body.addEventListener("click", function (event: MouseEvent) {
     var x: number = Math.floor(event.offsetX / 5),
         y: number = Math.floor(event.offsetY / 5);
 
@@ -23,11 +23,19 @@ boardView.view.addEventListener("click", function (event: MouseEvent) {
 
     var { background } = boardView;
     var nowPlayerSymbol = game.nowPlayerSymbol;
+    var gameResult = game.result;
+
+    if (gameResult !== "none") {
+        if (confirm(gameResult)) {
+            game.restart();
+        }
+    }
 
     boardView.update();
     boardView.removeBackground();
 
-    createHintEffect(game.getPlaceableGrid(nowPlayerSymbol), nowPlayerSymbol, background);
+    var placeableGrids = game.getPlaceableGrids(nowPlayerSymbol);
+    createHintEffect(placeableGrids, nowPlayerSymbol, background);
     createRelatiEffect(playerSymbol, background, game);
 });
 

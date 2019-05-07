@@ -6,7 +6,7 @@ svg .relati-effect-line {
 }
 
 @keyframes relati-effect-line {
-    0% {
+    from {
         stroke-dashoffset: 15;
     }
 }

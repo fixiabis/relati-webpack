@@ -7,11 +7,11 @@ import {
 
 export class RelatiBoardView {
     public gridViews: RelatiGridView[] = [];
-    public view: SVGSVGElement = createSVG("svg");
+    public body: SVGSVGElement = createSVG("svg");
     public background: SVGGElement = createSVG("g");
 
     constructor(public board: RelatiBoard, public container: HTMLElement) {
-        updateSVG(this.view, {
+        updateSVG(this.body, {
             "width": `${board.width * 5}`,
             "height": `${board.height * 5}`
         });
@@ -36,14 +36,14 @@ export class RelatiBoardView {
             linesContainer.appendChild(line);
         }
 
-        container.appendChild(this.view);
-        this.view.appendChild(this.background);
-        this.view.appendChild(linesContainer);
+        container.appendChild(this.body);
+        this.body.appendChild(this.background);
+        this.body.appendChild(linesContainer);
 
         for (let grid of board.grids) {
             let gridView = new RelatiGridView(this, grid);
             this.gridViews.push(gridView);
-            this.view.appendChild(gridView.view);
+            this.body.appendChild(gridView.body);
         }
 
         this.resize();
@@ -53,7 +53,7 @@ export class RelatiBoardView {
     resize() {
         let { container, board: { width, height } } = this;
 
-        this.view.style.transform = "scale(" + Math.min(
+        this.body.style.transform = "scale(" + Math.min(
             container.clientWidth / (width * 5),
             container.clientHeight / (height * 5)
         ) * 0.95 + ")";
@@ -74,17 +74,17 @@ export class RelatiBoardView {
 }
 
 export class RelatiGridView {
-    public body: number = 0;
-    public view: SVGGElement = createSVG("g");
+    public gridBody: number = 0;
+    public body: SVGGElement = createSVG("g");
 
     constructor(public boardView: RelatiBoardView, public grid: RelatiGrid) {
-        this.body = grid.body;
+        this.gridBody = grid.body;
     }
 
     update() {
         let { grid } = this;
 
-        if (this.body === grid.body) return;
+        if (this.gridBody === grid.body) return;
 
         let symbolAttr = {
             "d": "",
@@ -100,8 +100,8 @@ export class RelatiGridView {
 
         switch (grid.body & 0b00000111) {
             case RELATI_SYMBOL_N: {
-                let childCount = this.view.childNodes.length;
-                while (childCount-- > 0) this.view.removeChild(this.view.childNodes[0]);
+                let childCount = this.body.childNodes.length;
+                while (childCount-- > 0) this.body.removeChild(this.body.childNodes[0]);
                 break;
             }
 
@@ -126,34 +126,34 @@ export class RelatiGridView {
             }
         }
 
-        if (!this.body) {
+        if (!this.gridBody) {
             if (!grid.isSpace) {
                 if (grid.is(RELATI_LAUNCHER)) {
                     symbolAttr["stroke-width"] = "1.2";
-                    this.view.appendChild(createSVG("path", symbolAttr));
+                    this.body.appendChild(createSVG("path", symbolAttr));
 
                     symbolAttr["stroke-width"] = "0.6";
                     symbolAttr["stroke"] = "#f2f2f2";
-                    this.view.appendChild(createSVG("path", symbolAttr));
+                    this.body.appendChild(createSVG("path", symbolAttr));
                 } else if (grid.is(RELATI_REPEATER)) {
-                    this.view.appendChild(createSVG("path", symbolAttr));
+                    this.body.appendChild(createSVG("path", symbolAttr));
                 } else {
                     symbolAttr["stroke"] = "#666";
-                    this.view.appendChild(createSVG("path", symbolAttr));
+                    this.body.appendChild(createSVG("path", symbolAttr));
                 }
             }
         } else if (!grid.is(RELATI_LAUNCHER)) {
             let color = symbolAttr["stroke"];
 
             if (!grid.is(RELATI_REPEATER)) color = "#666";
-            let childCount = this.view.childNodes.length;
+            let childCount = this.body.childNodes.length;
 
             while (childCount-- > 0) updateSVG(
-                this.view.childNodes[childCount] as SVGElement,
+                this.body.childNodes[childCount] as SVGElement,
                 { "stroke": color }
             );
         }
 
-        this.body = grid.body;
+        this.gridBody = grid.body;
     }
 }

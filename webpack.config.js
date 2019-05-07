@@ -1,9 +1,9 @@
 const path = require("path");
 
 module.exports = {
-    entry: "./index.ts",
+    entry: "./bootstrap.ts",
     output: {
-        filename: "main.js",
+        filename: "index.js",
         path: path.resolve(__dirname, "./js")
     },
     devtool: "source-map",

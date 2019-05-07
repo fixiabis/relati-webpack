@@ -47,19 +47,6 @@ function createLine(source: RelatiGrid, traces: RelatiGrid[], color: string, vie
     view.appendChild(path);
 }
 
-export function createRelatiEffect(symbol: number, view: SVGElement, game: RelatiGame) {
-    let { board: { grids }, routeType, turn } = game;
-    let color = SYMBOL_COLOR[symbol];
-
-    for (let grid of grids) grid.lost(RELATI_EFFECTED);
-
-    for (let grid of grids) {
-        if (grid.is(RELATI_LAUNCHER) && grid.symbol == symbol) {
-            createRelatiLine(grid, color, view, routeType, turn, game);
-        }
-    }
-}
-
 function createRelatiLine(grid: RelatiGrid, color: string, view: SVGElement, routeType: number, turn: number, game: RelatiGame) {
     if (grid.is(RELATI_EFFECTED) || game.turn > turn) return;
     grid.gain(RELATI_EFFECTED);
@@ -77,4 +64,17 @@ function createRelatiLine(grid: RelatiGrid, color: string, view: SVGElement, rou
             }
         }
     }, 250);
+}
+
+export function createRelatiEffect(symbol: number, view: SVGElement, game: RelatiGame) {
+    let { board: { grids }, routeType, turn } = game;
+    let color = SYMBOL_COLOR[symbol];
+
+    for (let grid of grids) grid.lost(RELATI_EFFECTED);
+
+    for (let grid of grids) {
+        if (grid.is(RELATI_LAUNCHER) && grid.symbol == symbol) {
+            createRelatiLine(grid, color, view, routeType, turn, game);
+        }
+    }
 }
