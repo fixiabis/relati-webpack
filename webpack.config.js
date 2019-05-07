@@ -3,8 +3,8 @@ const path = require("path");
 module.exports = {
     entry: "./index.ts",
     output: {
-        filename: "bundle.js",
-        path: path.resolve(__dirname, "./")
+        filename: "main.js",
+        path: path.resolve(__dirname, "./js")
     },
     devtool: "source-map",
     resolve: {

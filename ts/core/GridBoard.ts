@@ -39,15 +39,15 @@ export enum GRID_DRCT {
 /** 棋盤格 */
 export class Grid {
     /** 原始陣列索引 */
-    public i: number;
+    public readonly i: number;
 
     constructor(
         /** 所屬棋盤 */
-        public board: GridBoard,
+        public readonly board: GridBoard,
         /** X座標 */
-        public x: number,
+        public readonly x: number,
         /** Y座標 */
-        public y: number
+        public readonly y: number
     ) {
         this.i = x * board.height + y;
     }
@@ -72,15 +72,15 @@ export class Grid {
 /** 棋盤 */
 export class GridBoard {
     /** 所有棋盤格 */
-    public grids: Grid[];
+    public readonly grids: Grid[];
     /** 棋盤格總數 */
-    public length: number;
+    public readonly length: number;
 
     constructor(
         /** 棋盤寬度 */
-        public width: number,
+        public readonly width: number,
         /** 棋盤高度 */
-        public height: number
+        public readonly height: number
     ) {
         let grids: Grid[] = [];
 

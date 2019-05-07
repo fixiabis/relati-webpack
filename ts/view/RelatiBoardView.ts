@@ -68,8 +68,8 @@ export class RelatiBoardView {
 
     removeBackground() {
         let { background } = this;
-        let times = background.childNodes.length;
-        while (times-- > 0) background.removeChild(background.childNodes[0]);
+        let childCount = background.childNodes.length;
+        while (childCount-- > 0) background.removeChild(background.childNodes[0]);
     }
 }
 
@@ -93,15 +93,15 @@ export class RelatiGridView {
             "stroke-width": "0.6"
         };
 
-        var srtX = grid.x * 5 + 1;
-        var srtY = grid.y * 5 + 1;
-        var endX = grid.x * 5 + 4;
-        var endY = grid.y * 5 + 4;
+        let srtX = grid.x * 5 + 1;
+        let srtY = grid.y * 5 + 1;
+        let endX = grid.x * 5 + 4;
+        let endY = grid.y * 5 + 4;
 
         switch (grid.body & 0b00000111) {
             case RELATI_SYMBOL_N: {
-                let times = this.view.childNodes.length;
-                while (times-- > 0) this.view.removeChild(this.view.childNodes[0]);
+                let childCount = this.view.childNodes.length;
+                while (childCount-- > 0) this.view.removeChild(this.view.childNodes[0]);
                 break;
             }
 
@@ -146,10 +146,10 @@ export class RelatiGridView {
             let color = symbolAttr["stroke"];
 
             if (!grid.is(RELATI_REPEATER)) color = "#666";
-            let times = this.view.childNodes.length;
+            let childCount = this.view.childNodes.length;
 
-            while (times-- > 0) updateSVG(
-                this.view.childNodes[times] as SVGElement,
+            while (childCount-- > 0) updateSVG(
+                this.view.childNodes[childCount] as SVGElement,
                 { "stroke": color }
             );
         }
