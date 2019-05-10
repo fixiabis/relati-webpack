@@ -1,3 +1,4 @@
+import "../../scss/view/relati-effect.scss";
 import { createSVG } from "../core/SVGProcess";
 import { RelatiGrid, RELATI_LAUNCHER, RELATI_RECEIVER } from "../core/RelatiBoard";
 import { getRelatiTracesBy } from "../core/RelatiRoutes";

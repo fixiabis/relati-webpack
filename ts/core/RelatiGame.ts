@@ -2,16 +2,22 @@ import { RelatiBoard, RELATI_LAUNCHER, RELATI_REPEATER, RELATI_RECEIVER, RelatiG
 import { hasRelatiRoutesBy } from "./RelatiRoutes";
 import { destoryRepeaterBy, restoreRepeaterBy } from "./RelatiAction";
 
+/** 任何狀態 */
 const RELATI_ANYSTAT = ~0b00000000;
 
+/** 遊戲主體 */
 export class RelatiGame {
+    /** 回合 */
     public turn = 0;
 
     constructor(
+        /** 棋盤 */
         public board: RelatiBoard,
+        /** Relati類型 */
         public routeType: number
     ) { this.restart(); }
 
+    /** 重新開始 */
     restart() {
         this.turn = 0;
 
@@ -20,6 +26,11 @@ export class RelatiGame {
         }
     }
 
+    /**
+     * 選取棋盤格放置
+     * @param x 棋盤X座標
+     * @param y 棋盤Y座標
+     */
     selectGrid(x: number, y: number) {
         let grid = this.board.getGrid(x, y);
         if (!grid.isSpace) return;
@@ -40,6 +51,10 @@ export class RelatiGame {
         restoreRepeaterBy(board, routeType);
     }
 
+    /**
+     * 取得可放置玩家符號的棋盤格
+     * @param symbol 符號
+     */
     getPlaceableGrids(symbol: number) {
         let grids: RelatiGrid[] = [];
 
@@ -54,10 +69,12 @@ export class RelatiGame {
         return grids;
     }
 
+    /** 目前玩家符號 */
     get nowPlayerSymbol() {
         return this.turn % 2 + 1;
     }
 
+    /** 遊戲結果 */
     get result() {
         if (this.turn < 2) return "none";
 

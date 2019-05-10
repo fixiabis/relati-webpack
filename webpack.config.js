@@ -2,6 +2,8 @@ const path = require("path");
 
 module.exports = {
     entry: "./bootstrap.ts",
+    // mode: "production",
+    mode: "development",
     output: {
         filename: "index.js",
         path: path.resolve(__dirname, "./js")
