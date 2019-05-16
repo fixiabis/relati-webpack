@@ -1,5 +1,6 @@
 export namespace MessageBox {
     export let view: HTMLElement = document.getElementById("message-box") as HTMLElement;
+    export let messageContent: HTMLElement = document.getElementById("message-content") as HTMLElement;
     export let acceptButton: HTMLElement = document.getElementById("message-accept") as HTMLElement;
     export let rejectButton: HTMLElement = document.getElementById("message-reject") as HTMLElement;
     export let verifyButton: HTMLElement = document.getElementById("message-verify") as HTMLElement;
@@ -7,8 +8,10 @@ export namespace MessageBox {
     export type MessageCallback = (result: string) => void;
     let callback: MessageCallback | null;
 
-    export function show(type: string, response: MessageCallback) {
+    export function show(type: string, message: string, response: MessageCallback) {
         view.className = type;
+        messageContent.innerText = message;
+        messageContent.style.display = message ? "" : "none";
         callback = response;
     }
 

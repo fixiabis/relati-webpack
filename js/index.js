@@ -188,9 +188,13 @@ var urlEscape = __webpack_require__(/*! ../../node_modules/css-loader/dist/runti
 var ___CSS_LOADER_URL___0___ = urlEscape(__webpack_require__(/*! ../../svg/btn/accept.svg */ "./svg/btn/accept.svg"));
 var ___CSS_LOADER_URL___1___ = urlEscape(__webpack_require__(/*! ../../svg/btn/reject.svg */ "./svg/btn/reject.svg"));
 var ___CSS_LOADER_URL___2___ = urlEscape(__webpack_require__(/*! ../../svg/btn/verify.svg */ "./svg/btn/verify.svg"));
+var ___CSS_LOADER_URL___3___ = urlEscape(__webpack_require__(/*! ../../svg/message/confirm.svg */ "./svg/message/confirm.svg"));
+var ___CSS_LOADER_URL___4___ = urlEscape(__webpack_require__(/*! ../../svg/message/owin.svg */ "./svg/message/owin.svg"));
+var ___CSS_LOADER_URL___5___ = urlEscape(__webpack_require__(/*! ../../svg/message/xwin.svg */ "./svg/message/xwin.svg"));
+var ___CSS_LOADER_URL___6___ = urlEscape(__webpack_require__(/*! ../../svg/message/draw.svg */ "./svg/message/draw.svg"));
 
 // Module
-exports.push([module.i, "#message-box {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  justify-content: space-around;\n  font-size: 30px;\n  color: #888;\n  background-color: #f2f2f2;\n  width: 300px;\n  height: 200px;\n  position: fixed;\n  top: calc(50vh - 100px);\n  left: calc(50vw - 150px);\n  border-width: 2px;\n  border-color: #888;\n  border-style: solid;\n  border-radius: 5px;\n  box-sizing: border-box;\n  animation: message-box-show 0.5s; }\n\n#message-box.none,\n#message-box .btn {\n  display: none; }\n\n#message-box.accept #message-accept,\n#message-box.reject #message-reject,\n#message-box.verify #message-verify {\n  display: block; }\n\n#message-box #message-accept {\n  background-color: crimson;\n  background-image: url(" + ___CSS_LOADER_URL___0___ + "); }\n\n#message-box #message-reject {\n  background-color: royalblue;\n  background-image: url(" + ___CSS_LOADER_URL___1___ + "); }\n\n#message-box #message-verify {\n  background-color: seagreen;\n  background-image: url(" + ___CSS_LOADER_URL___2___ + "); }\n\n@keyframes message-box-show {\n  from {\n    transform: scale(0); } }\n", ""]);
+exports.push([module.i, "#message-box {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  justify-content: center;\n  font-size: 30px;\n  color: #888;\n  background-color: #f2f2f2;\n  width: 300px;\n  height: 200px;\n  position: fixed;\n  top: calc(50vh - 100px);\n  left: calc(50vw - 150px);\n  border-width: 2px;\n  border-color: #888;\n  border-style: solid;\n  border-radius: 5px;\n  box-sizing: border-box;\n  animation: message-box-show 0.5s; }\n\n#message-box.none,\n#message-box > *,\n#message-box .btn {\n  display: none; }\n\n#message-box.confirm .controls,\n#message-box.draw .controls,\n#message-box.owin .controls,\n#message-box.xwin .controls {\n  display: flex;\n  margin-top: 5px; }\n\n#message-box .controls .btn {\n  width: 45px;\n  height: 45px;\n  background-size: 40px; }\n\n#message-box.accept #message-accept,\n#message-box.reject #message-reject,\n#message-box.verify #message-verify {\n  display: block; }\n\n#message-box #message-accept {\n  background-color: crimson;\n  background-image: url(" + ___CSS_LOADER_URL___0___ + "); }\n\n#message-box #message-reject {\n  background-color: royalblue;\n  background-image: url(" + ___CSS_LOADER_URL___1___ + "); }\n\n#message-box #message-verify {\n  background-color: seagreen;\n  background-image: url(" + ___CSS_LOADER_URL___2___ + "); }\n\n#message-box .confirm {\n  background-image: url(" + ___CSS_LOADER_URL___3___ + "); }\n\n#message-box .owin {\n  background-image: url(" + ___CSS_LOADER_URL___4___ + "); }\n\n#message-box .xwin {\n  background-image: url(" + ___CSS_LOADER_URL___5___ + "); }\n\n#message-box .draw {\n  background-image: url(" + ___CSS_LOADER_URL___6___ + "); }\n\n#message-box.confirm .confirm,\n#message-box.draw .draw,\n#message-box.owin .owin,\n#message-box.xwin .xwin {\n  display: block; }\n\n#message-box .message-icon {\n  width: 100%;\n  height: 50px;\n  background-repeat: no-repeat;\n  background-position: center;\n  background-size: 60px; }\n\n#message-box #message-content {\n  display: block;\n  font-size: 14px; }\n\n@keyframes message-box-show {\n  from {\n    transform: scale(0); } }\n", ""]);
 
 
 
@@ -209,7 +213,7 @@ var urlEscape = __webpack_require__(/*! ../../node_modules/css-loader/dist/runti
 var ___CSS_LOADER_URL___0___ = urlEscape(__webpack_require__(/*! ../../svg/btn/exit.svg */ "./svg/btn/exit.svg"));
 
 // Module
-exports.push([module.i, ".page-container {\n  color: #888;\n  width: 100vw;\n  height: 100vh;\n  overflow: hidden;\n  position: relative; }\n\n.page-container > .page {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  justify-content: flex-start;\n  width: 100%;\n  height: 100%;\n  position: absolute;\n  left: -100%;\n  transition: left 0.5s; }\n\n.page-container > .page.active {\n  left: 0%; }\n\n.page-container > .page.active ~ .page {\n  left: 100%; }\n\n.page-container .controls {\n  display: flex;\n  align-items: center;\n  justify-content: space-around;\n  width: 200px;\n  height: 60px; }\n\n.page-container .btn {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  width: 50px;\n  height: 50px;\n  border-radius: 5px;\n  background-color: #888;\n  background-image: url(" + ___CSS_LOADER_URL___0___ + ");\n  background-repeat: no-repeat;\n  background-position: center;\n  transition: transform 0.5s; }\n\n.page-container .btn:active {\n  transform: scale(0.8); }\n", ""]);
+exports.push([module.i, "* {\n  user-select: none; }\n\nhtml,\nbody {\n  margin: 0;\n  width: 100vw;\n  height: 100vh; }\n\nbody {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  background-color: #f2f2f2; }\n\n.page-container {\n  color: #888;\n  width: 100vw;\n  height: 100vh;\n  overflow: hidden;\n  position: relative; }\n\n.page-container > .page {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  justify-content: flex-start;\n  width: 100%;\n  height: 100%;\n  position: absolute;\n  left: -100%;\n  transition: left 0.5s; }\n\n.page-container > .page.active {\n  left: 0%; }\n\n.page-container > .page.active ~ .page {\n  left: 100%; }\n\n.page-container .controls {\n  display: flex;\n  align-items: center;\n  justify-content: space-around;\n  width: 200px;\n  height: 60px; }\n\n.page-container .btn {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  width: 50px;\n  height: 50px;\n  border-radius: 5px;\n  background-color: #888;\n  background-image: url(" + ___CSS_LOADER_URL___0___ + ");\n  background-repeat: no-repeat;\n  background-position: center;\n  transition: transform 0.5s; }\n\n.page-container .btn:active {\n  transform: scale(0.8); }\n", ""]);
 
 
 
@@ -1134,6 +1138,50 @@ module.exports = "data:image/svg+xml;base64,PHN2ZyBpZD0iZGVidWciIHdpZHRoPSI1MCIg
 
 /***/ }),
 
+/***/ "./svg/message/confirm.svg":
+/*!*********************************!*\
+  !*** ./svg/message/confirm.svg ***!
+  \*********************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "data:image/svg+xml;base64,PHN2ZyBpZD0iZGVidWciIHdpZHRoPSI1MCIgaGVpZ2h0PSI1MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICAgIDxwYXRoIGQ9Ik0gMTggMjAuNSBBIDYuNCA2LjQgMCAxIDEgMjUgMjYuNSBWIDMwIiBzdHJva2U9IiM4ODgiIHN0cm9rZS13aWR0aD0iNSIgZmlsbD0ibm9uZSI+PC9wYXRoPgogICAgPGNpcmNsZSBjeD0iMjUiIGN5PSIzNSIgcj0iMi40IiBmaWxsPSIjODg4Ij48L2NpcmNsZT4KICAgIDxzdHlsZT5zdmc6dGFyZ2V0IHsgYmFja2dyb3VuZC1jb2xvcjogI2YyZjJmMjsgfTwvc3R5bGU+Cjwvc3ZnPg=="
+
+/***/ }),
+
+/***/ "./svg/message/draw.svg":
+/*!******************************!*\
+  !*** ./svg/message/draw.svg ***!
+  \******************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "data:image/svg+xml;base64,PHN2ZyBpZD0iZGVidWciIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjUwIiBoZWlnaHQ9IjUwIiBmaWxsPSJub25lIj4KICAgIDxwYXRoIGQ9Ik0gMTAgMTAgTCA0MCA0MCBNIDQwIDEwIEwgMTAgNDAiIHN0cm9rZT0icm95YWxibHVlIiBzdHJva2Utd2lkdGg9IjEyIj48L3BhdGg+CiAgICA8cGF0aCBkPSJNIDEwIDEwIEwgNDAgNDAgTSA0MCAxMCBMIDEwIDQwIiBzdHJva2U9IiNmMmYyZjIiIHN0cm9rZS13aWR0aD0iNiI+PC9wYXRoPgogICAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjI1IiBoZWlnaHQ9IjUwIiBmaWxsPSIjZjJmMmYyIi8+CiAgICA8cGF0aCBkPSJNIDI1IDI1IG0gMCAtMTUgYSAxNSAxNSAwIDAgMCwgMCAzMCIgc3Ryb2tlPSJjcmltc29uIiBzdHJva2Utd2lkdGg9IjEyIj48L3BhdGg+CiAgICA8cGF0aCBkPSJNIDI1IDI1IG0gMCAtMTUgYSAxNSAxNSAwIDAgMCwgMCAzMCIgc3Ryb2tlPSIjZjJmMmYyIiBzdHJva2Utd2lkdGg9IjYiPjwvcGF0aD4KICAgIDxzdHlsZT5zdmc6dGFyZ2V0IHsgYmFja2dyb3VuZC1jb2xvcjogI2YyZjJmMjsgfTwvc3R5bGU+Cjwvc3ZnPg=="
+
+/***/ }),
+
+/***/ "./svg/message/owin.svg":
+/*!******************************!*\
+  !*** ./svg/message/owin.svg ***!
+  \******************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "data:image/svg+xml;base64,PHN2ZyBpZD0iZGVidWciIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjUwIiBoZWlnaHQ9IjUwIiBmaWxsPSJub25lIj4KICAgIDxwYXRoIGQ9Ik0gMjUgMjUgbSAwIC0xNSBhIDE1IDE1IDAgMCAxLCAwIDMwIGEgMTUgMTUgMCAwIDEsIDAgLTMwIiBzdHJva2U9ImNyaW1zb24iIHN0cm9rZS13aWR0aD0iMTIiPjwvcGF0aD4KICAgIDxwYXRoIGQ9Ik0gMjUgMjUgbSAwIC0xNSBhIDE1IDE1IDAgMCAxLCAwIDMwIGEgMTUgMTUgMCAwIDEsIDAgLTMwIiBzdHJva2U9IiNmMmYyZjIiIHN0cm9rZS13aWR0aD0iNiI+PC9wYXRoPgogICAgPHN0eWxlPnN2Zzp0YXJnZXQgeyBiYWNrZ3JvdW5kLWNvbG9yOiAjZjJmMmYyOyB9PC9zdHlsZT4KPC9zdmc+"
+
+/***/ }),
+
+/***/ "./svg/message/xwin.svg":
+/*!******************************!*\
+  !*** ./svg/message/xwin.svg ***!
+  \******************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "data:image/svg+xml;base64,PHN2ZyBpZD0iZGVidWciIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjUwIiBoZWlnaHQ9IjUwIiBmaWxsPSJub25lIj4KICAgIDxwYXRoIGQ9Ik0gMTAgMTAgTCA0MCA0MCBNIDQwIDEwIEwgMTAgNDAiIHN0cm9rZT0icm95YWxibHVlIiBzdHJva2Utd2lkdGg9IjEyIj48L3BhdGg+CiAgICA8cGF0aCBkPSJNIDEwIDEwIEwgNDAgNDAgTSA0MCAxMCBMIDEwIDQwIiBzdHJva2U9IiNmMmYyZjIiIHN0cm9rZS13aWR0aD0iNiI+PC9wYXRoPgogICAgPHN0eWxlPnN2Zzp0YXJnZXQgeyBiYWNrZ3JvdW5kLWNvbG9yOiAjZjJmMmYyOyB9PC9zdHlsZT4KPC9zdmc+"
+
+/***/ }),
+
 /***/ "./svg/player-O.svg":
 /*!**************************!*\
   !*** ./svg/player-O.svg ***!
@@ -2035,8 +2083,14 @@ var RelatiRouteRule_1 = __webpack_require__(/*! ../main/rule/RelatiRouteRule */ 
 var RelatiBoardView_1 = __webpack_require__(/*! ../view/RelatiBoardView */ "./ts/view/RelatiBoardView.ts");
 var RelatiEffectView_1 = __webpack_require__(/*! ../view/RelatiEffectView */ "./ts/view/RelatiEffectView.ts");
 var PlacementRule_1 = __webpack_require__(/*! ../main/rule/PlacementRule */ "./ts/main/rule/PlacementRule.ts");
+var MessageBox_1 = __webpack_require__(/*! ../view/MessageBox */ "./ts/view/MessageBox.ts");
 var toMainPageButton = document.getElementById("game-to-main");
-toMainPageButton.addEventListener("click", function (event) { return Page_1.Page.switchTo("main"); });
+toMainPageButton.addEventListener("click", function (event) {
+    MessageBox_1.MessageBox.show("confirm accept reject", "確認離開？", function (message) {
+        if (message == "accept")
+            Page_1.Page.switchTo("main");
+    });
+});
 var board = new RelatiBoard_1.RelatiBoard(9, 9);
 var players = [new RelatiPlayer_1.RelatiPlayer("O"), new RelatiPlayer_1.RelatiPlayer("X")];
 var game = new RelatiGame_1.RelatiGame(board, players, RelatiRouteRule_1.BY_COMMON_RELATI);
@@ -2055,18 +2109,26 @@ game.onstart = function () {
     boardView.remove();
 };
 game.onover = function (gameResult) {
+    var messageIcon = "";
+    var messageContent = "";
     switch (gameResult) {
         case 1:
-            alert("圈贏");
+            messageIcon = "owin";
+            messageContent = "圈方獲勝";
             break;
         case 2:
-            alert("叉贏");
+            messageIcon = "xwin";
+            messageContent = "叉方獲勝";
             break;
         case 3:
-            alert("平手");
+            messageIcon = "draw";
+            messageContent = "無神獲勝";
             break;
     }
-    game.restart();
+    MessageBox_1.MessageBox.show(messageIcon + " accept reject", messageContent, function (message) {
+        if (message == "accept")
+            game.restart();
+    });
 };
 var prevPlayerSymbol = "";
 game.onturnstart = function () { return prevPlayerSymbol = game.nowPlayer.symbol; };
@@ -2130,12 +2192,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var MessageBox;
 (function (MessageBox) {
     MessageBox.view = document.getElementById("message-box");
+    MessageBox.messageContent = document.getElementById("message-content");
     MessageBox.acceptButton = document.getElementById("message-accept");
     MessageBox.rejectButton = document.getElementById("message-reject");
     MessageBox.verifyButton = document.getElementById("message-verify");
     var callback;
-    function show(type, response) {
+    function show(type, message, response) {
         MessageBox.view.className = type;
+        MessageBox.messageContent.innerText = message;
+        MessageBox.messageContent.style.display = message ? "" : "none";
         callback = response;
     }
     MessageBox.show = show;
