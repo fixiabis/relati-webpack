@@ -101,9 +101,8 @@ export class RelatiGrid extends Grid {
     /** 該格視為空格 */
     get isSpace() {
         return (
-            this.symbol === "" || 
-            !this.is("relati-receiver") &&
-            !this.is("relati-repeater")
+            this.symbol === "" ||
+            !this.is(["relati-receiver", "relati-launcher"], "any")
         );
     }
 }

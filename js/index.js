@@ -1481,8 +1481,7 @@ var RelatiGrid = /** @class */ (function (_super) {
         /** 該格視為空格 */
         get: function () {
             return (this.symbol === "" ||
-                !this.is("relati-receiver") &&
-                    !this.is("relati-repeater"));
+                !this.is(["relati-receiver", "relati-launcher"], "any"));
         },
         enumerable: true,
         configurable: true
@@ -2045,7 +2044,9 @@ function restore(grid, routeType) {
     if (grid.is("relati-repeater"))
         return;
     grid.gain("relati-repeater");
+    console.log(grid.x, grid.y);
     var traces = RelatiRouteRule_1.RelatiRouteRule.trace(grid, grid.symbol, restoreStatus, routeType);
+    console.log(traces);
     for (var _i = 0, traces_1 = traces; _i < traces_1.length; _i++) {
         var route = traces_1[_i];
         restore(route.grids[0], routeType);
