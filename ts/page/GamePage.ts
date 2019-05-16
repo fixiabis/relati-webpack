@@ -54,7 +54,7 @@ game.onover = function (gameResult: RelatiGameResult) {
             break;
         case 3:
             messageIcon = "draw";
-            messageContent = "無神獲勝";
+            messageContent = "無人獲勝";
             break;
     }
 

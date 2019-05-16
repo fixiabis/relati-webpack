@@ -17,7 +17,7 @@
         border-style: solid;
         border-radius: 5px;
         box-sizing: border-box;
-        animation: message-box-show 0.5s;
+        animation: message-box-show 0.25s;
     }
 
     &.none,
@@ -88,10 +88,34 @@
         display: block;
         font-size: 14px;
     }
+
+    &.wait .wait {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .wait::before {
+        content: "";
+        display: block;
+        width: 60px;
+        height: 60px;
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: 60px;
+        background-image: url(../../svg/message/wait.svg);
+        animation: rotate 0.5s infinite;
+    }
 }
 
 @keyframes message-box-show {
     from {
         transform: scale(0);
+    }
+}
+
+@keyframes rotate {
+    from {
+        transform: rotate(180deg);
     }
 }
