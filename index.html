@@ -27,16 +27,39 @@
 <body>
     <div class="page-container">
         <div id="game-page" class="page">
+            <div id="game-players">
+                <div id="player-O"></div>
+                <div id="player-vs"></div>
+                <div id="player-X"></div>
+            </div>
             <div id="game-board"></div>
+            <div id="game-controls" class="controls">
+                <div id="game-to-main" class="btn to-main-page"></div>
+            </div>
         </div>
-        <div id="main-page" class="page active">
+        <div id="main-page" class="page">
             <div id="main-title">Relati</div>
             <div id="main-controls" class="controls">
                 <div id="main-to-game" class="btn to-game-page"></div>
                 <div id="main-to-help" class="btn to-help-page"></div>
             </div>
         </div>
-        <div id="help-page" class="page"></div>
+        <div id="help-page" class="page">
+            <div id="help-desc" class="controls"></div>
+            <div id="help-board"></div>
+            <div id="help-controls" class="controls">
+                <div id="help-prev" class="btn prev-help-desc"></div>
+                <div id="help-to-main" class="btn to-main-page"></div>
+                <div id="help-next" class="btn next-help-desc"></div>
+            </div>
+        </div>
+        <div id="message-box" class="none">
+            <div class="controls">
+                <div id="message-accept" class="btn"></div>
+                <div id="message-verify" class="btn"></div>
+                <div id="message-reject" class="btn"></div>
+            </div>
+        </div>
     </div>
     <script src="js/index.js"></script>
 </body>

@@ -1,0 +1,9 @@
+|        | Launcher | Repeater | Receiver |
+|--------+----------+----------+----------+
+| source | Required | -------- |          |
+| normal |          | Required | Required |
+| frozen |          |          | Required |
+| broken |          |          |          |
+| target |          | -------- | Required |
+| turret |          | Required | Required |
+| bullet |          | Required | Required |

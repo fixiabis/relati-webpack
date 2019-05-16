@@ -1,7 +1,7 @@
 const path = require("path");
 
 module.exports = {
-    entry: "./bootstrap.ts",
+    entry: "./launcher.ts",
     // mode: "production",
     mode: "development",
     output: {

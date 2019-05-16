@@ -22,3 +22,26 @@ export function updateSVG(element: SVGElement, attribute: SVGAttr) {
         element.setAttribute(name, attribute[name]);
     }
 }
+
+/**
+ * 增加SVG子元素
+ * @param element SVG元素
+ * @param childElements SVG子元素
+ */
+export function appendSVGChild(element: SVGElement, childElements: SVGElement[]) {
+    for (let childElement of childElements) {
+        element.appendChild(childElement);
+    }
+}
+
+/**
+ * 移除SVG子元素
+ * @param element SVG元素
+ */
+export function removeSVGChild(element: SVGElement) {
+    let elementCount = element.childNodes.length;
+
+    while (elementCount-- > 0) {
+        element.removeChild(element.childNodes[0]);
+    }
+}

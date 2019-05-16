@@ -1,2 +1,5 @@
-import "../../scss/page/help-page.scss";
-import { Page } from "../main/Page";
+import { Page } from "../view/Page";
+
+const toMainPageButton: HTMLElement = document.getElementById("help-to-main") as HTMLElement;
+
+toMainPageButton.addEventListener("click", event => Page.switchTo("main"));

@@ -1,90 +1,104 @@
-import { createSVG, updateSVG } from "../core/SVGProcess";
-import {
-    RelatiGrid, RelatiBoard,
-    RELATI_SYMBOL_N, RELATI_SYMBOL_O, RELATI_SYMBOL_X,
-    RELATI_LAUNCHER, RELATI_REPEATER
-} from "../core/RelatiBoard";
+import { RelatiGame } from "../main/RelatiGame";
+import { createSVG, updateSVG, appendSVGChild, removeSVGChild } from "../core/SVGProcess";
+import { RelatiBoard, RelatiGrid } from "../main/RelatiBoard";
+import { RelatiSymbol } from "../main/RelatiDefs";
 
 export class RelatiBoardView {
+    public context: SVGSVGElement = createSVG("svg");
     public gridViews: RelatiGridView[] = [];
-    public body: SVGSVGElement = createSVG("svg");
-    public background: SVGGElement = createSVG("g");
+    public layers: SVGGElement[];
 
-    constructor(public board: RelatiBoard, public container: HTMLElement) {
-        updateSVG(this.body, {
+    constructor(public game: RelatiGame, public container: HTMLElement) {
+        let { board } = game;
+
+        updateSVG(this.context, {
             "width": `${board.width * 5}`,
             "height": `${board.height * 5}`
         });
 
-        let linesContainer = createSVG("g");
+        let routesLayer = createSVG("g");
+        let dotsLayer = createSVG("g");
+        let linesLayer = createSVG("g");
+        let gridsLayer = createSVG("g");
+        appendGridLine(board, linesLayer);
 
-        let lineAttr = {
-            "d": "",
-            "stroke": "#888",
-            "stroke-width": "0.4"
-        };
-
-        for (let x = 1; x < board.width; x++) {
-            lineAttr["d"] = `M ${x * 5} 0 V ${board.height * 5}`;
-            let line = createSVG("path", lineAttr);
-            linesContainer.appendChild(line);
-        }
-
-        for (let y = 1; y < board.height; y++) {
-            lineAttr["d"] = `M 0 ${y * 5} H ${board.width * 5}`;
-            let line = createSVG("path", lineAttr);
-            linesContainer.appendChild(line);
-        }
-
-        container.appendChild(this.body);
-        this.body.appendChild(this.background);
-        this.body.appendChild(linesContainer);
+        this.layers = [routesLayer, dotsLayer, linesLayer, gridsLayer];
+        appendSVGChild(this.context, this.layers);
 
         for (let grid of board.grids) {
-            let gridView = new RelatiGridView(this, grid);
+            let gridView = new RelatiGridView(grid);
+            gridsLayer.appendChild(gridView.context);
             this.gridViews.push(gridView);
-            this.body.appendChild(gridView.body);
         }
+
+        this.container.appendChild(this.context);
 
         this.resize();
         window.addEventListener("resize", this.resize.bind(this));
     }
 
     resize() {
-        let { container, board: { width, height } } = this;
+        let { container, game: { board: { width, height } } } = this;
 
-        this.body.style.transform = "scale(" + Math.min(
+        this.context.style.transform = "scale(" + Math.min(
             container.clientWidth / (width * 5),
             container.clientHeight / (height * 5)
         ) * 0.95 + ")";
     }
 
     update() {
-        for (let i = 0; i < this.gridViews.length; i++) {
-            let gridView = this.gridViews[i];
-            gridView.update();
-        }
+        for (let gridView of this.gridViews) gridView.update();
     }
 
-    removeBackground() {
-        let { background } = this;
-        let childCount = background.childNodes.length;
-        while (childCount-- > 0) background.removeChild(background.childNodes[0]);
+    remove() {
+        for (let gridView of this.gridViews) gridView.remove();
+        removeSVGChild(this.layers[0]);
+        removeSVGChild(this.layers[1]);
+    }
+}
+
+let lineAttr = {
+    "d": "",
+    "stroke": "#888",
+    "stroke-width": "0.4"
+};
+
+function appendGridLine(board: RelatiBoard, linesLayer: SVGGElement) {
+    for (let x = 1; x < board.width; x++) {
+        lineAttr["d"] = `M ${x * 5} 0 V ${board.height * 5}`;
+        let line = createSVG("path", lineAttr);
+        linesLayer.appendChild(line);
+    }
+
+    for (let y = 1; y < board.height; y++) {
+        lineAttr["d"] = `M 0 ${y * 5} H ${board.width * 5}`;
+        let line = createSVG("path", lineAttr);
+        linesLayer.appendChild(line);
     }
 }
 
 export class RelatiGridView {
-    public gridBody: number = 0;
-    public body: SVGGElement = createSVG("g");
+    public context: SVGGElement = createSVG("g");
+    public symbol: RelatiSymbol = "";
+    public status: { [status: string]: boolean } = {};
 
-    constructor(public boardView: RelatiBoardView, public grid: RelatiGrid) {
-        this.gridBody = grid.body;
+    constructor(public grid: RelatiGrid) {
+        this.symbol = grid.symbol;
+        this.status = { ...grid.status };
     }
 
     update() {
         let { grid } = this;
 
-        if (this.gridBody === grid.body) return;
+        if (
+            this.symbol == grid.symbol &&
+            this.status["relati-launcher"] ==
+            grid.status["relati-launcher"] &&
+            this.status["relati-repeater"] ==
+            grid.status["relati-repeater"] &&
+            this.status["relati-receiver"] ==
+            grid.status["relati-receiver"]
+        ) return;
 
         let symbolAttr = {
             "d": "",
@@ -98,14 +112,13 @@ export class RelatiGridView {
         let endX = grid.x * 5 + 4;
         let endY = grid.y * 5 + 4;
 
-        switch (grid.body & 0b00000111) {
-            case RELATI_SYMBOL_N: {
-                let childCount = this.body.childNodes.length;
-                while (childCount-- > 0) this.body.removeChild(this.body.childNodes[0]);
+        switch (grid.symbol) {
+            case "": {
+                removeSVGChild(this.context);
                 break;
             }
 
-            case RELATI_SYMBOL_O: {
+            case "O": {
                 symbolAttr["d"] = (
                     `M ${srtX + 1.5} ${srtY + 1.5} ` +
                     "m 0 -1.5 " +
@@ -116,7 +129,7 @@ export class RelatiGridView {
                 break;
             }
 
-            case RELATI_SYMBOL_X: {
+            case "X": {
                 symbolAttr["d"] = (
                     `M ${srtX} ${srtY} L ${endX} ${endY} ` +
                     `M ${endX} ${srtY} L ${srtX} ${endY}`
@@ -126,34 +139,40 @@ export class RelatiGridView {
             }
         }
 
-        if (!this.gridBody) {
+        if (!this.symbol) {
             if (!grid.isSpace) {
-                if (grid.is(RELATI_LAUNCHER)) {
+                if (grid.is("relati-launcher")) {
                     symbolAttr["stroke-width"] = "1.2";
-                    this.body.appendChild(createSVG("path", symbolAttr));
+                    this.context.appendChild(createSVG("path", symbolAttr));
 
                     symbolAttr["stroke-width"] = "0.6";
                     symbolAttr["stroke"] = "#f2f2f2";
-                    this.body.appendChild(createSVG("path", symbolAttr));
-                } else if (grid.is(RELATI_REPEATER)) {
-                    this.body.appendChild(createSVG("path", symbolAttr));
+                    this.context.appendChild(createSVG("path", symbolAttr));
+                } else if (grid.is("relati-repeater")) {
+                    this.context.appendChild(createSVG("path", symbolAttr));
                 } else {
                     symbolAttr["stroke"] = "#666";
-                    this.body.appendChild(createSVG("path", symbolAttr));
+                    this.context.appendChild(createSVG("path", symbolAttr));
                 }
             }
-        } else if (!grid.is(RELATI_LAUNCHER)) {
+        } else if (!grid.is("relati-launcher")) {
             let color = symbolAttr["stroke"];
 
-            if (!grid.is(RELATI_REPEATER)) color = "#666";
-            let childCount = this.body.childNodes.length;
+            if (!grid.is("relati-repeater")) color = "#666";
 
-            while (childCount-- > 0) updateSVG(
-                this.body.childNodes[childCount] as SVGElement,
+            updateSVG(
+                this.context.childNodes[0] as SVGElement,
                 { "stroke": color }
             );
         }
 
-        this.gridBody = grid.body;
+        this.symbol = grid.symbol;
+        this.status = { ...grid.status };
+    }
+
+    remove() {
+        this.symbol = "";
+        this.status = {};
+        removeSVGChild(this.context);
     }
 }

@@ -1,8 +1,7 @@
-import "../../scss/page/main-page.scss";
-import { Page } from "../main/Page";
+import { Page } from "../view/Page";
 
-const toGamePage: HTMLElement = document.getElementById("main-to-game") as HTMLElement;
-const toHelpPage: HTMLElement = document.getElementById("main-to-help") as HTMLElement;
+const toGamePageButton: HTMLElement = document.getElementById("main-to-game") as HTMLElement;
+const toHelpPageButton: HTMLElement = document.getElementById("main-to-help") as HTMLElement;
 
-toGamePage.addEventListener("click", event => Page.switchTo("game"));
-toHelpPage.addEventListener("click", event => Page.switchTo("help"));
+toGamePageButton.addEventListener("click", event => Page.switchTo("game"));
+toHelpPageButton.addEventListener("click", event => Page.switchTo("help"));

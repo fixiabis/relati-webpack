@@ -8,20 +8,13 @@
         font-family: sans-serif;
     }
 
-    #main-controls {
-        & {
-            width: 150px;
-            justify-content: space-between;
-        }
+    .to-game-page {
+        background-color: crimson;
+        background-image: url(../../svg/btn/play.svg);
+    }
 
-        .to-game-page {
-            background-color: crimson;
-            background-image: url(../../svg/play.svg);
-        }
-
-        .to-help-page {
-            background-color: royalblue;
-            background-image: url(../../svg/help.svg);
-        }
+    .to-help-page {
+        background-color: royalblue;
+        background-image: url(../../svg/btn/help.svg);
     }
 }

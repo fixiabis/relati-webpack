@@ -1,11 +1,14 @@
-import "../../scss/view/relati-effect.scss";
-import { createSVG } from "../core/SVGProcess";
-import { RelatiGrid, RELATI_LAUNCHER, RELATI_RECEIVER } from "../core/RelatiBoard";
-import { getRelatiTracesBy } from "../core/RelatiRoutes";
-import { RelatiGame } from "../core/RelatiGame";
+import { createSVG, removeSVGChild } from "../core/SVGProcess";
+import { RelatiGrid } from "../main/RelatiBoard";
+import { RelatiGame } from "../main/RelatiGame";
+import { RelatiRouteRule } from "../main/rule/RelatiRouteRule";
+import { RelatiRouteType, RelatiSymbol } from "../main/RelatiDefs";
 
-const RELATI_EFFECTED = 0b10000000;
-const SYMBOL_COLOR = ["#666", "crimson", "royalblue"];
+const SYMBOL_COLOR = {
+    "": "#666",
+    "O": "crimson",
+    "X": "royalblue"
+};
 
 let dotAttr = {
     "cx": "",
@@ -21,8 +24,10 @@ function createDot(x: number, y: number, color: string) {
     return createSVG("circle", dotAttr);
 }
 
-export function createHintEffect(grids: RelatiGrid[], symbol: number, view: SVGElement) {
+export function createHintEffect(grids: RelatiGrid[], symbol: RelatiSymbol, view: SVGElement) {
     let color = SYMBOL_COLOR[symbol];
+    removeSVGChild(view);
+
     for (let { x, y } of grids) {
         view.appendChild(createDot(x, y, color));
     }
@@ -48,18 +53,20 @@ function createLine(source: RelatiGrid, traces: RelatiGrid[], color: string, vie
     view.appendChild(path);
 }
 
-function createRelatiLine(grid: RelatiGrid, color: string, view: SVGElement, routeType: number, turn: number, game: RelatiGame) {
-    if (grid.is(RELATI_EFFECTED) || game.turn > turn) return;
-    grid.gain(RELATI_EFFECTED);
+function createRelatiLine(grid: RelatiGrid, color: string, view: SVGElement, routeType: RelatiRouteType, turn: number, game: RelatiGame) {
+    if (grid.is("effect-activate") || game.turn > turn) return;
+    grid.gain("effect-activate");
 
     setTimeout(() => {
         if (game.turn > turn) return;
-        let traces = getRelatiTracesBy(grid, grid.symbol | RELATI_RECEIVER, routeType);
+        let traces = RelatiRouteRule.trace(grid, grid.symbol, ["relati-receiver"], routeType);
 
-        for (let grids of traces) {
+        for (let { grids } of traces) {
+            grids.reverse();
+
             let targetGrid = grids[grids.length - 1];
 
-            if (!targetGrid.is(RELATI_EFFECTED)) {
+            if (!targetGrid.is("effect-activate")) {
                 createLine(grid, grids, color, view);
                 createRelatiLine(targetGrid, color, view, routeType, turn, game);
             }
@@ -67,14 +74,15 @@ function createRelatiLine(grid: RelatiGrid, color: string, view: SVGElement, rou
     }, 250);
 }
 
-export function createRelatiEffect(symbol: number, view: SVGElement, game: RelatiGame) {
+export function createRelatiEffect(symbol: RelatiSymbol, view: SVGElement, game: RelatiGame) {
     let { board: { grids }, routeType, turn } = game;
     let color = SYMBOL_COLOR[symbol];
+    removeSVGChild(view);
 
-    for (let grid of grids) grid.lost(RELATI_EFFECTED);
+    for (let grid of grids) grid.lost("effect-activate");
 
     for (let grid of grids) {
-        if (grid.is(RELATI_LAUNCHER) && grid.symbol == symbol) {
+        if (grid.is("relati-launcher") && grid.symbol == symbol) {
             createRelatiLine(grid, color, view, routeType, turn, game);
         }
     }
