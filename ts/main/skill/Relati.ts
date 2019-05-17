@@ -13,13 +13,9 @@ function restore(grid: RelatiGrid, routeType: RelatiRouteType) {
     if (grid.is("relati-repeater")) return;
     grid.gain("relati-repeater");
 
-    console.log(grid.x, grid.y);
-
     let traces: RelatiRoute[] = RelatiRouteRule.trace(
         grid, grid.symbol, restoreStatus, routeType
     );
-
-    console.log(traces);
 
     for (let route of traces) restore(route.grids[0], routeType);
 }

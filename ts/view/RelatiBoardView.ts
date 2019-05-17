@@ -85,6 +85,7 @@ export class RelatiGridView {
     constructor(public grid: RelatiGrid) {
         this.symbol = grid.symbol;
         this.status = { ...grid.status };
+        this.update();
     }
 
     update() {

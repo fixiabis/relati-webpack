@@ -1,12 +1,15 @@
 const path = require("path");
 
 module.exports = {
-    entry: "./launcher.ts",
-    // mode: "production",
-    mode: "development",
+    entry: {
+        "script": "./script-launcher.ts",
+        "style": "./style-launcher.ts"
+    },
+    mode: "production",
+    // mode: "development",
     output: {
-        filename: "index.js",
-        path: path.resolve(__dirname, "./js")
+        filename: "[name].bundle.js",
+        path: path.resolve(__dirname, "js")
     },
     devtool: "source-map",
     resolve: {

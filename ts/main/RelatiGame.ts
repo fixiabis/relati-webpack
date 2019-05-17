@@ -5,20 +5,6 @@ import { GAME_RESULT_NONE, WinnerDecision } from "./rule/WinnerDecision";
 import { DestoryRepeater, RestoreRepeater } from "./skill/Relati";
 import { Placement } from "./skill/Placement";
 
-/** 角色固有技能 */
-let roleInitEffects: RelatiEffect[] = [];
-
-/** 角色行動 */
-let roleActions: RelatiAction[] = [
-    Placement
-];
-
-/** 角色觸發技能 */
-let rolePassEffects: RelatiEffect[] = [
-    DestoryRepeater,
-    RestoreRepeater
-];
-
 /** 遊戲狀態 */
 interface RelatiGameState {
     turn: number;
@@ -63,7 +49,7 @@ export class RelatiGame {
     /**
      * 遊戲結束事件
      */
-    public onover?: Function;
+    public onend?: (gameResult: RelatiGameResult) => void;
 
     constructor(
         /** 棋盤 */
@@ -71,7 +57,13 @@ export class RelatiGame {
         /** 玩家 */
         public players: RelatiPlayer[],
         /** Relati路徑類型 */
-        public routeType: RelatiRouteType
+        public routeType: RelatiRouteType,
+        /** 角色固有技能 */
+        public roleInitEffects: RelatiEffect[],
+        /** 角色行動 */
+        public roleActions: RelatiAction[],
+        /** 角色觸發技能 */
+        public rolePassEffects: RelatiEffect[]
     ) { this.start(); }
 
     /** 開始 */
@@ -84,13 +76,13 @@ export class RelatiGame {
             if (this.onturnstart) this.onturnstart(grid);
 
             this.selectedGrid = grid;
-            for (let effect of roleInitEffects) await effect.do(this);
+            for (let effect of this.roleInitEffects) await effect.do(this);
 
             this.selectedGrid = grid;
 
             let actionValid = false;
 
-            for (let action of roleActions) {
+            for (let action of this.roleActions) {
                 if (await action.do(grid, this)) {
                     actionValid = true;
                     break;
@@ -100,14 +92,14 @@ export class RelatiGame {
             if (!actionValid) continue;
 
             this.selectedGrid = grid;
-            for (let effect of rolePassEffects) await effect.do(this);
+            for (let effect of this.rolePassEffects) await effect.do(this);
 
             delete this.selectedGrid;
             gameResult = WinnerDecision.state(this);
             if (this.onturnend) this.onturnend(grid);
         }
 
-        if (this.onover) this.onover(gameResult);
+        if (this.onend) this.onend(gameResult);
         return gameResult;
     }
 
