@@ -10,6 +10,9 @@ import { PlacementRule } from "../main/rule/PlacementRule";
 import { MessageBox } from "../view/MessageBox";
 import { Placement } from "../main/skill/Placement";
 import { DestoryRepeater, RestoreRepeater } from "../main/skill/Relati";
+import { RelatiNormalTypeCount } from "../main/skill/RelatiNormalTypeCount";
+import { Attack, AttackTarget } from "../main/skill/Attack";
+import { removeSVGChild } from "../core/SVGProcess";
 
 const toMainPageButton: HTMLElement = document.getElementById("game-to-main") as HTMLElement;
 
@@ -21,9 +24,9 @@ toMainPageButton.addEventListener("click", event => {
 
 let board = new RelatiBoard(9, 9);
 let players = [new RelatiPlayer("O"), new RelatiPlayer("X")];
-let roleInitEffects: RelatiEffect[] = [];
-let roleActions: RelatiAction[] = [Placement];
-let rolePassEffects: RelatiEffect[] = [DestoryRepeater, RestoreRepeater];
+let roleInitEffects: RelatiEffect[] = [AttackTarget];
+let roleActions: RelatiAction[] = [Placement, Attack];
+let rolePassEffects: RelatiEffect[] = [RelatiNormalTypeCount, DestoryRepeater, RestoreRepeater];
 
 let game = new RelatiGame(
     board, players, BY_COMMON_RELATI,
@@ -76,6 +79,7 @@ game.onend = gameResult => {
 let prevPlayerSymbol: RelatiSymbol = "";
 
 game.onturnstart = () => prevPlayerSymbol = game.nowPlayer.symbol;
+game.ongridselect = boardView.update.bind(boardView);
 
 game.onturnend = () => {
     boardView.update();
@@ -88,3 +92,5 @@ game.onturnend = () => {
     createHintEffect(grids, symbol, boardView.layers[1]);
     createRelatiEffect(prevPlayerSymbol, boardView.layers[0], game);
 };
+
+(window as any).game = game;

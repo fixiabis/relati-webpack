@@ -42,6 +42,12 @@ export class RelatiGame {
     public onturnend?: (grid: RelatiGrid) => void;
 
     /**
+     * 棋盤格選取事件
+     * @param grid 棋盤格
+     */
+    public ongridselect?: (grid: RelatiGrid) => void;
+
+    /**
      * 遊戲開始事件
      */
     public onstart?: Function;
@@ -73,6 +79,9 @@ export class RelatiGame {
 
         while (gameResult == GAME_RESULT_NONE) {
             let grid = await this.gridSelect();
+
+            if (!grid) continue;
+
             if (this.onturnstart) this.onturnstart(grid);
 
             this.selectedGrid = grid;
@@ -93,6 +102,8 @@ export class RelatiGame {
 
             this.selectedGrid = grid;
             for (let effect of this.rolePassEffects) await effect.do(this);
+
+            this.turn++;
 
             delete this.selectedGrid;
             gameResult = WinnerDecision.state(this);
@@ -117,7 +128,12 @@ export class RelatiGame {
 
     /** 等待格子選取 */
     gridSelect() {
-        return new Promise<RelatiGrid>(select => this.selectGrid = select);
+        return new Promise<RelatiGrid>(select => {
+            this.selectGrid = grid => {
+                select(grid);
+                if (this.ongridselect) this.ongridselect(grid);
+            };
+        });
     }
 
     /** 目前玩家 */

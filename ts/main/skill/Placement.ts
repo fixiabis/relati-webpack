@@ -23,8 +23,6 @@ export let Placement: RelatiAction = {
             grid
         });
 
-        game.turn++;
-
         return true;
     }
 };

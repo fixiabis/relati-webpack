@@ -28,6 +28,7 @@ export class RelatiBoardView {
         for (let grid of board.grids) {
             let gridView = new RelatiGridView(grid);
             gridsLayer.appendChild(gridView.context);
+            gridsLayer.appendChild(gridView.feature);
             this.gridViews.push(gridView);
         }
 
@@ -78,6 +79,7 @@ function appendGridLine(board: RelatiBoard, linesLayer: SVGGElement) {
 }
 
 export class RelatiGridView {
+    public feature: SVGGElement = createSVG("g");
     public context: SVGGElement = createSVG("g");
     public symbol: RelatiSymbol = "";
     public status: { [status: string]: boolean } = {};
@@ -98,7 +100,9 @@ export class RelatiGridView {
             this.status["relati-repeater"] ==
             grid.status["relati-repeater"] &&
             this.status["relati-receiver"] ==
-            grid.status["relati-receiver"]
+            grid.status["relati-receiver"] &&
+            this.status["attack-selected"] ==
+            grid.status["attack-selected"]
         ) return;
 
         let symbolAttr = {
@@ -140,6 +144,12 @@ export class RelatiGridView {
             }
         }
 
+        if (!grid.is("relati-repeater")) symbolAttr["stroke"] = "#666";
+
+        if (
+            !grid.is(["relati-launcher", "relati-receiver"], "any")
+        ) symbolAttr["stroke"] = "#bbb";
+
         if (!this.symbol) {
             if (!grid.isSpace) {
                 if (grid.is("relati-launcher")) {
@@ -151,20 +161,31 @@ export class RelatiGridView {
                     this.context.appendChild(createSVG("path", symbolAttr));
                 } else if (grid.is("relati-repeater")) {
                     this.context.appendChild(createSVG("path", symbolAttr));
+                } else if (grid.is("relati-receiver")) {
+                    this.context.appendChild(createSVG("path", symbolAttr));
                 } else {
-                    symbolAttr["stroke"] = "#666";
                     this.context.appendChild(createSVG("path", symbolAttr));
                 }
             }
-        } else if (!grid.is("relati-launcher")) {
+        } else {
             let color = symbolAttr["stroke"];
-
-            if (!grid.is("relati-repeater")) color = "#666";
 
             updateSVG(
                 this.context.childNodes[0] as SVGElement,
                 { "stroke": color }
             );
+
+            // if (grid.is("attack-selected")) {
+            //     symbolAttr["stroke-width"] = "0.4";
+            //     symbolAttr["d"] = (
+            //         `M ${srtX - 0.5} ${srtY + 0.5} v -1 h 1` +
+            //         `M ${endX + 0.5} ${srtY + 0.5} v -1 h -1` +
+            //         `M ${srtX - 0.5} ${endY - 0.5} v 1 h 1` +
+            //         `M ${endX + 0.5} ${endY - 0.5} v 1 h -1`
+            //     );
+
+            //     this.feature.appendChild(createSVG("path", symbolAttr));
+            // } else removeSVGChild(this.feature);
         }
 
         this.symbol = grid.symbol;
@@ -175,5 +196,6 @@ export class RelatiGridView {
         this.symbol = "";
         this.status = {};
         removeSVGChild(this.context);
+        removeSVGChild(this.feature);
     }
 }

@@ -40,7 +40,7 @@ export let PlacementRule: PlacementRule = {
      * @param routeType 連結路徑類型
      */
     allow(grid, symbol, routeType) {
-        return grid.isSpace && RelatiRouteRule.allow(
+        return !grid.symbol && RelatiRouteRule.allow(
             grid, symbol, placementStatus, routeType
         );
     },
@@ -55,7 +55,7 @@ export let PlacementRule: PlacementRule = {
         let grids: RelatiGrid[] = [];
 
         for (let grid of game.board.grids) {
-            if (PlacementRule.allow(
+            if (!grid.symbol && PlacementRule.allow(
                 grid, symbol, routeType || game.routeType
             )) grids.push(grid);
         }

@@ -5,6 +5,7 @@ export type RelatiStatus = (
     "relati-launcher" |
     "relati-repeater" |
     "relati-receiver" |
+    "attack-selected" |
     "effect-activate"
 );
 
@@ -17,7 +18,7 @@ export interface RelatiRule {
 }
 
 export interface RelatiAction {
-    do(grid: RelatiGrid, game?: RelatiGame, ...state: any[]): boolean;
+    do(grid: RelatiGrid, game: RelatiGame, ...state: any[]): boolean | Promise<boolean>;
 }
 
 export interface RelatiEffect {
@@ -31,7 +32,9 @@ export type RelatiGameResult = 0 | 1 | 2 | 3;
 export let RelatiStatusList: RelatiStatus[] = [
     "relati-launcher",
     "relati-repeater",
-    "relati-receiver"
+    "relati-receiver",
+    "attack-selected",
+    "effect-activate"
 ];
 
 export let AllRelatiStatus: RelatiStatus[] = RelatiStatusList;
