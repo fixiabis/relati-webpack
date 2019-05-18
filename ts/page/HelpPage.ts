@@ -46,7 +46,7 @@ let boardView = new RelatiBoardView(game, container);
 
 window.addEventListener("hashchange", () => {
     if (location.hash == "#help") game.restart();
-});
+}); 
 
 boardView.context.addEventListener("click", function (event: MouseEvent) {
     let x: number = Math.floor(event.offsetX / 5),
@@ -64,6 +64,7 @@ boardView.context.addEventListener("click", function (event: MouseEvent) {
 });
 
 game.onstart = () => {
+    MessageBox.show("verify", "放置符號時需發生連線，無法繼續放置符號時便輸了，以下為連線的範例", null);
     game.selectedGrid = stepGrid[game.turn];
     boardView.remove();
 };
@@ -142,9 +143,6 @@ game.onturnend = () => {
     }, 2500);
 
     switch (game.turn) {
-        case 1:
-            MessageBox.show("verify", "放置符號時需發生連線，無法繼續放置符號時便輸了，以下為連線的範例", null);
-            break;
         case 11:
             MessageBox.show("verify", "倘若將一處圍成區塊時，對方將無法藉由連線把符號放入其中", null);
             break;
@@ -230,4 +228,4 @@ let stepMessage: { [turn: number]: string } = {
     41: "區塊抗壓技巧"
 };
 
-game.restart();
+if (location.hash == "#help") game.restart();
