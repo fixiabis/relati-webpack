@@ -141,10 +141,17 @@ game.onturnend = () => {
         if (game.selectGrid) game.selectGrid(stepGrid[game.turn]);
     }, 2500);
 
-    if (game.turn == 51) {
-        MessageBox.show("verify", "恭喜，想必你對遊戲有一些概念了", function () {
-            Page.switchTo("main");
-        });
+    switch (game.turn) {
+        case 1:
+            MessageBox.show("verify", "放置符號時需發生連線，無法繼續放置符號時便輸了，以下為連線的範例", null);
+            break;
+        case 11:
+            MessageBox.show("verify", "倘若將一處圍成區塊時，對方將無法藉由連線把符號放入其中", null);
+            break;
+        case 51:
+            MessageBox.show("verify", "恭喜，想必你對遊戲有一些概念了", function () {
+                Page.switchTo("main");
+            });
     }
 };
 
