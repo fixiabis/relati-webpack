@@ -46,7 +46,7 @@ let boardView = new RelatiBoardView(game, container);
 
 window.addEventListener("hashchange", () => {
     if (location.hash == "#help") game.restart();
-}); 
+});
 
 boardView.context.addEventListener("click", function (event: MouseEvent) {
     let x: number = Math.floor(event.offsetX / 5),
@@ -136,11 +136,14 @@ game.onturnend = () => {
 
     createRelatiEffect(prevPlayerSymbol, boardView.layers[0], game);
 
+    let turn = game.turn;
+
     if (game.turn < 2) {
         game.selectedGrid = stepGrid[game.turn];
     } else setTimeout(() => {
+        if (game.turn !== turn) return;
         if (game.selectGrid) game.selectGrid(stepGrid[game.turn]);
-    }, 2500);
+    }, 1800);
 
     switch (game.turn) {
         case 11:
