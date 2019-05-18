@@ -141,7 +141,7 @@ game.onturnend = () => {
         if (game.selectGrid) game.selectGrid(stepGrid[game.turn]);
     }, 2500);
 
-    if (game.turn == 50) {
+    if (game.turn == 51) {
         MessageBox.show("verify", "恭喜，想必你對遊戲有一些概念了", function () {
             Page.switchTo("main");
         });
