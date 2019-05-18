@@ -78,7 +78,7 @@ export class RelatiGame {
         if (this.onstart) this.onstart();
 
         while (gameResult == GAME_RESULT_NONE) {
-            let grid = await this.gridSelect();
+            let grid = this.selectedGrid || await this.gridSelect();
 
             if (!grid) continue;
 

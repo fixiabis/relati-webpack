@@ -26,9 +26,9 @@ function createDot(x: number, y: number, color: string) {
 
 export function createHintEffect(grids: RelatiGrid[], symbol: RelatiSymbol, view: SVGElement) {
     let color = SYMBOL_COLOR[symbol];
-    removeSVGChild(view);
 
-    for (let { x, y } of grids) {
+    for (let { x, y, symbol } of grids) {
+        if (symbol) continue;
         view.appendChild(createDot(x, y, color));
     }
 }
@@ -77,7 +77,6 @@ function createRelatiLine(grid: RelatiGrid, color: string, view: SVGElement, rou
 export function createRelatiEffect(symbol: RelatiSymbol, view: SVGElement, game: RelatiGame) {
     let { board: { grids }, routeType, turn } = game;
     let color = SYMBOL_COLOR[symbol];
-    removeSVGChild(view);
 
     for (let grid of grids) grid.lost("effect-activate");
 

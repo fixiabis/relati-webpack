@@ -26,6 +26,9 @@
         display: none;
     }
 
+    &.accept .controls,
+    &.reject .controls,
+    &.verify .controls,
     &.confirm .controls,
     &.draw .controls,
     &.owin .controls,

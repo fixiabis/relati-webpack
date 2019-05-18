@@ -10,13 +10,11 @@ import { PlacementRule } from "../main/rule/PlacementRule";
 import { MessageBox } from "../view/MessageBox";
 import { Placement } from "../main/skill/Placement";
 import { DestoryRepeater, RestoreRepeater } from "../main/skill/Relati";
-import { RelatiNormalTypeCount } from "../main/skill/RelatiNormalTypeCount";
-import { Attack, AttackTarget } from "../main/skill/Attack";
 import { removeSVGChild } from "../core/SVGProcess";
 
 const toMainPageButton: HTMLElement = document.getElementById("game-to-main") as HTMLElement;
 
-toMainPageButton.addEventListener("click", event => {
+toMainPageButton.addEventListener("click", () => {
     MessageBox.show("confirm accept reject", "確認離開？", message => {
         if (message == "accept") Page.switchTo("main");
     });
@@ -24,9 +22,9 @@ toMainPageButton.addEventListener("click", event => {
 
 let board = new RelatiBoard(9, 9);
 let players = [new RelatiPlayer("O"), new RelatiPlayer("X")];
-let roleInitEffects: RelatiEffect[] = [AttackTarget];
-let roleActions: RelatiAction[] = [Placement, Attack];
-let rolePassEffects: RelatiEffect[] = [RelatiNormalTypeCount, DestoryRepeater, RestoreRepeater];
+let roleInitEffects: RelatiEffect[] = [];
+let roleActions: RelatiAction[] = [Placement];
+let rolePassEffects: RelatiEffect[] = [DestoryRepeater, RestoreRepeater];
 
 let game = new RelatiGame(
     board, players, BY_COMMON_RELATI,
@@ -47,6 +45,7 @@ boardView.context.addEventListener("click", function (event: MouseEvent) {
         y: number = Math.floor(event.offsetY / 5),
         grid = board.getGrid(x, y);
 
+    if (MessageBox.isShow) return;
     if (game.selectGrid) game.selectGrid(grid);
 });
 
@@ -81,13 +80,16 @@ let prevPlayerSymbol: RelatiSymbol = "";
 game.onturnstart = () => prevPlayerSymbol = game.nowPlayer.symbol;
 game.ongridselect = boardView.update.bind(boardView);
 
-game.onturnend = () => {
+game.onturnend = async () => {
     boardView.update();
 
     let symbol = game.nowPlayer.symbol;
     let grids = PlacementRule.trace(
         game, symbol, BY_COMMON_RELATI
     );
+
+    removeSVGChild(boardView.layers[0]);
+    removeSVGChild(boardView.layers[1]);
 
     createHintEffect(grids, symbol, boardView.layers[1]);
     createRelatiEffect(prevPlayerSymbol, boardView.layers[0], game);
