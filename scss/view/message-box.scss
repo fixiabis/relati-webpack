@@ -53,6 +53,10 @@
         padding: 0px 10px;
     }
 
+    &.wait #message-content {
+        display: none;
+    }
+
     .btn-group {
         display: flex;
         margin-top: 10px;
