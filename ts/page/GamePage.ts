@@ -95,4 +95,6 @@ game.onturnend = async () => {
 
 game.start();
 
-(window as any).game = game;
+(function (global: any) {
+    global["game"] = game;
+})(window);

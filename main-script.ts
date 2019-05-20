@@ -6,7 +6,7 @@ import "./ts/page/GamePage";
 import "./ts/page/HelpPage";
 
 if (!location.hash) {
-    Page.switchTo("main-page");
+    Page.switchTo("main");
 }
 
 (function (global: any) {

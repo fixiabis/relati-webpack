@@ -53,8 +53,12 @@
         padding: 0px 10px;
     }
 
-    &.wait #message-content {
+    &.wait .btn-group {
         display: none;
+    }
+
+    &.wait #message-icon {
+        animation: wait 0.5s infinite;
     }
 
     .btn-group {
@@ -82,5 +86,11 @@
 @keyframes message-box-show {
     from {
         transform: scale(0);
+    }
+}
+
+@keyframes wait {
+    from {
+        transform: rotate(180deg);
     }
 }
