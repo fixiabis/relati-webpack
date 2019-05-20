@@ -2,11 +2,11 @@ import { Page } from "../view/Page";
 import { RelatiGame } from "../main/RelatiGame";
 import { RelatiBoard } from "../main/RelatiBoard";
 import { RelatiPlayer } from "../main/RelatiPlayer";
-import { BY_COMMON_RELATI } from "../main/rule/RelatiRouteRule";
-import { RelatiBoardView } from "../view/RelatiBoardView";
+import { BY_COMMON_RELATI } from "../main/rule/RelatiRoute";
+import { RelatiBoardView } from "../view/RelatiBoard";
 import { RelatiSymbol, RelatiEffect, RelatiAction } from "../main/RelatiDefs";
-import { createHintEffect, createRelatiEffect } from "../view/RelatiEffectView";
-import { PlacementRule } from "../main/rule/PlacementRule";
+import { createHintEffect, createRelatiEffect } from "../view/RelatiEffect";
+import { PlacementRule } from "../main/rule/Placement";
 import { MessageBox } from "../view/MessageBox";
 import { Placement } from "../main/skill/Placement";
 import { DestoryRepeater, RestoreRepeater } from "../main/skill/Relati";
@@ -15,22 +15,20 @@ import { removeSVGChild } from "../core/SVGProcess";
 const toMainPageButton: HTMLElement = document.getElementById("game-to-main") as HTMLElement;
 
 toMainPageButton.addEventListener("click", () => {
-    MessageBox.show("confirm accept reject", "確認離開？", message => {
+    MessageBox.show("yorn accept reject", "確認離開？", message => {
         if (message == "accept") Page.switchTo("main");
     });
 });
 
 let board = new RelatiBoard(9, 9);
 let players = [new RelatiPlayer("O"), new RelatiPlayer("X")];
-let roleInitEffects: RelatiEffect[] = [];
-let roleActions: RelatiAction[] = [Placement];
-let rolePassEffects: RelatiEffect[] = [DestoryRepeater, RestoreRepeater];
+let gridActions: RelatiAction[] = [Placement];
+let gridEffects: RelatiEffect[] = [DestoryRepeater, RestoreRepeater];
 
 let game = new RelatiGame(
     board, players, BY_COMMON_RELATI,
-    roleInitEffects,
-    roleActions,
-    rolePassEffects
+    gridActions,
+    gridEffects
 );
 
 let container = document.getElementById("game-board") as HTMLElement;
@@ -94,5 +92,7 @@ game.onturnend = async () => {
     createHintEffect(grids, symbol, boardView.layers[1]);
     createRelatiEffect(prevPlayerSymbol, boardView.layers[0], game);
 };
+
+game.start();
 
 (window as any).game = game;

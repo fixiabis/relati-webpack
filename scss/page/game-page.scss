@@ -40,7 +40,7 @@
         }
 
         &::after {
-            background-image: url(../../svg/player-O.svg);
+            background-image: url(../../svg/page/game/player-O.svg);
         }
     }
 
@@ -50,12 +50,12 @@
         }
 
         &::after {
-            background-image: url(../../svg/player-X.svg);
+            background-image: url(../../svg/page/game/player-X.svg);
         }
     }
 
     #player-vs {
-        background-image: url(../../svg/player-vs.svg);
+        background-image: url(../../svg/page/game/player-vs.svg);
     }
 
     #game-board {

@@ -1,6 +1,9 @@
-import { RelatiRule, RelatiGameResult } from "../RelatiDefs";
+import { RelatiRule } from "../RelatiDefs";
 import { RelatiGame } from "../RelatiGame";
-import { PlacementRule } from "./PlacementRule";
+import { PlacementRule } from "./Placement";
+
+/** 遊戲勝負結果 */
+export type RelatiGameResult = 0 | 1 | 2 | 3;
 
 /** 尚無結果 */
 export const GAME_RESULT_NONE: RelatiGameResult = 0;

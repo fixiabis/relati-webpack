@@ -1,7 +1,7 @@
 import { RelatiAction } from "../RelatiDefs";
 import { RelatiGrid } from "../RelatiBoard";
 import { RelatiGame } from "../RelatiGame";
-import { PlacementRule } from "../rule/PlacementRule";
+import { PlacementRule } from "../rule/Placement";
 
 export let Placement: RelatiAction = {
     do(grid: RelatiGrid, game: RelatiGame) {
@@ -16,12 +16,6 @@ export let Placement: RelatiAction = {
             grid.symbol = symbol;
             grid.gain("relati-receiver");
         } else return false;
-
-        game.history.push({
-            turn: game.turn,
-            type: "placement",
-            grid
-        });
 
         return true;
     }

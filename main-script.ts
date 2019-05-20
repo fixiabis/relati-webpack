@@ -5,5 +5,11 @@ import "./ts/page/MainPage";
 import "./ts/page/GamePage";
 import "./ts/page/HelpPage";
 
-if (!location.hash) Page.switchTo("main");
-(window as any).MessageBox = MessageBox;
+if (!location.hash) {
+    Page.switchTo("main-page");
+}
+
+(function (global: any) {
+    global["Page"] = Page;
+    global["MessageBox"] = MessageBox;
+})(window);

@@ -1,6 +1,6 @@
 import { GRID_DRCT } from "../../core/GridBoard";
+import { RelatiRule, RelatiSymbol, RelatiStatus } from "../RelatiDefs";
 import { RelatiGrid } from "../RelatiBoard";
-import { RelatiStatus, RelatiSymbol, RelatiRule, RelatiRouteType } from "../RelatiDefs";
 
 let {
     DRCT_F, DRCT_B, DRCT_R, DRCT_L,
@@ -57,26 +57,22 @@ const REMOTE_STABLE_ROUTES = [
     [DRCT_BLL, DRCT_BL, DRCT_L]
 ];
 
-/** Relati路徑 */
-export interface RelatiRoute {
-    type: string,
-    grids: RelatiGrid[]
-}
+export type RelatiRouteType = 0 | 1;
 
 /** 使用一般Relati路徑類型 */
-export const BY_NORMAL_RELATI: RelatiRouteType = 0;
+export const BY_NORMAL_RELATI = 0;
 
 /** 使用通用Relati路徑類型 */
-export const BY_COMMON_RELATI: RelatiRouteType = 1;
+export const BY_COMMON_RELATI = 1;
 
 /** 連結路徑規範 */
-interface RelatiRouteRule extends RelatiRule {
+interface RelatiRoute extends RelatiRule {
     /** 判斷是否符合連結路徑規範 */
     allow(
         grid: RelatiGrid,
         symbol: RelatiSymbol,
         statusList: RelatiStatus[],
-        routeType: RelatiRouteType
+        routeType: number
     ): boolean;
 
     /** 取得符合連結路徑規範的路徑 */
@@ -85,11 +81,11 @@ interface RelatiRouteRule extends RelatiRule {
         symbol: RelatiSymbol,
         statusList: RelatiStatus[],
         routeType: RelatiRouteType
-    ): RelatiRoute[];
+    ): RelatiGrid[][];
 }
 
 /** 連結路徑規範 */
-export let RelatiRouteRule: RelatiRouteRule = {
+export let RelatiRoute: RelatiRoute = {
     /** 判斷是否符合連結路徑規範 */
     allow(grid, symbol, statusList, routeType) {
         switch (routeType) {
@@ -136,7 +132,7 @@ export let RelatiRouteRule: RelatiRouteRule = {
 
     /** 取得符合連結路徑規範的路徑 */
     trace(grid, symbol, statusList, routeType) {
-        let routes: RelatiRoute[] = [];
+        let routes: RelatiGrid[][] = [];
 
         switch (routeType) {
             case BY_COMMON_RELATI:
@@ -151,10 +147,7 @@ export let RelatiRouteRule: RelatiRouteRule = {
                         targetGrid.is(statusList, "any") &&
                         middleGrid1.isSpace &&
                         middleGrid2.isSpace
-                    ) routes.push({
-                        type: "remote-stable",
-                        grids: [targetGrid, middleGrid1, middleGrid2]
-                    });
+                    ) routes.push([targetGrid, middleGrid1, middleGrid2]);
                 }
 
                 for (let i = 0; i < 8; i++) {
@@ -166,10 +159,7 @@ export let RelatiRouteRule: RelatiRouteRule = {
                         targetGrid.symbol == symbol &&
                         targetGrid.is(statusList, "any") &&
                         middleGrid.isSpace
-                    ) routes.push({
-                        type: "remote-normal",
-                        grids: [targetGrid, middleGrid]
-                    });
+                    ) routes.push([targetGrid, middleGrid]);
                 }
             case BY_NORMAL_RELATI:
                 for (let i = 0; i < 8; i++) {
@@ -179,10 +169,7 @@ export let RelatiRouteRule: RelatiRouteRule = {
                         targetGrid &&
                         targetGrid.symbol == symbol &&
                         targetGrid.is(statusList, "any")
-                    ) routes.push({
-                        type: "normal",
-                        grids: [targetGrid]
-                    });
+                    ) routes.push([targetGrid]);
                 }
         }
 

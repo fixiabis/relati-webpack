@@ -1,7 +1,7 @@
 import { RelatiGrid } from "../RelatiBoard";
 import { RelatiGame } from "../RelatiGame";
-import { RelatiRouteRule } from "./RelatiRouteRule";
-import { RelatiSymbol, RelatiRule, RelatiStatus, RelatiRouteType } from "../RelatiDefs";
+import { RelatiRoute, RelatiRouteType } from "./RelatiRoute";
+import { RelatiSymbol, RelatiRule, RelatiStatus } from "../RelatiDefs";
 
 let placementStatus: RelatiStatus[] = ["relati-repeater"];
 
@@ -40,7 +40,7 @@ export let PlacementRule: PlacementRule = {
      * @param routeType 連結路徑類型
      */
     allow(grid, symbol, routeType) {
-        return !grid.symbol && RelatiRouteRule.allow(
+        return !grid.symbol && RelatiRoute.allow(
             grid, symbol, placementStatus, routeType
         );
     },

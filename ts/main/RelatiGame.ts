@@ -1,24 +1,16 @@
 import { RelatiBoard, RelatiGrid } from "./RelatiBoard";
-import { RelatiAction, RelatiEffect, RelatiRouteType, AllRelatiStatus, RelatiGameResult } from "./RelatiDefs";
+import { RelatiRouteType } from "./rule/RelatiRoute";
+import { RelatiEffect, RelatiAction, AllRelatiStatus } from "./RelatiDefs";
 import { RelatiPlayer } from "./RelatiPlayer";
-import { GAME_RESULT_NONE, WinnerDecision } from "./rule/WinnerDecision";
-import { DestoryRepeater, RestoreRepeater } from "./skill/Relati";
-import { Placement } from "./skill/Placement";
+import { RelatiGameResult, GAME_RESULT_NONE, WinnerDecision } from "./rule/WinnerDecision";
 
-/** 遊戲狀態 */
-interface RelatiGameState {
-    turn: number;
-    type: string;
+export interface RelatiGameState {
     grid: RelatiGrid;
 }
 
-/** 遊戲主體 */
 export class RelatiGame {
     /** 回合 */
     public turn = 0;
-
-    /** 紀錄 */
-    public history: RelatiGameState[] = [];
 
     /** 已選擇棋盤格 */
     public selectedGrid?: RelatiGrid;
@@ -64,13 +56,11 @@ export class RelatiGame {
         public players: RelatiPlayer[],
         /** Relati路徑類型 */
         public routeType: RelatiRouteType,
-        /** 角色固有技能 */
-        public roleInitEffects: RelatiEffect[],
-        /** 角色行動 */
-        public roleActions: RelatiAction[],
-        /** 角色觸發技能 */
-        public rolePassEffects: RelatiEffect[]
-    ) { this.start(); }
+        /** 可用行動 */
+        public gridActions: RelatiAction[],
+        /** 可用技能 */
+        public gridEffects: RelatiEffect[]
+    ) { }
 
     /** 開始 */
     async start() {
@@ -84,14 +74,9 @@ export class RelatiGame {
 
             if (this.onturnstart) this.onturnstart(grid);
 
-            this.selectedGrid = grid;
-            for (let effect of this.roleInitEffects) await effect.do(this);
-
-            this.selectedGrid = grid;
-
             let actionValid = false;
 
-            for (let action of this.roleActions) {
+            for (let action of this.gridActions) {
                 if (await action.do(grid, this)) {
                     actionValid = true;
                     break;
@@ -101,7 +86,7 @@ export class RelatiGame {
             if (!actionValid) continue;
 
             this.selectedGrid = grid;
-            for (let effect of this.rolePassEffects) await effect.do(this);
+            for (let effect of this.gridEffects) await effect.do(this);
 
             this.turn++;
 

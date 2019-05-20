@@ -5,6 +5,8 @@
  * B: (x = x, y + 1)
  * R: (x + 1, y = y)
  * L: (x - 1, y = y)
+ * 16進制表示
+ * 0xFBRL
  */
 export enum GRID_DRCT {
     DRCT_C = 0x0000,

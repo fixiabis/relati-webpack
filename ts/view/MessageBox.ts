@@ -1,5 +1,6 @@
 export namespace MessageBox {
     export let view: HTMLElement = document.getElementById("message-box") as HTMLElement;
+    export let messageIcon: HTMLElement = document.getElementById("message-icon") as HTMLElement;
     export let messageContent: HTMLElement = document.getElementById("message-content") as HTMLElement;
     export let acceptButton: HTMLElement = document.getElementById("message-accept") as HTMLElement;
     export let rejectButton: HTMLElement = document.getElementById("message-reject") as HTMLElement;

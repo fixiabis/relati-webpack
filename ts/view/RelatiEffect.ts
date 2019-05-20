@@ -1,8 +1,8 @@
-import { createSVG, removeSVGChild } from "../core/SVGProcess";
+import { createSVG } from "../core/SVGProcess";
 import { RelatiGrid } from "../main/RelatiBoard";
 import { RelatiGame } from "../main/RelatiGame";
-import { RelatiRouteRule } from "../main/rule/RelatiRouteRule";
-import { RelatiRouteType, RelatiSymbol } from "../main/RelatiDefs";
+import { RelatiRoute, RelatiRouteType } from "../main/rule/RelatiRoute";
+import { RelatiSymbol } from "../main/RelatiDefs";
 
 const SYMBOL_COLOR = {
     "": "#666",
@@ -59,9 +59,9 @@ function createRelatiLine(grid: RelatiGrid, color: string, view: SVGElement, rou
 
     setTimeout(() => {
         if (game.turn > turn) return;
-        let traces = RelatiRouteRule.trace(grid, grid.symbol, ["relati-receiver"], routeType);
+        let traces = RelatiRoute.trace(grid, grid.symbol, ["relati-receiver"], routeType);
 
-        for (let { grids } of traces) {
+        for (let grids of traces) {
             grids.reverse();
 
             let targetGrid = grids[grids.length - 1];

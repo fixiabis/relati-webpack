@@ -3,42 +3,33 @@ import { MessageBox } from "../view/MessageBox";
 import { RelatiGame } from "../main/RelatiGame";
 import { RelatiBoard, RelatiGrid } from "../main/RelatiBoard";
 import { RelatiPlayer } from "../main/RelatiPlayer";
-import { BY_COMMON_RELATI } from "../main/rule/RelatiRouteRule";
-import { RelatiBoardView } from "../view/RelatiBoardView";
+import { BY_COMMON_RELATI } from "../main/rule/RelatiRoute";
+import { RelatiBoardView } from "../view/RelatiBoard";
 import { RelatiSymbol, RelatiEffect, RelatiAction } from "../main/RelatiDefs";
-import { createHintEffect, createRelatiEffect } from "../view/RelatiEffectView";
-import { PlacementRule } from "../main/rule/PlacementRule";
+import { createHintEffect, createRelatiEffect } from "../view/RelatiEffect";
+import { PlacementRule } from "../main/rule/Placement";
 import { Placement } from "../main/skill/Placement";
 import { DestoryRepeater, RestoreRepeater } from "../main/skill/Relati";
 import { updateSVG, removeSVGChild } from "../core/SVGProcess";
-import { GAME_RESULT_DRAW } from "../main/rule/WinnerDecision";
 
 const toMainPageButton: HTMLElement = document.getElementById("help-to-main") as HTMLElement;
 const helpMessaageView: HTMLElement = document.getElementById("help-desc") as HTMLElement;
 
 toMainPageButton.addEventListener("click", event => {
-    MessageBox.show("confirm accept reject", "確認離開？", message => {
-        if (message == "accept") Page.switchTo("main");
-    });
-});
-
-toMainPageButton.addEventListener("click", () => {
-    MessageBox.show("confirm accept reject", "確認離開？", message => {
+    MessageBox.show("yorn accept reject", "確認離開？", message => {
         if (message == "accept") Page.switchTo("main");
     });
 });
 
 let board = new RelatiBoard(9, 9);
 let players = [new RelatiPlayer("O"), new RelatiPlayer("X")];
-let roleInitEffects: RelatiEffect[] = [];
-let roleActions: RelatiAction[] = [Placement];
-let rolePassEffects: RelatiEffect[] = [DestoryRepeater, RestoreRepeater];
+let gridActions: RelatiAction[] = [Placement];
+let gridEffects: RelatiEffect[] = [DestoryRepeater, RestoreRepeater];
 
 let game = new RelatiGame(
     board, players, BY_COMMON_RELATI,
-    roleInitEffects,
-    roleActions,
-    rolePassEffects
+    gridActions,
+    gridEffects
 );
 
 let container = document.getElementById("help-board") as HTMLElement;
@@ -143,7 +134,7 @@ game.onturnend = () => {
     } else setTimeout(() => {
         if (game.turn !== turn) return;
         if (game.selectGrid) game.selectGrid(stepGrid[game.turn]);
-    }, 1800);
+    }, 1000);
 
     switch (game.turn) {
         case 11:
@@ -231,4 +222,4 @@ let stepMessage: { [turn: number]: string } = {
     41: "區塊抗壓技巧"
 };
 
-if (location.hash == "#help") game.restart();
+if (location.hash == "#help") game.start();

@@ -2,8 +2,8 @@ const path = require("path");
 
 module.exports = {
     entry: {
-        "script": "./script-launcher.ts",
-        "style": "./style-launcher.ts"
+        "script": "./main-script.ts",
+        "style": "./main-style.ts"
     },
     mode: "production",
     // mode: "development",

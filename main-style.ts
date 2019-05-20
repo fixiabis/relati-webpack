@@ -1,3 +1,4 @@
+import "./scss/view/btn.scss";
 import "./scss/view/page.scss";
 import "./scss/view/message-box.scss";
 

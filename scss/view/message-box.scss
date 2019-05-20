@@ -21,70 +21,30 @@
     }
 
     &.none,
-    & > *,
-    .btn {
+    & > * {
         display: none;
     }
 
-    &.accept .controls,
-    &.reject .controls,
-    &.verify .controls,
-    &.confirm .controls,
-    &.draw .controls,
-    &.owin .controls,
-    &.xwin .controls {
-        display: flex;
-        margin-top: 5px;
-    }
-
-    .controls .btn {
-        width: 45px;
-        height: 45px;
-        background-size: 40px;
-    }
-
-    &.accept #message-accept,
-    &.reject #message-reject,
-    &.verify #message-verify {
+    &.owin #message-icon,
+    &.xwin #message-icon,
+    &.draw #message-icon,
+    &.wait #message-icon,
+    &.yorn #message-icon {
         display: block;
     }
 
-    #message-accept {
-        background-color: crimson;
-        background-image: url(../../svg/btn/accept.svg);
-    }
-
-    #message-reject {
-        background-color: royalblue;
-        background-image: url(../../svg/btn/reject.svg);
-    }
-
-    #message-verify {
-        background-color: seagreen;
-        background-image: url(../../svg/btn/verify.svg);
-    }
-
-    $message-types: (confirm, owin, xwin, draw);
-
-    @each $type in $message-types {
-        .#{$type} {
-            background-image: url(../../svg/message/#{$type}.svg);
-        }
-    }
-
-    &.confirm .confirm,
-    &.draw .draw,
-    &.owin .owin,
-    &.xwin .xwin {
-        display: block;
-    }
-
-    & .message-icon {
+    #message-icon {
         width: 100%;
         height: 50px;
         background-repeat: no-repeat;
         background-position: center;
         background-size: 60px;
+    }
+
+    @each $type in (owin, xwin, draw, wait, yorn) {
+        &.#{$type} #message-icon {
+            background-image: url(../../svg/view/message-box/#{$type}.svg);
+        }
     }
 
     #message-content {
@@ -93,33 +53,30 @@
         padding: 0px 10px;
     }
 
-    &.loading .loading {
+    .btn-group {
         display: flex;
-        align-items: center;
-        justify-content: center;
+        margin-top: 10px;
     }
 
-    .loading::before {
-        content: "";
+    .btn-group > * {
+        display: none;
+    }
+
+    &.verify #message-verify,
+    &.accept #message-accept,
+    &.reject #message-reject {
         display: block;
-        width: 60px;
-        height: 60px;
-        background-repeat: no-repeat;
-        background-position: center;
-        background-size: 60px;
-        background-image: url(../../svg/message/loading.svg);
-        animation: rotate 0.5s infinite;
+    }
+
+    @each $type in (accept, reject, verify) {
+        #message-#{$type} {
+            background-image: url(../../svg/view/btn/#{$type}.svg);
+        }
     }
 }
 
 @keyframes message-box-show {
     from {
         transform: scale(0);
-    }
-}
-
-@keyframes rotate {
-    from {
-        transform: rotate(180deg);
     }
 }

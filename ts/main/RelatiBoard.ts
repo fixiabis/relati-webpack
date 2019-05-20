@@ -1,4 +1,4 @@
-import { Grid, GridBoard } from "../core/GridBoard";
+import { GridBoard, Grid } from "../core/GridBoard";
 import { RelatiStatus, RelatiSymbol } from "./RelatiDefs";
 
 /** Relati棋盤格 */
@@ -12,10 +12,6 @@ export class RelatiGrid extends Grid {
 
     /** 狀態存儲 */
     public status: { [status: string]: boolean } = {};
-
-    constructor(board: RelatiBoard, x: number, y: number) {
-        super(board, x, y);
-    }
 
     /**
      * 判斷是否符合狀態
@@ -100,10 +96,7 @@ export class RelatiGrid extends Grid {
 
     /** 該格視為空格 */
     get isSpace() {
-        return (
-            this.symbol === "" ||
-            !this.is(["relati-receiver", "relati-launcher"], "any")
-        );
+        return this.symbol === "";
     }
 }
 

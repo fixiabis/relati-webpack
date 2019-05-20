@@ -28,7 +28,6 @@ export class RelatiBoardView {
         for (let grid of board.grids) {
             let gridView = new RelatiGridView(grid);
             gridsLayer.appendChild(gridView.context);
-            gridsLayer.appendChild(gridView.feature);
             this.gridViews.push(gridView);
         }
 
@@ -79,7 +78,6 @@ function appendGridLine(board: RelatiBoard, linesLayer: SVGGElement) {
 }
 
 export class RelatiGridView {
-    public feature: SVGGElement = createSVG("g");
     public context: SVGGElement = createSVG("g");
     public symbol: RelatiSymbol = "";
     public status: { [status: string]: boolean } = {};
@@ -174,18 +172,6 @@ export class RelatiGridView {
                 this.context.childNodes[0] as SVGElement,
                 { "stroke": color }
             );
-
-            // if (grid.is("attack-selected")) {
-            //     symbolAttr["stroke-width"] = "0.4";
-            //     symbolAttr["d"] = (
-            //         `M ${srtX - 0.5} ${srtY + 0.5} v -1 h 1` +
-            //         `M ${endX + 0.5} ${srtY + 0.5} v -1 h -1` +
-            //         `M ${srtX - 0.5} ${endY - 0.5} v 1 h 1` +
-            //         `M ${endX + 0.5} ${endY - 0.5} v 1 h -1`
-            //     );
-
-            //     this.feature.appendChild(createSVG("path", symbolAttr));
-            // } else removeSVGChild(this.feature);
         }
 
         this.symbol = grid.symbol;
@@ -196,6 +182,5 @@ export class RelatiGridView {
         this.symbol = "";
         this.status = {};
         removeSVGChild(this.context);
-        removeSVGChild(this.feature);
     }
 }

@@ -1,6 +1,6 @@
 import { RelatiGrid } from "../RelatiBoard";
-import { RelatiRouteRule, RelatiRoute } from "../rule/RelatiRouteRule";
-import { RelatiRouteType, RelatiEffect, RelatiStatus } from "../RelatiDefs";
+import { RelatiRoute, RelatiRouteType } from "../rule/RelatiRoute";
+import { RelatiEffect, RelatiStatus } from "../RelatiDefs";
 
 let restoreStatus: RelatiStatus[] = ["relati-receiver"];
 
@@ -13,11 +13,11 @@ function restore(grid: RelatiGrid, routeType: RelatiRouteType) {
     if (grid.is("relati-repeater")) return;
     grid.gain("relati-repeater");
 
-    let traces: RelatiRoute[] = RelatiRouteRule.trace(
+    let traces: RelatiGrid[][] = RelatiRoute.trace(
         grid, grid.symbol, restoreStatus, routeType
     );
 
-    for (let route of traces) restore(route.grids[0], routeType);
+    for (let grids of traces) restore(grids[0], routeType);
 }
 
 /** 恢復Relati中繼機能 */
